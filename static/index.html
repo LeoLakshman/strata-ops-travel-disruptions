@@ -40,7 +40,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="/static/style.css?v=20261011_8">
+  <link rel="stylesheet" href="/static/style.css?v=20261011_9">
 </head>
 <body class="bg-surface-900 text-gray-100 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
 
@@ -105,7 +105,7 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
 
     <!-- Search & Route Input Card -->
-    <section class="bg-surface-800 rounded-2xl border border-surface-700 p-5 shadow-xl relative overflow-hidden">
+    <section id="searchCard" class="ops-glass-panel rounded-2xl p-5 shadow-2xl relative overflow-hidden">
       <div class="absolute -top-24 -right-24 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
       
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
@@ -306,18 +306,41 @@
       </form>
     </section>
 
-    <!-- Loading State View -->
-    <div id="loadingState" class="hidden py-16 flex flex-col items-center justify-center space-y-4">
-      <div class="relative w-16 h-16">
-        <div class="absolute inset-0 rounded-full border-4 border-blue-500/20"></div>
-        <div class="absolute inset-0 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-          <i data-lucide="plane" class="w-6 h-6 text-blue-400 animate-pulse"></i>
+    <!-- Loading State View (Modern Operations Scanning HUD & Shimmer Preview) -->
+    <div id="loadingState" class="hidden py-8 space-y-6">
+      <div class="flex flex-col items-center justify-center space-y-3 text-center">
+        <div class="relative w-16 h-16 flex items-center justify-center">
+          <div class="absolute inset-0 rounded-full border-2 border-blue-500/20"></div>
+          <div class="absolute inset-0 rounded-full border-2 border-blue-400 border-t-transparent animate-spin"></div>
+          <div class="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center">
+            <i data-lucide="radio" class="w-5 h-5 text-blue-400 animate-pulse"></i>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-white tracking-wide uppercase flex items-center justify-center gap-2">
+            <span>Telemetry Ingestion & Risk Fusion Active</span>
+            <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+          </h3>
+          <p id="loadingStatusText" class="text-xs text-blue-300 font-mono mt-1">Connecting to FAA Command Center & NOAA Aviation Weather</p>
         </div>
       </div>
-      <div class="text-center">
-        <h3 class="text-base font-semibold text-white">Querying Live Airspace & Weather Telemetry...</h3>
-        <p id="loadingStatusText" class="text-xs text-gray-400 mt-1">Connecting to FAA Command Center & NOAA Aviation Weather</p>
+
+      <!-- Shimmer Skeleton Preview Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 opacity-60 pointer-events-none">
+        <div class="lg:col-span-12 ops-glass-panel p-6 rounded-2xl space-y-3">
+          <div class="h-6 w-1/3 ops-shimmer-box"></div>
+          <div class="h-4 w-2/3 ops-shimmer-box"></div>
+        </div>
+        <div class="lg:col-span-7 ops-glass-panel p-6 rounded-2xl space-y-4">
+          <div class="h-56 ops-shimmer-box rounded-xl"></div>
+          <div class="h-4 w-1/2 ops-shimmer-box"></div>
+        </div>
+        <div class="lg:col-span-5 ops-glass-panel p-6 rounded-2xl space-y-3">
+          <div class="h-6 w-1/2 ops-shimmer-box"></div>
+          <div class="h-14 ops-shimmer-box rounded-xl"></div>
+          <div class="h-14 ops-shimmer-box rounded-xl"></div>
+          <div class="h-14 ops-shimmer-box rounded-xl"></div>
+        </div>
       </div>
     </div>
 
@@ -331,7 +354,7 @@
     <div id="resultsContainer" class="hidden space-y-6">
 
       <!-- Executive Risk Banner -->
-      <section id="riskBanner" class="rounded-2xl p-6 border transition-all duration-300 relative overflow-hidden">
+      <section id="riskBanner" class="ops-glass-panel rounded-2xl p-6 border transition-all duration-300 relative overflow-hidden">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
           
           <!-- Risk Score & Level Visual -->
@@ -396,7 +419,7 @@
         <div class="lg:col-span-7 space-y-6">
           
           <!-- Interactive Route & Geometry Map -->
-          <div class="bg-surface-800 rounded-2xl border border-surface-700 p-4 shadow-lg overflow-hidden">
+          <div class="ops-glass-panel rounded-2xl p-4 shadow-xl overflow-hidden">
             <div class="flex items-center justify-between mb-2">
               <div class="flex items-center space-x-2">
                 <i data-lucide="map" class="w-4 h-4 text-blue-400"></i>
@@ -426,12 +449,18 @@
               </div>
               <div id="tomtomStatusIndicator" class="text-[10px] text-gray-400 font-mono"></div>
             </div>
-            <!-- Leaflet Container -->
-            <div id="mapContainer" class="w-full h-64 rounded-xl border border-surface-700/70 z-10"></div>
+            <!-- Leaflet Container with HUD Corner Brackets -->
+            <div class="map-hud-frame">
+              <span class="map-hud-corner tl"></span>
+              <span class="map-hud-corner tr"></span>
+              <span class="map-hud-corner bl"></span>
+              <span class="map-hud-corner br"></span>
+              <div id="mapContainer" class="w-full h-72 rounded-xl z-10"></div>
+            </div>
           </div>
 
           <!-- 4 Component Dimension Risk Meters -->
-          <div class="bg-surface-800 rounded-2xl border border-surface-700 p-5 shadow-lg">
+          <div class="ops-glass-panel rounded-2xl p-5 shadow-xl">
             <h3 class="text-xs font-bold uppercase tracking-wider text-gray-300 mb-4 flex items-center justify-between">
               <span id="dimensionsSectionTitle">Risk Decomposition by Dimension</span>
               <span class="text-[10px] text-gray-500 font-normal">Bayesian Fused Scores</span>
@@ -497,7 +526,7 @@
           </div>
 
           <!-- Hour-by-Hour Travel Day Risk Timeline -->
-          <div class="bg-surface-800 rounded-2xl border border-surface-700 p-5 shadow-lg">
+          <div class="ops-glass-panel rounded-2xl p-5 shadow-xl">
             <div class="flex items-center justify-between mb-3">
               <div>
                 <h3 class="text-xs font-bold uppercase tracking-wider text-gray-300">Hour-by-Hour Disruption Trajectory</h3>
@@ -519,7 +548,7 @@
         <div class="lg:col-span-5 space-y-6">
 
           <!-- Actionable Guidance Matrix Card -->
-          <div class="bg-surface-800 rounded-2xl border border-surface-700 p-5 shadow-lg">
+          <div class="ops-glass-panel rounded-2xl p-5 shadow-xl">
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center space-x-2">
                 <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
@@ -544,7 +573,7 @@
           </div>
 
           <!-- Uncertainty & Confidence Quantification Panel -->
-          <div class="bg-surface-800 rounded-2xl border border-surface-700 p-5 shadow-lg">
+          <div class="ops-glass-panel rounded-2xl p-5 shadow-xl">
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center space-x-2">
                 <i data-lucide="help-circle" class="w-4 h-4 text-blue-400"></i>
@@ -629,7 +658,7 @@
       </div>
 
       <!-- Operational Alternate Routes & Bypasses -->
-      <section id="alternateRoutesSection" class="bg-surface-800 rounded-2xl border border-surface-700 p-6 shadow-xl space-y-4">
+      <section id="alternateRoutesSection" class="ops-glass-panel rounded-2xl p-6 shadow-2xl space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-700 pb-3">
           <div class="flex items-center space-x-2.5">
             <div class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
@@ -655,7 +684,7 @@
       </section>
 
       <!-- Highway Corridor, Halts & Strategic Stay Recommendations -->
-      <section id="roadwayStaySection" class="bg-surface-800 rounded-2xl border border-surface-700 p-6 shadow-xl space-y-6">
+      <section id="roadwayStaySection" class="ops-glass-panel rounded-2xl p-6 shadow-2xl space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-700 pb-3">
           <div class="flex items-center space-x-2.5">
             <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
@@ -720,7 +749,7 @@
       </section>
 
       <!-- AI Synthesis & Operations Executive Briefing -->
-      <section class="bg-surface-800 rounded-2xl border border-surface-700 p-6 shadow-xl relative overflow-hidden">
+      <section class="ops-glass-panel rounded-2xl p-6 shadow-2xl relative overflow-hidden">
         <div class="flex items-center justify-between mb-4 border-b border-surface-700 pb-3">
           <div class="flex items-center space-x-2.5">
             <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
@@ -742,7 +771,7 @@
       </section>
 
       <!-- Traceable Evidence Dossier (What the evidence is behind each recommendation) -->
-      <section class="bg-surface-800 rounded-2xl border border-surface-700 p-6 shadow-xl">
+      <section id="evidenceDossier" class="ops-glass-panel rounded-2xl p-6 shadow-2xl">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-surface-700 pb-3">
           <div>
             <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
@@ -913,6 +942,9 @@
     </div>
   </div>
 
-  <script src="/static/app.js?v=20261011_8"></script>
+  <!-- Operational Floating Toast Notifications Container -->
+  <div id="opsToastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="/static/app.js?v=20261011_9"></script>
 </body>
 </html>

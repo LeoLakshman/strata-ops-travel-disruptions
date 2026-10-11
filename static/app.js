@@ -8,6 +8,11 @@ let flightMap = null;
 let currentAssessment = null;
 let activeEvidenceFilter = 'all';
 
+// Request Lifecycle & Concurrency Controllers
+let activeAssessmentController = null;
+let activeChatController = null;
+let activeAirportController = null;
+
 // Real-Time Visual Overlays State
 let tomtomApiKey = localStorage.getItem('strata_tomtom_api_key') || '';
 let tomtomTrafficLayer = null;
@@ -16,6 +21,38 @@ let nexradRadarLayer = null;
 let isTomTomTrafficActive = false;
 let isTomTomIncidentsActive = false;
 let isNexradRadarActive = false;
+
+/**
+ * High-Polish Operational Toast Notification
+ */
+function showToast(message, iconName = 'info', type = 'info') {
+  const container = document.getElementById('opsToastContainer');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'ops-toast';
+
+  let iconColor = 'text-blue-400';
+  if (type === 'success') iconColor = 'text-emerald-400';
+  if (type === 'warning') iconColor = 'text-amber-400';
+  if (type === 'error') iconColor = 'text-rose-400';
+
+  const safeIcon = (iconName || 'info').replace(/[^a-z0-9_-]/gi, '');
+  toast.innerHTML = `
+    <i data-lucide="${safeIcon}" class="w-4 h-4 ${iconColor} flex-shrink-0"></i>
+    <span class="leading-tight">${escapeHtml(message)}</span>
+  `;
+
+  container.appendChild(toast);
+  if (window.lucide) lucide.createIcons();
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px) scale(0.95)';
+    toast.style.transition = 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+    setTimeout(() => toast.remove(), 260);
+  }, 3200);
+}
 
 function getIsoDate(offsetDays = 0) {
   const d = new Date();
@@ -146,6 +183,7 @@ async function initSettings() {
       refreshActiveTomTomLayers();
 
       settingsModal.classList.add('hidden');
+      showToast('API credentials saved & telemetry synchronized', 'check-circle', 'success');
     });
   }
 
@@ -161,6 +199,7 @@ async function initSettings() {
       applyBaseMapTiles();
       refreshActiveTomTomLayers();
       settingsModal.classList.add('hidden');
+      showToast('API credentials cleared from local storage', 'trash-2', 'warning');
     });
   }
 }
@@ -304,6 +343,7 @@ function initMapLayerToggles() {
 
 /**
  * Live Airport Autocomplete for Origin & Destination
+ * Equipped with AbortController request cancellation and keyboard navigation
  */
 function setupAirportAutocomplete(inputId, suggestionsId) {
   const input = document.getElementById(inputId);
@@ -311,9 +351,11 @@ function setupAirportAutocomplete(inputId, suggestionsId) {
   if (!input || !box) return;
 
   let debounceTimer = null;
+  let activeIndex = -1;
 
   input.addEventListener('input', () => {
     clearTimeout(debounceTimer);
+    activeIndex = -1;
     const val = input.value.trim();
     if (val.length < 1) {
       box.classList.add('hidden');
@@ -322,8 +364,15 @@ function setupAirportAutocomplete(inputId, suggestionsId) {
     }
 
     debounceTimer = setTimeout(async () => {
+      if (activeAirportController) {
+        activeAirportController.abort();
+      }
+      activeAirportController = new AbortController();
+
       try {
-        const resp = await fetch(`/api/airports?q=${encodeURIComponent(val)}`);
+        const resp = await fetch(`/api/airports?q=${encodeURIComponent(val)}`, {
+          signal: activeAirportController.signal
+        });
         if (!resp.ok) return;
         const data = await resp.json();
         const airports = data.airports || [];
@@ -334,10 +383,11 @@ function setupAirportAutocomplete(inputId, suggestionsId) {
         }
 
         box.innerHTML = '';
-        airports.forEach(apt => {
+        airports.forEach((apt, idx) => {
           const item = document.createElement('button');
           item.type = 'button';
-          item.className = 'w-full px-3 py-2 text-left hover:bg-surface-800 flex items-center justify-between group transition cursor-pointer text-xs';
+          item.setAttribute('data-idx', idx);
+          item.className = 'autocomplete-item w-full px-3 py-2 text-left hover:bg-surface-800 flex items-center justify-between group transition cursor-pointer text-xs';
           item.innerHTML = `
             <div class="truncate mr-2">
               <span class="font-mono font-bold text-white group-hover:text-blue-400">${apt.iata}</span>
@@ -357,7 +407,7 @@ function setupAirportAutocomplete(inputId, suggestionsId) {
 
         box.classList.remove('hidden');
       } catch (e) {
-        // quiet error
+        if (e.name === 'AbortError') return;
       }
     }, 120);
   });
@@ -369,7 +419,31 @@ function setupAirportAutocomplete(inputId, suggestionsId) {
   });
 
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
+    const items = box.querySelectorAll('.autocomplete-item');
+    if (box.classList.contains('hidden') || items.length === 0) {
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = (activeIndex + 1) % items.length;
+      items.forEach((item, idx) => {
+        item.classList.toggle('bg-surface-800', idx === activeIndex);
+      });
+      items[activeIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = (activeIndex - 1 + items.length) % items.length;
+      items.forEach((item, idx) => {
+        item.classList.toggle('bg-surface-800', idx === activeIndex);
+      });
+      items[activeIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      if (activeIndex >= 0 && items[activeIndex]) {
+        e.preventDefault();
+        items[activeIndex].click();
+      }
+    } else if (e.key === 'Escape') {
       box.classList.add('hidden');
     }
   });
@@ -393,6 +467,7 @@ function initFormHandlers() {
     const tmp = originInput.value;
     originInput.value = destInput.value;
     destInput.value = tmp;
+    showToast(`Swapped corridor route: ${originInput.value} ⇄ ${destInput.value}`, 'arrow-left-right', 'info');
   });
 
   // Airport Autocomplete
@@ -453,6 +528,7 @@ function initFormHandlers() {
         travelDateInput.value = targetDate;
         syncDatePresetButtons(targetDate);
       }
+      showToast(`Loaded preset corridor: ${orig} → ${dest}`, 'zap', 'info');
       submitAssessment(orig, dest, targetDate, 'all_day');
     });
   });
@@ -584,8 +660,14 @@ function initFormHandlers() {
 
 /**
  * Execute Assessment Request to Backend
+ * Includes AbortController concurrency management to prevent network race conditions
  */
 async function submitAssessment(origin, destination, dateVal, timeWindow) {
+  if (activeAssessmentController) {
+    activeAssessmentController.abort();
+  }
+  activeAssessmentController = new AbortController();
+
   const loading = document.getElementById('loadingState');
   const results = document.getElementById('resultsContainer');
   const errorBox = document.getElementById('errorBox');
@@ -629,6 +711,7 @@ async function submitAssessment(origin, destination, dateVal, timeWindow) {
     const resp = await fetch('/api/assess', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: activeAssessmentController.signal,
       body: JSON.stringify({
         origin: origin,
         destination: destination,
@@ -659,6 +742,9 @@ async function submitAssessment(origin, destination, dateVal, timeWindow) {
 
     renderResults(data);
 
+    const toastLevelType = data.risk_level === 'LOW' ? 'success' : (data.risk_level === 'MODERATE' ? 'warning' : 'error');
+    showToast(`Assessment complete: ${data.composite_risk_score}/100 (${data.risk_level})`, 'shield-alert', toastLevelType);
+
     if (flightMap) {
       setTimeout(() => {
         flightMap.invalidateSize();
@@ -667,6 +753,10 @@ async function submitAssessment(origin, destination, dateVal, timeWindow) {
     }
   } catch (err) {
     clearInterval(timer);
+    if (err.name === 'AbortError') {
+      // In-flight request was cleanly superseded by a newer user search
+      return;
+    }
     loading.classList.add('hidden');
     submitBtn.disabled = false;
     errorBox.classList.remove('hidden');
@@ -891,6 +981,15 @@ function initMap() {
   }).setView([39.8283, -98.5795], 4);
 
   applyBaseMapTiles();
+
+  // Responsive map viewport adjustment handler
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (flightMap) flightMap.invalidateSize();
+    }, 150);
+  });
 }
 
 /**
@@ -1582,6 +1681,7 @@ function renderAlternateRoutes(alternateRoutes) {
 
       // Submit assessment for the alternate route!
       const targetDate = travelDateInput ? travelDateInput.value : getIsoDate(1);
+      showToast(`Switched corridor to alternate route: ${orig} → ${dest}`, 'git-fork', 'info');
       submitAssessment(orig, dest, targetDate, timeWindow);
 
       // Smooth scroll to top of results
@@ -1663,6 +1763,7 @@ function initJourneyChatAssistant() {
           </div>
         </div>
       `;
+      showToast('Chat conversation reset', 'rotate-ccw', 'info');
     });
   }
 
@@ -1684,6 +1785,12 @@ function initJourneyChatAssistant() {
 
     input.value = '';
     sendBtn.disabled = true;
+
+    // Concurrency cancellation for in-flight chat stream
+    if (activeChatController) {
+      activeChatController.abort();
+    }
+    activeChatController = new AbortController();
 
     // Append User Message
     appendChatMessage('user', query);
@@ -1709,6 +1816,7 @@ function initJourneyChatAssistant() {
       const resp = await fetch('/api/chat-assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: activeChatController.signal,
         body: JSON.stringify({
           message: query,
           assessment_context: currentAssessment,
@@ -1744,6 +1852,7 @@ function initJourneyChatAssistant() {
       }
 
     } catch (err) {
+      if (err.name === 'AbortError') return;
       const typing = document.getElementById(typingId);
       if (typing) typing.remove();
       appendChatMessage('ai', `⚠️ Unable to process query: ${err.message}`);

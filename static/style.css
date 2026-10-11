@@ -1,14 +1,104 @@
-/* Strata Ops Enterprise Design System */
+/* ==========================================================================
+   STRATA OPS // PRINCIPAL DESIGN SYSTEM & OPERATIONS HUD
+   High-Performance Dark Mode, Glassmorphism, Micro-Interactions & Telemetry
+   ========================================================================== */
 
-/* Dark Mode Native Controls & Forms */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  /* Color Tokens */
+  --bg-deep: #060911;
+  --surface-950: #080d1a;
+  --surface-900: #0b1122;
+  --surface-850: #0f172a;
+  --surface-800: #131d33;
+  --surface-700: #1e293b;
+  --surface-600: #334155;
+  
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-focus: rgba(59, 130, 246, 0.6);
+  --border-hover: rgba(255, 255, 255, 0.14);
+  
+  --glow-blue: rgba(59, 130, 246, 0.18);
+  --glow-indigo: rgba(99, 102, 241, 0.22);
+  --glow-emerald: rgba(16, 185, 129, 0.2);
+  --glow-rose: rgba(244, 63, 94, 0.25);
+  
+  /* Motion & Easing */
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --transition-fast: 150ms var(--ease-smooth);
+  --transition-normal: 240ms var(--ease-smooth);
+  --transition-slow: 400ms var(--ease-smooth);
+}
+
+/* Base Canvas & Ambient Radial Glow */
+body {
+  background-color: var(--bg-deep) !important;
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30, 58, 138, 0.22) 0%, transparent 60%),
+    radial-gradient(circle at 100% 60%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 0% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 35%);
+  background-attachment: fixed;
+  color: #f1f5f9;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphic Operations Panels */
+.ops-glass-panel {
+  background: rgba(15, 23, 42, 0.72) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.ops-glass-panel:hover {
+  border-color: var(--border-hover) !important;
+}
+
+/* High-Contrast Interactive Form Inputs */
+input[type="text"],
+input[type="password"],
+input[type="date"],
+select {
+  background-color: #0b1122 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+  transition: all var(--transition-fast);
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+select:focus {
+  background-color: #0f172a !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  outline: none !important;
+}
+
+/* Dark Mode Native Date Picker Calendar Indicator */
 input[type="date"] {
   color-scheme: dark;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.8);
+  filter: invert(0.85) sepia(1) saturate(5) hue-rotate(185deg);
   cursor: pointer;
-  opacity: 0.75;
+  opacity: 0.8;
   transition: opacity 0.2s;
 }
 
@@ -16,40 +106,99 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
 }
 
-/* Custom Scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Tabular Figures for All Telemetry & Metric Gauges */
+.tabular-nums,
+[data-metric],
+#riskScoreNumber,
+#delayProbVal,
+#cancelProbVal,
+#connRiskVal {
+  font-variant-numeric: tabular-nums;
 }
 
-::-webkit-scrollbar-track {
-  background: #0b0f19;
+/* Tactile Micro-Interactions on Buttons & Chips */
+button {
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #1f2937;
-  border-radius: 4px;
+button:active {
+  transform: scale(0.975);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #374151;
+/* Primary Executive CTA Button */
+#submitBtn {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-/* Leaflet Map overrides for dark operations theme */
+#submitBtn::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  transform: rotate(25deg);
+  transition: left 0.75s ease;
+}
+
+#submitBtn:hover::after {
+  left: 130%;
+}
+
+/* Pulse Beacon Animation */
+@keyframes beacon-ping {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.beacon-pulse {
+  animation: beacon-ping 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Operations HUD Frame for Leaflet Map */
+.map-hud-frame {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+}
+
+.map-hud-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: rgba(96, 165, 250, 0.6);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.map-hud-corner.tl { top: 8px; left: 8px; border-top: 2px solid; border-left: 2px solid; }
+.map-hud-corner.tr { top: 8px; right: 8px; border-top: 2px solid; border-right: 2px solid; }
+.map-hud-corner.bl { bottom: 8px; left: 8px; border-bottom: 2px solid; border-left: 2px solid; }
+.map-hud-corner.br { bottom: 8px; right: 8px; border-bottom: 2px solid; border-right: 2px solid; }
+
+/* Custom Leaflet Map Dark Styling */
 .leaflet-container {
-  background-color: #0b0f19 !important;
+  background-color: #060911 !important;
   font-family: inherit !important;
 }
 
-/* Custom Leaflet Route Pins */
+/* Custom Route Markers */
 .airport-pin {
   background: #1e3a8a;
   border: 1.5px solid #60a5fa;
   color: #f8fafc;
   font-weight: 700;
   font-size: 11px;
-  letter-spacing: 0.05em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
   border-radius: 6px;
   padding: 2px 7px;
   text-align: center;
@@ -57,117 +206,104 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   white-space: nowrap;
 }
 
-.airport-pin.origin {
-  background: #1d4ed8;
-  border-color: #93c5fd;
-}
+.airport-pin.origin { background: #1d4ed8; border-color: #93c5fd; }
+.airport-pin.dest-low { background: #065f46; border-color: #34d399; }
+.airport-pin.dest-mod { background: #92400e; border-color: #fbbf24; }
+.airport-pin.dest-high { background: #991b1b; border-color: #f87171; }
 
-.airport-pin.dest-low {
-  background: #065f46;
-  border-color: #34d399;
-}
-
-.airport-pin.dest-mod {
-  background: #92400e;
-  border-color: #fbbf24;
-}
-
-.airport-pin.dest-high {
-  background: #991b1b;
-  border-color: #f87171;
-}
-
-/* Roadway Operations Map Pins */
 .road-pin {
   font-weight: 700;
   font-size: 11px;
-  letter-spacing: 0.05em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
   border-radius: 6px;
-  padding: 2px 7px;
+  padding: 2px 8px;
   text-align: center;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
   white-space: nowrap;
 }
 
-.road-pin.origin {
-  background: #047857;
-  border: 1.5px solid #34d399;
-  color: #ecfdf5;
-}
-
-.road-pin.dest {
-  background: #0f766e;
-  border: 1.5px solid #2dd4bf;
-  color: #f0fdfa;
-}
-
-.road-pin.halt {
-  background: #0369a1;
-  border: 1.5px solid #38bdf8;
-  color: #f0f9ff;
-}
-
-.road-pin.stay {
-  background: #6d28d9;
-  border: 1.5px solid #c084fc;
-  color: #faf5ff;
-}
+.road-pin.origin { background: #047857; border: 1.5px solid #34d399; color: #ecfdf5; }
+.road-pin.dest { background: #0f766e; border: 1.5px solid #2dd4bf; color: #f0fdfa; }
+.road-pin.halt { background: #0284c7; border: 1.5px solid #38bdf8; color: #f0f9ff; }
+.road-pin.stay { background: #7c3aed; border: 1.5px solid #c084fc; color: #faf5ff; }
 
 /* Operational Risk Banner Visual Hierarchy */
 .risk-low {
-  background: linear-gradient(135deg, rgba(6, 78, 59, 0.2) 0%, rgba(17, 24, 39, 0.95) 100%);
-  border-color: rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.28) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.2) !important;
 }
 
 .risk-moderate {
-  background: linear-gradient(135deg, rgba(146, 64, 14, 0.2) 0%, rgba(17, 24, 39, 0.95) 100%);
-  border-color: rgba(245, 158, 11, 0.3);
+  background: linear-gradient(135deg, rgba(146, 64, 14, 0.28) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  box-shadow: 0 10px 25px -5px rgba(146, 64, 14, 0.2) !important;
 }
 
 .risk-high {
-  background: linear-gradient(135deg, rgba(153, 27, 27, 0.25) 0%, rgba(17, 24, 39, 0.95) 100%);
-  border-color: rgba(239, 68, 68, 0.4);
+  background: linear-gradient(135deg, rgba(153, 27, 27, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  box-shadow: 0 10px 25px -5px rgba(153, 27, 27, 0.25) !important;
 }
 
 .risk-critical {
-  background: linear-gradient(135deg, rgba(136, 19, 55, 0.35) 0%, rgba(17, 24, 39, 0.95) 100%);
-  border-color: rgba(244, 63, 94, 0.55);
-  box-shadow: 0 0 25px rgba(225, 29, 72, 0.15);
+  background: linear-gradient(135deg, rgba(136, 19, 55, 0.45) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+  border-color: rgba(244, 63, 94, 0.6) !important;
+  box-shadow: 0 0 35px rgba(225, 29, 72, 0.25) !important;
 }
 
-/* Print Styles for Corporate Advisory Memo */
-@media print {
-  body {
-    background: #ffffff !important;
-    color: #0f172a !important;
-  }
-  header, footer, #searchCard, .preset-btn, #settingsModal, #exportBriefingBtn, .no-print {
-    display: none !important;
-  }
-  #resultsContainer {
-    display: block !important;
-  }
-  .bg-surface-800, .bg-surface-900 {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border: 1px solid #e2e8f0 !important;
-    box-shadow: none !important;
-  }
-  .text-white, .text-gray-200, .text-gray-300 {
-    color: #0f172a !important;
-  }
-  .text-gray-400, .text-gray-500 {
-    color: #475569 !important;
+/* Modern Shimmer Skeleton Animation */
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.ops-shimmer-box {
+  position: relative;
+  overflow: hidden;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 0.75rem;
+}
+
+.ops-shimmer-box::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  animation: shimmer-sweep 1.8s infinite;
+}
+
+/* Chatbot Floating Companion Dock */
+#journeyChatSidePanel {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.75), 0 0 20px rgba(30, 58, 138, 0.15);
+  transition: width 0.35s var(--ease-smooth), height 0.35s var(--ease-smooth), max-width 0.35s var(--ease-smooth), max-height 0.35s var(--ease-smooth), transform 0.3s var(--ease-smooth);
+}
+
+#journeyChatSidePanel.chat-expanded {
+  width: calc(100vw - 1.5rem) !important;
+  max-width: 860px !important;
+  height: 84vh !important;
+  max-height: 880px !important;
+  right: 0.75rem !important;
+  bottom: 0.75rem !important;
+  border-color: rgba(99, 102, 241, 0.6) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 35px rgba(79, 70, 229, 0.3) !important;
+}
+
+@media (min-width: 768px) {
+  #journeyChatSidePanel.chat-expanded {
+    right: 1.5rem !important;
+    bottom: 1.5rem !important;
   }
 }
 
-/* Chatbot Input High-Contrast Visual Styling */
+/* High-Contrast Chatbot Input Styling */
 #journeyChatInput {
-  background-color: #0b0f19 !important;
+  background-color: #080d1a !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
-  border: 1px solid #374151 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   font-size: 13px !important;
 }
 
@@ -177,29 +313,105 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 #journeyChatInput:focus {
-  background-color: #111827 !important;
+  background-color: #0f172a !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   border-color: #3b82f6 !important;
-  outline: none !important;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4) !important;
+  outline: none !important;
 }
 
-/* Chatbot Expanded Mode */
-#journeyChatSidePanel.chat-expanded {
-  width: calc(100vw - 1.5rem) !important;
-  max-width: 840px !important;
-  height: 84vh !important;
-  max-height: 880px !important;
-  right: 0.75rem !important;
-  bottom: 0.75rem !important;
-  border-color: rgba(99, 102, 241, 0.5) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(59, 130, 246, 0.25) !important;
+/* Chat Message Bubbles */
+.chat-bubble-user {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(79, 70, 229, 0.25) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #ffffff;
+  border-radius: 1rem 1rem 0.25rem 1rem;
 }
 
-@media (min-width: 768px) {
-  #journeyChatSidePanel.chat-expanded {
-    right: 1.5rem !important;
-    bottom: 1.5rem !important;
+.chat-bubble-ai {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  border-radius: 1rem 1rem 1rem 0.25rem;
+}
+
+/* Toast Notifications */
+#opsToastContainer {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.ops-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.85rem;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7);
+  animation: toast-in 0.25s var(--ease-smooth);
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Print Styles for Corporate Advisory Memo */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+  header, footer, #searchCard, .preset-btn, #settingsModal, #exportBriefingBtn, #journeyChatSidePanel, #floatingChatTriggerBtn, .no-print {
+    display: none !important;
+  }
+  #resultsContainer {
+    display: block !important;
+  }
+  .ops-glass-panel, .bg-surface-800, .bg-surface-900 {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+  }
+  .text-white, .text-gray-200, .text-gray-300 {
+    color: #0f172a !important;
+  }
+  .text-gray-400, .text-gray-500 {
+    color: #475569 !important;
   }
 }
