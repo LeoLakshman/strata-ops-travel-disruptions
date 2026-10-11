@@ -97,6 +97,19 @@ async def health_check():
     }
 
 
+@app.get("/api/config")
+async def get_app_config():
+    """
+    Exposes client configuration including optional TomTom and Gemini capabilities.
+    """
+    tomtom_key = os.environ.get("TOMTOM_API_KEY", "")
+    return {
+        "gemini_configured": GeminiAIClient.is_available(),
+        "tomtom_configured": bool(tomtom_key),
+        "tomtom_key": tomtom_key or None,
+    }
+
+
 @app.post("/api/assess", response_model=AssessmentResponse)
 async def assess_travel_disruption(req: AssessmentRequest):
     """

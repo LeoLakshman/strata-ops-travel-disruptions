@@ -8,6 +8,15 @@ let flightMap = null;
 let currentAssessment = null;
 let activeEvidenceFilter = 'all';
 
+// Real-Time Visual Overlays State
+let tomtomApiKey = localStorage.getItem('strata_tomtom_api_key') || '';
+let tomtomTrafficLayer = null;
+let tomtomIncidentsLayer = null;
+let nexradRadarLayer = null;
+let isTomTomTrafficActive = false;
+let isTomTomIncidentsActive = false;
+let isNexradRadarActive = false;
+
 function getIsoDate(offsetDays = 0) {
   const d = new Date();
   d.setDate(d.getDate() + offsetDays);
@@ -42,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSettings();
   initFormHandlers();
   initMap();
+  initMapLayerToggles();
 
   const travelDateInput = document.getElementById('travelDateInput');
   const initialDate = travelDateInput?.value || getIsoDate(1);
@@ -51,51 +61,242 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Settings & API Key handling
+ * Settings & API Key handling (Gemini & TomTom Developer Keys)
  */
-function initSettings() {
+async function initSettings() {
   const settingsBtn = document.getElementById('settingsBtn');
   const settingsModal = document.getElementById('settingsModal');
   const closeSettingsBtn = document.getElementById('closeSettingsBtn');
   const saveKeyBtn = document.getElementById('saveKeyBtn');
   const clearKeyBtn = document.getElementById('clearKeyBtn');
   const keyInput = document.getElementById('geminiApiKeyInput');
+  const tomtomInput = document.getElementById('tomtomApiKeyInput');
   const aiEngineLabel = document.getElementById('aiEngineLabel');
+  const tomtomStatusIndicator = document.getElementById('tomtomStatusIndicator');
 
-  const savedKey = localStorage.getItem('strata_gemini_api_key') || '';
-  if (savedKey) {
-    keyInput.value = savedKey;
+  // Load saved Gemini Key
+  const savedGeminiKey = localStorage.getItem('strata_gemini_api_key') || '';
+  if (savedGeminiKey && keyInput) {
+    keyInput.value = savedGeminiKey;
     aiEngineLabel.textContent = 'Gemini 2.5 Active';
   }
 
-  settingsBtn.addEventListener('click', () => {
-    settingsModal.classList.remove('hidden');
-    lucide.createIcons();
-  });
+  // Load saved TomTom Key
+  const savedTomTomKey = localStorage.getItem('strata_tomtom_api_key') || '';
+  if (savedTomTomKey) {
+    tomtomApiKey = savedTomTomKey;
+    if (tomtomInput) tomtomInput.value = savedTomTomKey;
+  }
 
-  closeSettingsBtn.addEventListener('click', () => {
-    settingsModal.classList.add('hidden');
-  });
-
-  saveKeyBtn.addEventListener('click', () => {
-    const val = keyInput.value.trim();
-    if (val) {
-      localStorage.setItem('strata_gemini_api_key', val);
-      aiEngineLabel.textContent = 'Gemini 2.5 Active';
-    } else {
-      localStorage.removeItem('strata_gemini_api_key');
-      aiEngineLabel.textContent = 'AI Engine';
+  // Auto-sync config from backend if configured in .env
+  try {
+    const cfgRes = await fetch('/api/config');
+    if (cfgRes.ok) {
+      const cfg = await cfgRes.json();
+      if (cfg.tomtom_key && !tomtomApiKey) {
+        tomtomApiKey = cfg.tomtom_key;
+        if (tomtomInput) tomtomInput.value = tomtomApiKey;
+      }
     }
-    settingsModal.classList.add('hidden');
-  });
+  } catch (e) {
+    // Non-fatal config fetch
+  }
 
-  clearKeyBtn.addEventListener('click', () => {
-    keyInput.value = '';
-    localStorage.removeItem('strata_gemini_api_key');
-    aiEngineLabel.textContent = 'AI Engine';
-    settingsModal.classList.add('hidden');
-  });
+  updateTomTomUIStatus();
+
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', () => {
+      settingsModal.classList.remove('hidden');
+      lucide.createIcons();
+    });
+  }
+
+  if (closeSettingsBtn) {
+    closeSettingsBtn.addEventListener('click', () => {
+      settingsModal.classList.add('hidden');
+    });
+  }
+
+  if (saveKeyBtn) {
+    saveKeyBtn.addEventListener('click', () => {
+      // 1. Gemini Key
+      const gVal = keyInput ? keyInput.value.trim() : '';
+      if (gVal) {
+        localStorage.setItem('strata_gemini_api_key', gVal);
+        aiEngineLabel.textContent = 'Gemini 2.5 Active';
+      } else {
+        localStorage.removeItem('strata_gemini_api_key');
+        aiEngineLabel.textContent = 'AI Engine';
+      }
+
+      // 2. TomTom Key
+      const tVal = tomtomInput ? tomtomInput.value.trim() : '';
+      if (tVal) {
+        localStorage.setItem('strata_tomtom_api_key', tVal);
+        tomtomApiKey = tVal;
+      } else {
+        localStorage.removeItem('strata_tomtom_api_key');
+        tomtomApiKey = '';
+      }
+
+      updateTomTomUIStatus();
+      refreshActiveTomTomLayers();
+
+      settingsModal.classList.add('hidden');
+    });
+  }
+
+  if (clearKeyBtn) {
+    clearKeyBtn.addEventListener('click', () => {
+      if (keyInput) keyInput.value = '';
+      if (tomtomInput) tomtomInput.value = '';
+      localStorage.removeItem('strata_gemini_api_key');
+      localStorage.removeItem('strata_tomtom_api_key');
+      tomtomApiKey = '';
+      aiEngineLabel.textContent = 'AI Engine';
+      updateTomTomUIStatus();
+      refreshActiveTomTomLayers();
+      settingsModal.classList.add('hidden');
+    });
+  }
 }
+
+function updateTomTomUIStatus() {
+  const tomtomStatusIndicator = document.getElementById('tomtomStatusIndicator');
+  if (!tomtomStatusIndicator) return;
+  if (tomtomApiKey) {
+    tomtomStatusIndicator.innerHTML = `<span class="text-emerald-400 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>TomTom Key Active</span>`;
+  } else {
+    tomtomStatusIndicator.innerHTML = `<span class="text-gray-500">TomTom: No Key</span>`;
+  }
+}
+
+function refreshActiveTomTomLayers() {
+  if (!flightMap) return;
+  if (isTomTomTrafficActive) {
+    if (tomtomTrafficLayer) flightMap.removeLayer(tomtomTrafficLayer);
+    if (tomtomApiKey) {
+      tomtomTrafficLayer = L.tileLayer(
+        `https://api.tomtom.com/traffic/map/4/tile/flow/relative0/{z}/{x}/{y}.png?key=${tomtomApiKey}`,
+        { maxZoom: 18, opacity: 0.85, zIndex: 15 }
+      ).addTo(flightMap);
+    } else {
+      isTomTomTrafficActive = false;
+      const dot = document.getElementById('tomtomTrafficDot');
+      if (dot) dot.className = 'w-2 h-2 rounded-full bg-gray-500';
+    }
+  }
+
+  if (isTomTomIncidentsActive) {
+    if (tomtomIncidentsLayer) flightMap.removeLayer(tomtomIncidentsLayer);
+    if (tomtomApiKey) {
+      tomtomIncidentsLayer = L.tileLayer(
+        `https://api.tomtom.com/traffic/map/4/tile/incidents/s0/{z}/{x}/{y}.png?key=${tomtomApiKey}`,
+        { maxZoom: 18, opacity: 0.9, zIndex: 16 }
+      ).addTo(flightMap);
+    } else {
+      isTomTomIncidentsActive = false;
+      const dot = document.getElementById('tomtomIncidentsDot');
+      if (dot) dot.className = 'w-2 h-2 rounded-full bg-gray-500';
+    }
+  }
+}
+
+/**
+ * Interactive Visual Map Layer Toggles: TomTom Traffic, Incidents & NOAA Radar
+ */
+function initMapLayerToggles() {
+  const trafficBtn = document.getElementById('toggleTomTomTrafficBtn');
+  const incidentsBtn = document.getElementById('toggleTomTomIncidentsBtn');
+  const radarBtn = document.getElementById('toggleNexradRadarBtn');
+  const trafficDot = document.getElementById('tomtomTrafficDot');
+  const incidentsDot = document.getElementById('tomtomIncidentsDot');
+  const radarDot = document.getElementById('nexradRadarDot');
+  const settingsModal = document.getElementById('settingsModal');
+
+  // 1. Toggle TomTom Traffic Flow
+  if (trafficBtn) {
+    trafficBtn.addEventListener('click', () => {
+      if (!tomtomApiKey) {
+        // Prompt for key
+        if (settingsModal) {
+          settingsModal.classList.remove('hidden');
+          const tInput = document.getElementById('tomtomApiKeyInput');
+          if (tInput) tInput.focus();
+        }
+        return;
+      }
+
+      isTomTomTrafficActive = !isTomTomTrafficActive;
+      if (isTomTomTrafficActive) {
+        if (!tomtomTrafficLayer) {
+          tomtomTrafficLayer = L.tileLayer(
+            `https://api.tomtom.com/traffic/map/4/tile/flow/relative0/{z}/{x}/{y}.png?key=${tomtomApiKey}`,
+            { maxZoom: 18, opacity: 0.85, zIndex: 15 }
+          );
+        }
+        if (flightMap) tomtomTrafficLayer.addTo(flightMap);
+        trafficDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+      } else {
+        if (flightMap && tomtomTrafficLayer) flightMap.removeLayer(tomtomTrafficLayer);
+        trafficDot.className = 'w-2 h-2 rounded-full bg-gray-500';
+      }
+    });
+  }
+
+  // 2. Toggle TomTom Real-Time Incidents
+  if (incidentsBtn) {
+    incidentsBtn.addEventListener('click', () => {
+      if (!tomtomApiKey) {
+        if (settingsModal) {
+          settingsModal.classList.remove('hidden');
+          const tInput = document.getElementById('tomtomApiKeyInput');
+          if (tInput) tInput.focus();
+        }
+        return;
+      }
+
+      isTomTomIncidentsActive = !isTomTomIncidentsActive;
+      if (isTomTomIncidentsActive) {
+        if (!tomtomIncidentsLayer) {
+          tomtomIncidentsLayer = L.tileLayer(
+            `https://api.tomtom.com/traffic/map/4/tile/incidents/s0/{z}/{x}/{y}.png?key=${tomtomApiKey}`,
+            { maxZoom: 18, opacity: 0.9, zIndex: 16 }
+          );
+        }
+        if (flightMap) tomtomIncidentsLayer.addTo(flightMap);
+        incidentsDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+      } else {
+        if (flightMap && tomtomIncidentsLayer) flightMap.removeLayer(tomtomIncidentsLayer);
+        incidentsDot.className = 'w-2 h-2 rounded-full bg-gray-500';
+      }
+    });
+  }
+
+  // 3. Toggle Free NOAA NEXRAD Weather Radar
+  if (radarBtn) {
+    radarBtn.addEventListener('click', () => {
+      isNexradRadarActive = !isNexradRadarActive;
+      if (isNexradRadarActive) {
+        if (!nexradRadarLayer) {
+          nexradRadarLayer = L.tileLayer.wms('https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', {
+            layers: 'nexrad-n0r-900913',
+            format: 'image/png',
+            transparent: true,
+            opacity: 0.55,
+            zIndex: 14,
+          });
+        }
+        if (flightMap) nexradRadarLayer.addTo(flightMap);
+        radarDot.className = 'w-2 h-2 rounded-full bg-blue-400 animate-pulse';
+      } else {
+        if (flightMap && nexradRadarLayer) flightMap.removeLayer(nexradRadarLayer);
+        radarDot.className = 'w-2 h-2 rounded-full bg-gray-500';
+      }
+    });
+  }
+}
+
 
 /**
  * Live Airport Autocomplete for Origin & Destination

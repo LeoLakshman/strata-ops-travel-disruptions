@@ -361,7 +361,7 @@
           
           <!-- Interactive Route & Geometry Map -->
           <div class="bg-surface-800 rounded-2xl border border-surface-700 p-4 shadow-lg overflow-hidden">
-            <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center justify-between mb-2">
               <div class="flex items-center space-x-2">
                 <i data-lucide="map" class="w-4 h-4 text-blue-400"></i>
                 <h3 id="mapSectionTitle" class="text-xs font-bold uppercase tracking-wider text-gray-300">Airspace Corridor & Route Geometry</h3>
@@ -369,6 +369,26 @@
               <div id="routeFlightStats" class="text-xs text-gray-400 font-mono">
                 2,580 mi • Est. 6h 10m
               </div>
+            </div>
+
+            <!-- Map Visual Layer Toggles -->
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-surface-700/60 text-xs">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-gray-400 text-[11px] font-medium mr-1">Live Overlays:</span>
+                <button type="button" id="toggleTomTomTrafficBtn" class="px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 border border-surface-600 flex items-center gap-1.5 transition text-[11px]" title="Toggle TomTom Live Highway Traffic Flow (Green/Orange/Red)">
+                  <span id="tomtomTrafficDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                  <span>TomTom Traffic Flow</span>
+                </button>
+                <button type="button" id="toggleTomTomIncidentsBtn" class="px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 border border-surface-600 flex items-center gap-1.5 transition text-[11px]" title="Toggle TomTom Real-Time Road Closures & Incidents">
+                  <span id="tomtomIncidentsDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                  <span>TomTom Incidents</span>
+                </button>
+                <button type="button" id="toggleNexradRadarBtn" class="px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 border border-surface-600 flex items-center gap-1.5 transition text-[11px]" title="Toggle NOAA NEXRAD Precipitation Storm Radar (Free)">
+                  <span id="nexradRadarDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                  <span>NOAA Storm Radar</span>
+                </button>
+              </div>
+              <div id="tomtomStatusIndicator" class="text-[10px] text-gray-400 font-mono"></div>
             </div>
             <!-- Leaflet Container -->
             <div id="mapContainer" class="w-full h-64 rounded-xl border border-surface-700/70 z-10"></div>
@@ -707,9 +727,19 @@
         <span class="text-[11px] text-gray-500 mt-1 block">Free tier available from <a href="https://aistudio.google.com/" target="_blank" class="text-blue-400 underline">Google AI Studio</a>.</span>
       </div>
 
+      <div class="pt-2 border-t border-surface-700/60">
+        <label class="block text-xs font-semibold text-gray-300 mb-1 flex items-center justify-between">
+          <span>TomTom Developer API Key (Traffic & Maps)</span>
+          <span class="text-[10px] text-emerald-400 font-mono">Live Visuals</span>
+        </label>
+        <input type="password" id="tomtomApiKeyInput" placeholder="Paste your TomTom API key..." 
+          class="w-full px-3 py-2 bg-surface-900 border border-surface-700 rounded-xl text-white text-xs focus:outline-none focus:border-blue-500 font-mono">
+        <span class="text-[11px] text-gray-500 mt-1 block">Unlocks real-time highway traffic flow layers (relative/absolute delay) & incident markers from <a href="https://developer.tomtom.com/" target="_blank" class="text-blue-400 underline">developer.tomtom.com</a>.</span>
+      </div>
+
       <div class="flex items-center justify-end space-x-2 pt-2">
-        <button id="clearKeyBtn" class="px-3 py-1.5 text-xs text-gray-400 hover:text-white rounded-lg">Clear Key</button>
-        <button id="saveKeyBtn" class="px-4 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg shadow">Save & Close</button>
+        <button id="clearKeyBtn" class="px-3 py-1.5 text-xs text-gray-400 hover:text-white rounded-lg">Clear Keys</button>
+        <button id="saveKeyBtn" class="px-4 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg shadow">Save & Apply</button>
       </div>
     </div>
   </div>
