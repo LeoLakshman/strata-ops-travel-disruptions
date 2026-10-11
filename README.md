@@ -110,25 +110,52 @@ Operations decisions require knowing *how sure* the system is:
 1. **Nationwide U.S. Airport & City Resolution (2,036+ Airports)**:
    - Exhaustive coverage of 2,036 U.S. commercial, regional, and municipal airports (e.g. `LBB` Lubbock Preston Smith, `DFW`, `JFK`, `SFO`, `DEN`, `ORD`).
    - Supports 8,825+ search aliases: IATA codes (`LBB`, `LAX`), ICAO codes (`KLBB`, `KDFW`), city and regional names (`"Lubbock, TX"`, `"Dallas"`, `"San Francisco"`, `"Bay Area"`), plus dynamic network geocoding fallback.
-2. **Dedicated Roadway Dynamics & Highway Routing Preferences**:
-   - In **Roadway / Driving Mode**, flight-specific dynamics (FAA Ground Stops, airport ATC delays, great-circle flight arcs) are suppressed in favor of dedicated highway operations:
+2. **Evaluated Alternate Routes & Dynamic One-Click Rerouting**:
+   - When disruptions or delays are identified, the platform automatically synthesizes lower-risk alternatives:
+     - **Co-Terminal Regional Airport Bypasses**: e.g., Fly into **OAK (Oakland)** or **SJC (San Jose)** when SFO faces low ceilings or FAA Ground Delay Programs, saving 40+ risk points and 60+ minutes of delay.
+     - **Multimodal Highway Driving Alternative**: For trips under 550 miles, computes direct interstate driving durations and road conditions immune to airline ground stops.
+     - **Connecting Hub Weather Diversions**: Routes long transcontinental journeys south of Midwest storm fronts via clear VFR hubs (e.g., DFW or PHX).
+     - **Upper Plains / Weather-Resilient Highway Bypasses**: Flat terrain corridors (e.g., US-287/US-82) avoiding mountain gradients and metro choke points.
+   - **One-Click Reroute Execution**: Clicking **[Switch to This Route]** auto-populates the assessment form and instantly runs live telemetry for the new route.
+
+3. **Interactive Journey Companion AI Assistant (Ask Ops AI)**:
+   - An interactive conversational dispatcher embedded directly into the live dashboard (`POST /api/chat-assistant`).
+   - Context-aware intelligence grounded in the trip's live telemetry, FAA notices, METAR observations, road conditions, and alternate routes.
+   - Handles situational inquiries:
+     - *Delay & Cancellation Recovery Protocols* (airline app rebooking rules, carry-on guidance).
+     - *Flight vs Driving Comparative Analysis*.
+     - *Automated Manager / Stakeholder Update Notice Generator* (drafts professional email alerts ready to send).
+     - *Interactive dynamic follow-up prompt chips*.
+
+4. **Interactive What-If Scenario Sensitivity Simulation**:
+   - Real-time tester embedded in the Uncertainty card allowing operations coordinators to simulate shifting variables:
+     - *Shift Departure to Early Morning (06:00-09:00)*: Visualizes runway throughput improvements and convective storm drops (-55% congestion).
+     - *Severe Storm Front Intensification (+30% precip / 45kt gusts)*: Simulates immediate escalation to formal FAA Ground Delay Program.
+     - *Ground Stop Cleared / Visual Approach Restored*: Simulates rapid clearance of arrival meter backlogs.
+
+5. **Dedicated Roadway Dynamics & Highway Routing Preferences**:
+   - In **Roadway / Driving Mode**, flight-specific dynamics are suppressed in favor of dedicated highway operations:
      - **Interstate Corridors (Fastest)**: Uses major interstate freeways (e.g. `I-20 W`, `I-80 W`, `I-95 S`) for minimum transit duration.
      - **State Highways (Scenic / Non-Toll)**: Routes via state and U.S. highways (e.g. `TX-114 W / US-380 W`) to bypass tolls and high-density urban choke points.
      - **Weather-Resilient Bypass**: Routes via lower-elevation bypasses (e.g. `US-84 W`) to circumvent high-elevation mountain passes and winter snowstorm corridors.
    - **Tactical Waypoint Halts**: Geocoded milestone stops every 2–4 hours for driver fatigue mitigation, EV Fast Charging hubs, and rest plazas.
    - **Roadside Lodging Contingencies**: Vetted motels and business hotels along the drive with explicit operational triggers (e.g. *Execute booking if pass closure or road blizzard is active past 17:00*).
-   - **Interactive Road Corridor Map**: Visualizes the actual highway polyline, origin/destination road nodes, halt pins (`HALT 1`, `HALT 2`, `HALT 3`), and stay pins (`LODGE`).
-3. **Fast 1-Click Evaluation Presets**:
+   - **Interactive Road Corridor Map**: Visualizes the actual highway polyline with TomTom Routing / OSRM turn-by-turn geometry, origin/destination road nodes, halt pins (`HALT 1`, `HALT 2`, `HALT 3`), and stay pins (`LODGE`) snapped directly onto the route.
+
+6. **Fast 1-Click Evaluation Presets**:
    - `JFK → SFO (Tomorrow)`: Coastal fog, transcontinental corridor, and terminal wind outlook.
    - `ORD → BOS (Today)`: Live FAA Ground Delay Program at Boston Logan due to runway construction.
    - `ATL → MIA (Tomorrow)`: Convective thunderstorm and subtropical shower tracking.
    - `DEN → SEA (Tomorrow)`: Mountain wave turbulence and Pacific Northwest marine layer.
-4. **Hour-by-Hour Travel Day Trajectory**:
+
+7. **Hour-by-Hour Travel Day Trajectory**:
    - 24-hour timeline displaying temperature, precipitation probability, wind gusts, and disruption index for each hour—automatically highlighting the **Optimal Flight Window**.
-5. **Dual-Role Operational Action Matrix**:
+
+8. **Dual-Role Operational Action Matrix**:
    - **For Traveler**: Departure rebooking windows, carry-on luggage strategy, airport buffer time, and Northeast corridor rail alternatives.
    - **For Operations Team**: Itinerary priority watch flags, minimum connection window enforcement, airline waiver monitoring, and duty of care lodging pre-authorizations.
-6. **Print / Export Ops Briefing**:
+
+9. **Print / Export Ops Briefing**:
    - One-click formatted corporate travel advisory ready for emailing or printing.
 
 ---
