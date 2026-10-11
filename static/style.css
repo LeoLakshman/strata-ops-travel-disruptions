@@ -1,112 +1,254 @@
 /* ==========================================================================
-   STRATA OPS // PRINCIPAL DESIGN SYSTEM & OPERATIONS HUD
-   High-Performance Dark Mode, Glassmorphism, Micro-Interactions & Telemetry
+   STRATA OPS // GOOGLE & FIREBASE DESIGN SYSTEM
+   Clean, Modern, Accessible Canvas inspired by Google.com, Careers.google.com & Firebase
    ========================================================================== */
 
 :root {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans: "Plus Jakarta Sans", "Google Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, Menlo, Monaco, Consolas, monospace;
+
+  /* Google & Firebase Color Tokens */
+  --google-blue: #1a73e8;
+  --google-blue-hover: #1557b0;
+  --google-blue-light: #e8f0fe;
+  --google-blue-border: #aecbfa;
+
+  --google-green: #188038;
+  --google-green-hover: #137333;
+  --google-green-light: #e6f4ea;
+  --google-green-border: #a8dab5;
+
+  --google-yellow: #f29900;
+  --google-yellow-light: #fef7e0;
+  --google-yellow-border: #fdd663;
+
+  --google-red: #d93025;
+  --google-red-hover: #c5221f;
+  --google-red-light: #fce8e6;
+  --google-red-border: #f5c2c7;
+
+  --google-purple: #9334e6;
+  --google-purple-light: #f3e8ff;
+  --google-purple-border: #d8b4fe;
+
+  /* Neutral Surfaces & Ink */
+  --bg-canvas: #f8fafd;
+  --surface-card: #ffffff;
+  --surface-subtle: #f1f3f4;
+  --surface-hover: #f8f9fa;
   
-  /* Color Tokens */
-  --bg-deep: #060911;
-  --surface-950: #080d1a;
-  --surface-900: #0b1122;
-  --surface-850: #0f172a;
-  --surface-800: #131d33;
-  --surface-700: #1e293b;
-  --surface-600: #334155;
-  
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-focus: rgba(59, 130, 246, 0.6);
-  --border-hover: rgba(255, 255, 255, 0.14);
-  
-  --glow-blue: rgba(59, 130, 246, 0.18);
-  --glow-indigo: rgba(99, 102, 241, 0.22);
-  --glow-emerald: rgba(16, 185, 129, 0.2);
-  --glow-rose: rgba(244, 63, 94, 0.25);
-  
-  /* Motion & Easing */
-  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --transition-fast: 150ms var(--ease-smooth);
-  --transition-normal: 240ms var(--ease-smooth);
-  --transition-slow: 400ms var(--ease-smooth);
+  --border-subtle: #dadce0;
+  --border-light: #e8eaed;
+  --border-focus: #1a73e8;
+
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --text-tertiary: #80868b;
+
+  /* Google Material Elevation Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.1), 0 1px 3px 1px rgba(60, 64, 67, 0.06);
+  --shadow-md: 0 1px 3px 0 rgba(60, 64, 67, 0.2), 0 4px 8px 3px rgba(60, 64, 67, 0.1);
+  --shadow-lg: 0 4px 20px 0 rgba(60, 64, 67, 0.15);
+  --shadow-floating: 0 12px 36px 0 rgba(60, 64, 67, 0.2);
+
+  --ease-google: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 150ms var(--ease-google);
+  --transition-normal: 250ms var(--ease-google);
 }
 
-/* Base Canvas & Ambient Radial Glow */
+/* Base Canvas & Typography */
 body {
-  background-color: var(--bg-deep) !important;
-  background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30, 58, 138, 0.22) 0%, transparent 60%),
-    radial-gradient(circle at 100% 60%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 0% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 35%);
-  background-attachment: fixed;
-  color: #f1f5f9;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  background-color: var(--bg-canvas) !important;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Glassmorphic Operations Panels */
-.ops-glass-panel {
-  background: rgba(15, 23, 42, 0.72) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+/* Google Elevated Card Component */
+.google-card {
+  background: var(--surface-card) !important;
   border: 1px solid var(--border-subtle) !important;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-normal), border-color var(--transition-normal);
 }
 
-.ops-glass-panel:hover {
-  border-color: var(--border-hover) !important;
+.google-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #c6c9ce !important;
 }
 
-/* High-Contrast Interactive Form Inputs */
+/* Google Pill Chips */
+.google-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.google-chip:hover {
+  background: var(--surface-subtle);
+  color: var(--text-primary);
+  border-color: #bdc1c6;
+}
+
+.google-chip.active {
+  background: var(--google-blue-light) !important;
+  color: var(--google-blue) !important;
+  border-color: var(--google-blue-border) !important;
+  font-weight: 600;
+}
+
+/* Modern Google Form Inputs */
 input[type="text"],
 input[type="password"],
 input[type="date"],
 select {
-  background-color: #0b1122 !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
-  transition: all var(--transition-fast);
+  background-color: #ffffff !important;
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+  font-size: 0.875rem !important;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast) !important;
 }
 
 input[type="text"]::placeholder,
 input[type="password"]::placeholder {
-  color: #64748b !important;
-  -webkit-text-fill-color: #64748b !important;
+  color: var(--text-tertiary) !important;
+  -webkit-text-fill-color: var(--text-tertiary) !important;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="date"]:focus,
 select:focus {
-  background-color: #0f172a !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  background-color: #ffffff !important;
+  border-color: var(--google-blue) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2) !important;
   outline: none !important;
 }
 
-/* Dark Mode Native Date Picker Calendar Indicator */
 input[type="date"] {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.85) sepia(1) saturate(5) hue-rotate(185deg);
-  cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+/* Google Primary Button */
+.btn-google-primary {
+  background-color: var(--google-blue) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(26, 115, 232, 0.35);
+  transition: all var(--transition-fast);
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  opacity: 1;
+.btn-google-primary:hover {
+  background-color: var(--google-blue-hover) !important;
+  box-shadow: 0 2px 6px rgba(26, 115, 232, 0.45);
 }
 
-/* Tabular Figures for All Telemetry & Metric Gauges */
+.btn-google-primary:active {
+  transform: scale(0.985);
+}
+
+/* Google Segmented Controls */
+.google-segmented-group {
+  display: inline-flex;
+  padding: 0.25rem;
+  background: var(--surface-subtle);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-light);
+}
+
+/* Leaflet Map Frame (Clean Light Google Maps style) */
+.google-map-frame {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  background: #f1f3f4;
+}
+
+.leaflet-container {
+  background-color: #f1f3f4 !important;
+  font-family: inherit !important;
+}
+
+/* Clean Google Map Pins */
+.google-map-pin {
+  background: #ffffff;
+  border-radius: 9999px;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(60, 64, 67, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+}
+
+.google-map-pin.origin {
+  border: 2px solid var(--google-blue);
+  color: var(--google-blue);
+}
+
+.google-map-pin.dest {
+  border: 2px solid var(--google-green);
+  color: var(--google-green);
+}
+
+.google-map-pin.halt {
+  border: 2px solid #0284c7;
+  color: #0369a1;
+  background: #f0f9ff;
+}
+
+.google-map-pin.stay {
+  border: 2px solid var(--google-purple);
+  color: var(--google-purple);
+  background: #faf5ff;
+}
+
+/* Risk Banner Themes (Firebase / Google Pastel Severity Cards) */
+.risk-card-low {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%) !important;
+  border-left: 6px solid var(--google-green) !important;
+  border-color: var(--google-green-border);
+}
+
+.risk-card-moderate {
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%) !important;
+  border-left: 6px solid var(--google-yellow) !important;
+  border-color: var(--google-yellow-border);
+}
+
+.risk-card-high {
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%) !important;
+  border-left: 6px solid var(--google-red) !important;
+  border-color: var(--google-red-border);
+}
+
+.risk-card-critical {
+  background: linear-gradient(135deg, #fff1f2 0%, #ffffff 100%) !important;
+  border-left: 6px solid #be123c !important;
+  border-color: #fca5a5;
+}
+
+/* Tabular figures for telemetry numbers */
 .tabular-nums,
 [data-metric],
 #riskScoreNumber,
@@ -116,227 +258,28 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   font-variant-numeric: tabular-nums;
 }
 
-/* Tactile Micro-Interactions on Buttons & Chips */
-button {
-  user-select: none;
-  -webkit-user-select: none;
-  transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-button:active {
-  transform: scale(0.975);
-}
-
-/* Primary Executive CTA Button */
-#submitBtn {
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-
-#submitBtn::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -60%;
-  width: 40%;
-  height: 200%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
-  transform: rotate(25deg);
-  transition: left 0.75s ease;
-}
-
-#submitBtn:hover::after {
-  left: 130%;
-}
-
-/* Pulse Beacon Animation */
-@keyframes beacon-ping {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-}
-
-.beacon-pulse {
-  animation: beacon-ping 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Operations HUD Frame for Leaflet Map */
-.map-hud-frame {
-  position: relative;
-  border-radius: 1rem;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
-}
-
-.map-hud-corner {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border-color: rgba(96, 165, 250, 0.6);
-  pointer-events: none;
-  z-index: 20;
-}
-
-.map-hud-corner.tl { top: 8px; left: 8px; border-top: 2px solid; border-left: 2px solid; }
-.map-hud-corner.tr { top: 8px; right: 8px; border-top: 2px solid; border-right: 2px solid; }
-.map-hud-corner.bl { bottom: 8px; left: 8px; border-bottom: 2px solid; border-left: 2px solid; }
-.map-hud-corner.br { bottom: 8px; right: 8px; border-bottom: 2px solid; border-right: 2px solid; }
-
-/* Custom Leaflet Map Dark Styling */
-.leaflet-container {
-  background-color: #060911 !important;
-  font-family: inherit !important;
-}
-
-/* Custom Route Markers */
-.airport-pin {
-  background: #1e3a8a;
-  border: 1.5px solid #60a5fa;
-  color: #f8fafc;
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  font-family: var(--font-mono);
-  border-radius: 6px;
-  padding: 2px 7px;
-  text-align: center;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
-  white-space: nowrap;
-}
-
-.airport-pin.origin { background: #1d4ed8; border-color: #93c5fd; }
-.airport-pin.dest-low { background: #065f46; border-color: #34d399; }
-.airport-pin.dest-mod { background: #92400e; border-color: #fbbf24; }
-.airport-pin.dest-high { background: #991b1b; border-color: #f87171; }
-
-.road-pin {
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  font-family: var(--font-mono);
-  border-radius: 6px;
-  padding: 2px 8px;
-  text-align: center;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
-  white-space: nowrap;
-}
-
-.road-pin.origin { background: #047857; border: 1.5px solid #34d399; color: #ecfdf5; }
-.road-pin.dest { background: #0f766e; border: 1.5px solid #2dd4bf; color: #f0fdfa; }
-.road-pin.halt { background: #0284c7; border: 1.5px solid #38bdf8; color: #f0f9ff; }
-.road-pin.stay { background: #7c3aed; border: 1.5px solid #c084fc; color: #faf5ff; }
-
-/* Operational Risk Banner Visual Hierarchy */
-.risk-low {
-  background: linear-gradient(135deg, rgba(6, 78, 59, 0.28) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-  border-color: rgba(16, 185, 129, 0.35) !important;
-  box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.2) !important;
-}
-
-.risk-moderate {
-  background: linear-gradient(135deg, rgba(146, 64, 14, 0.28) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-  border-color: rgba(245, 158, 11, 0.35) !important;
-  box-shadow: 0 10px 25px -5px rgba(146, 64, 14, 0.2) !important;
-}
-
-.risk-high {
-  background: linear-gradient(135deg, rgba(153, 27, 27, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-  border-color: rgba(239, 68, 68, 0.45) !important;
-  box-shadow: 0 10px 25px -5px rgba(153, 27, 27, 0.25) !important;
-}
-
-.risk-critical {
-  background: linear-gradient(135deg, rgba(136, 19, 55, 0.45) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-  border-color: rgba(244, 63, 94, 0.6) !important;
-  box-shadow: 0 0 35px rgba(225, 29, 72, 0.25) !important;
-}
-
-/* Modern Shimmer Skeleton Animation */
-@keyframes shimmer-sweep {
+/* Shimmer Skeleton (Google Clean Light Style) */
+@keyframes google-shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
 
-.ops-shimmer-box {
+.google-shimmer {
   position: relative;
   overflow: hidden;
-  background: rgba(30, 41, 59, 0.5);
-  border-radius: 0.75rem;
+  background: #e8eaed;
+  border-radius: 0.5rem;
 }
 
-.ops-shimmer-box::after {
+.google-shimmer::after {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-  animation: shimmer-sweep 1.8s infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: google-shimmer 1.6s infinite;
 }
 
-/* Chatbot Floating Companion Dock */
-#journeyChatSidePanel {
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.75), 0 0 20px rgba(30, 58, 138, 0.15);
-  transition: width 0.35s var(--ease-smooth), height 0.35s var(--ease-smooth), max-width 0.35s var(--ease-smooth), max-height 0.35s var(--ease-smooth), transform 0.3s var(--ease-smooth);
-}
-
-#journeyChatSidePanel.chat-expanded {
-  width: calc(100vw - 1.5rem) !important;
-  max-width: 860px !important;
-  height: 84vh !important;
-  max-height: 880px !important;
-  right: 0.75rem !important;
-  bottom: 0.75rem !important;
-  border-color: rgba(99, 102, 241, 0.6) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 35px rgba(79, 70, 229, 0.3) !important;
-}
-
-@media (min-width: 768px) {
-  #journeyChatSidePanel.chat-expanded {
-    right: 1.5rem !important;
-    bottom: 1.5rem !important;
-  }
-}
-
-/* High-Contrast Chatbot Input Styling */
-#journeyChatInput {
-  background-color: #080d1a !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  font-size: 13px !important;
-}
-
-#journeyChatInput::placeholder {
-  color: #94a3b8 !important;
-  -webkit-text-fill-color: #94a3b8 !important;
-}
-
-#journeyChatInput:focus {
-  background-color: #0f172a !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4) !important;
-  outline: none !important;
-}
-
-/* Chat Message Bubbles */
-.chat-bubble-user {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(79, 70, 229, 0.25) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.4);
-  color: #ffffff;
-  border-radius: 1rem 1rem 0.25rem 1rem;
-}
-
-.chat-bubble-ai {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #e2e8f0;
-  border-radius: 1rem 1rem 1rem 0.25rem;
-}
-
-/* Toast Notifications */
+/* Material 3 Floating Snackbar / Toast */
 #opsToastContainer {
   position: fixed;
   bottom: 1.5rem;
@@ -353,28 +296,78 @@ button:active {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 1rem;
-  border-radius: 0.85rem;
-  background: rgba(15, 23, 42, 0.92);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: 9999px;
+  background: #202124;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 0.8125rem;
   font-weight: 500;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7);
-  animation: toast-in 0.25s var(--ease-smooth);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  animation: toast-bounce 0.25s var(--ease-google);
 }
 
-@keyframes toast-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.95); }
+@keyframes toast-bounce {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
   to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* AI Journey Companion (Google Gemini / Firebase Drawer Aesthetic) */
+#journeyChatSidePanel {
+  background: #ffffff !important;
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: var(--shadow-floating);
+  transition: width 0.35s var(--ease-google), height 0.35s var(--ease-google), max-width 0.35s var(--ease-google), max-height 0.35s var(--ease-google);
+}
+
+#journeyChatSidePanel.chat-expanded {
+  width: calc(100vw - 2rem) !important;
+  max-width: 860px !important;
+  height: 85vh !important;
+  max-height: 880px !important;
+  right: 1rem !important;
+  bottom: 1rem !important;
+  border-color: var(--google-blue) !important;
+}
+
+/* Chat Input Styling */
+#journeyChatInput {
+  background-color: #ffffff !important;
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  border: 1px solid var(--border-subtle) !important;
+  font-size: 13px !important;
+}
+
+#journeyChatInput::placeholder {
+  color: var(--text-tertiary) !important;
+  -webkit-text-fill-color: var(--text-tertiary) !important;
+}
+
+#journeyChatInput:focus {
+  border-color: var(--google-blue) !important;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2) !important;
+}
+
+/* Chat Message Bubbles (Google Style) */
+.chat-bubble-user {
+  background: var(--google-blue-light);
+  border: 1px solid var(--google-blue-border);
+  color: #174ea6;
+  border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+}
+
+.chat-bubble-ai {
+  background: #f8f9fa;
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
 }
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -382,36 +375,27 @@ button:active {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: #dadce0;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #bdc1c6;
 }
 
-/* Print Styles for Corporate Advisory Memo */
+/* Print Optimization */
 @media print {
   body {
     background: #ffffff !important;
-    color: #0f172a !important;
   }
-  header, footer, #searchCard, .preset-btn, #settingsModal, #exportBriefingBtn, #journeyChatSidePanel, #floatingChatTriggerBtn, .no-print {
+  header, footer, #searchCard, #settingsModal, #exportBriefingBtn, #journeyChatSidePanel, #floatingChatTriggerBtn, .no-print {
     display: none !important;
   }
   #resultsContainer {
     display: block !important;
   }
-  .ops-glass-panel, .bg-surface-800, .bg-surface-900 {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border: 1px solid #cbd5e1 !important;
+  .google-card {
     box-shadow: none !important;
-  }
-  .text-white, .text-gray-200, .text-gray-300 {
-    color: #0f172a !important;
-  }
-  .text-gray-400, .text-gray-500 {
-    color: #475569 !important;
+    border: 1px solid #dadce0 !important;
   }
 }

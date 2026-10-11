@@ -71,15 +71,18 @@ function syncDatePresetButtons(selectedDate) {
   const todayStr = getIsoDate(0);
   const tmrwStr = getIsoDate(1);
 
+  const activeCls = 'text-[10px] px-2.5 py-0.5 rounded-full bg-[#1a73e8] text-white font-semibold transition shadow-xs';
+  const inactiveCls = 'text-[10px] px-2.5 py-0.5 rounded-full bg-[#f1f3f4] hover:bg-[#e8eaed] text-[#5f6368] font-medium transition';
+
   if (selectedDate === todayStr) {
-    todayBtn.className = 'text-[10px] px-2 py-0.5 rounded bg-blue-600 text-white font-semibold transition';
-    tmrwBtn.className = 'text-[10px] px-2 py-0.5 rounded bg-surface-700 hover:bg-surface-600 text-gray-300 font-medium transition';
+    todayBtn.className = activeCls;
+    tmrwBtn.className = inactiveCls;
   } else if (selectedDate === tmrwStr) {
-    tmrwBtn.className = 'text-[10px] px-2 py-0.5 rounded bg-blue-600 text-white font-semibold transition';
-    todayBtn.className = 'text-[10px] px-2 py-0.5 rounded bg-surface-700 hover:bg-surface-600 text-gray-300 font-medium transition';
+    tmrwBtn.className = activeCls;
+    todayBtn.className = inactiveCls;
   } else {
-    todayBtn.className = 'text-[10px] px-2 py-0.5 rounded bg-surface-700 hover:bg-surface-600 text-gray-300 font-medium transition';
-    tmrwBtn.className = 'text-[10px] px-2 py-0.5 rounded bg-surface-700 hover:bg-surface-600 text-gray-300 font-medium transition';
+    todayBtn.className = inactiveCls;
+    tmrwBtn.className = inactiveCls;
   }
 }
 
@@ -387,14 +390,14 @@ function setupAirportAutocomplete(inputId, suggestionsId) {
           const item = document.createElement('button');
           item.type = 'button';
           item.setAttribute('data-idx', idx);
-          item.className = 'autocomplete-item w-full px-3 py-2 text-left hover:bg-surface-800 flex items-center justify-between group transition cursor-pointer text-xs';
+          item.className = 'autocomplete-item w-full px-3.5 py-2.5 text-left hover:bg-[#f1f3f4] flex items-center justify-between group transition cursor-pointer text-xs';
           item.innerHTML = `
             <div class="truncate mr-2">
-              <span class="font-mono font-bold text-white group-hover:text-blue-400">${apt.iata}</span>
-              <span class="text-[11px] text-gray-300 ml-1.5 font-medium">${apt.city}${apt.state ? ', ' + apt.state : ''}</span>
-              <div class="text-[10px] text-gray-400 truncate">${apt.name}</div>
+              <span class="font-mono font-bold text-[#1a73e8] group-hover:text-[#1557b0]">${apt.iata}</span>
+              <span class="text-[11px] text-[#202124] ml-1.5 font-medium">${apt.city}${apt.state ? ', ' + apt.state : ''}</span>
+              <div class="text-[10px] text-[#5f6368] truncate">${apt.name}</div>
             </div>
-            <span class="text-[9px] font-mono text-gray-500 uppercase px-1.5 py-0.5 rounded bg-surface-800 border border-surface-700 flex-shrink-0">${apt.icao || ''}</span>
+            <span class="text-[9px] font-mono text-[#5f6368] uppercase px-1.5 py-0.5 rounded bg-[#f1f3f4] border border-[#dadce0] flex-shrink-0">${apt.icao || ''}</span>
           `;
           item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -428,14 +431,14 @@ function setupAirportAutocomplete(inputId, suggestionsId) {
       e.preventDefault();
       activeIndex = (activeIndex + 1) % items.length;
       items.forEach((item, idx) => {
-        item.classList.toggle('bg-surface-800', idx === activeIndex);
+        item.classList.toggle('bg-[#e8f0fe]', idx === activeIndex);
       });
       items[activeIndex].scrollIntoView({ block: 'nearest' });
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       activeIndex = (activeIndex - 1 + items.length) % items.length;
       items.forEach((item, idx) => {
-        item.classList.toggle('bg-surface-800', idx === activeIndex);
+        item.classList.toggle('bg-[#e8f0fe]', idx === activeIndex);
       });
       items[activeIndex].scrollIntoView({ block: 'nearest' });
     } else if (e.key === 'Enter') {
@@ -543,11 +546,11 @@ function initFormHandlers() {
   document.querySelectorAll('.mode-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.mode-tab-btn').forEach(b => {
-        b.classList.remove('bg-blue-600', 'text-white');
-        b.classList.add('text-gray-400');
+        b.classList.remove('font-semibold', 'text-white', 'bg-[#1a73e8]', 'shadow-sm');
+        b.classList.add('font-medium', 'text-[#5f6368]');
       });
-      btn.classList.add('bg-blue-600', 'text-white');
-      btn.classList.remove('text-gray-400');
+      btn.classList.add('font-semibold', 'text-white', 'bg-[#1a73e8]', 'shadow-sm');
+      btn.classList.remove('text-[#5f6368]', 'font-medium');
       const mode = btn.getAttribute('data-mode');
       document.getElementById('travelModeInput').value = mode;
 
@@ -584,11 +587,11 @@ function initFormHandlers() {
   document.querySelectorAll('.hw-pref-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.hw-pref-btn').forEach(b => {
-        b.classList.remove('bg-emerald-600', 'text-white');
-        b.classList.add('text-gray-400');
+        b.classList.remove('font-semibold', 'text-white', 'bg-[#188038]');
+        b.classList.add('font-medium', 'text-[#5f6368]');
       });
-      btn.classList.add('bg-emerald-600', 'text-white');
-      btn.classList.remove('text-gray-400');
+      btn.classList.add('font-semibold', 'text-white', 'bg-[#188038]');
+      btn.classList.remove('font-medium', 'text-[#5f6368]');
       const pref = btn.getAttribute('data-pref');
       const input = document.getElementById('highwayPrefInput');
       if (input) input.value = pref;
@@ -599,11 +602,11 @@ function initFormHandlers() {
   document.querySelectorAll('.halt-count-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.halt-count-btn').forEach(b => {
-        b.classList.remove('bg-blue-600', 'text-white');
-        b.classList.add('text-gray-400');
+        b.classList.remove('font-semibold', 'text-white', 'bg-[#1a73e8]');
+        b.classList.add('font-medium', 'text-[#5f6368]');
       });
-      btn.classList.add('bg-blue-600', 'text-white');
-      btn.classList.remove('text-gray-400');
+      btn.classList.add('font-semibold', 'text-white', 'bg-[#1a73e8]');
+      btn.classList.remove('font-medium', 'text-[#5f6368]');
       const halts = btn.getAttribute('data-halts');
       const input = document.getElementById('desiredHaltCountInput');
       if (input) input.value = halts;
@@ -611,19 +614,19 @@ function initFormHandlers() {
   });
 
   travelerTab.addEventListener('click', () => {
-    travelerTab.classList.add('bg-blue-600', 'text-white');
-    travelerTab.classList.remove('text-gray-400');
-    opsTab.classList.remove('bg-blue-600', 'text-white');
-    opsTab.classList.add('text-gray-400');
+    travelerTab.classList.add('font-semibold', 'text-white', 'bg-[#1a73e8]', 'shadow-sm');
+    travelerTab.classList.remove('font-medium', 'text-[#5f6368]');
+    opsTab.classList.remove('font-semibold', 'text-white', 'bg-[#1a73e8]', 'shadow-sm');
+    opsTab.classList.add('font-medium', 'text-[#5f6368]');
     travelerList.classList.remove('hidden');
     opsList.classList.add('hidden');
   });
 
   opsTab.addEventListener('click', () => {
-    opsTab.classList.add('bg-blue-600', 'text-white');
-    opsTab.classList.remove('text-gray-400');
-    travelerTab.classList.remove('bg-blue-600', 'text-white');
-    travelerTab.classList.add('text-gray-400');
+    opsTab.classList.add('font-semibold', 'text-white', 'bg-[#1a73e8]', 'shadow-sm');
+    opsTab.classList.remove('font-medium', 'text-[#5f6368]');
+    travelerTab.classList.remove('font-semibold', 'text-white', 'bg-[#1a73e8]', 'shadow-sm');
+    travelerTab.classList.add('font-medium', 'text-[#5f6368]');
     opsList.classList.remove('hidden');
     travelerList.classList.add('hidden');
   });
@@ -632,11 +635,9 @@ function initFormHandlers() {
   document.querySelectorAll('.ev-filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.ev-filter-btn').forEach(b => {
-        b.classList.remove('bg-blue-600', 'text-white');
-        b.classList.add('bg-surface-700', 'text-gray-300');
+        b.classList.remove('active');
       });
-      btn.classList.add('bg-blue-600', 'text-white');
-      btn.classList.remove('bg-surface-700', 'text-gray-300');
+      btn.classList.add('active');
       activeEvidenceFilter = btn.getAttribute('data-filter');
       renderEvidence();
     });
@@ -781,37 +782,32 @@ function renderResults(data) {
   circle.style.strokeDashoffset = offset;
 
   // Gauge color based on level
-  circle.classList.remove('text-emerald-500', 'text-amber-500', 'text-rose-500', 'text-red-600');
+  circle.classList.remove('text-[#188038]', 'text-[#f29900]', 'text-[#d93025]', 'text-[#be123c]', 'text-emerald-500', 'text-amber-500', 'text-rose-500', 'text-red-600');
   const banner = document.getElementById('riskBanner');
-  banner.classList.remove('risk-low', 'risk-moderate', 'risk-high', 'risk-critical');
+  banner.classList.remove('risk-card-low', 'risk-card-moderate', 'risk-card-high', 'risk-card-critical', 'risk-low', 'risk-moderate', 'risk-high', 'risk-critical');
 
   const badge = document.getElementById('riskLevelBadge');
-  badge.classList.remove(
-    'bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/30',
-    'bg-amber-500/20', 'text-amber-400', 'border-amber-500/30',
-    'bg-rose-500/20', 'text-rose-400', 'border-rose-500/30',
-    'bg-red-500/30', 'text-red-300', 'border-red-500/50'
-  );
+  badge.className = 'text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full border';
 
   if (level === 'LOW') {
-    circle.classList.add('text-emerald-500');
-    banner.classList.add('risk-low');
-    badge.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/30');
+    circle.classList.add('text-[#188038]');
+    banner.classList.add('risk-card-low');
+    badge.classList.add('bg-[#e6f4ea]', 'text-[#137333]', 'border-[#a8dab5]');
     badge.textContent = 'LOW DISRUPTION RISK';
   } else if (level === 'MODERATE') {
-    circle.classList.add('text-amber-500');
-    banner.classList.add('risk-moderate');
-    badge.classList.add('bg-amber-500/20', 'text-amber-400', 'border-amber-500/30');
+    circle.classList.add('text-[#f29900]');
+    banner.classList.add('risk-card-moderate');
+    badge.classList.add('bg-[#fef7e0]', 'text-[#b45309]', 'border-[#fdd663]');
     badge.textContent = 'MODERATE DISRUPTION RISK';
   } else if (level === 'HIGH') {
-    circle.classList.add('text-rose-500');
-    banner.classList.add('risk-high');
-    badge.classList.add('bg-rose-500/20', 'text-rose-400', 'border-rose-500/30');
+    circle.classList.add('text-[#d93025]');
+    banner.classList.add('risk-card-high');
+    badge.classList.add('bg-[#fce8e6]', 'text-[#c5221f]', 'border-[#f5c2c7]');
     badge.textContent = 'HIGH DISRUPTION RISK';
   } else {
-    circle.classList.add('text-red-600');
-    banner.classList.add('risk-critical');
-    badge.classList.add('bg-red-500/30', 'text-red-300', 'border-red-500/50');
+    circle.classList.add('text-[#be123c]');
+    banner.classList.add('risk-card-critical');
+    badge.classList.add('bg-[#ffe4e6]', 'text-[#9f1239]', 'border-[#fda4af]');
     badge.textContent = 'CRITICAL DISRUPTION RISK';
   }
 
@@ -913,7 +909,7 @@ function renderResults(data) {
     chipItems.forEach(item => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition';
+      btn.className = 'journey-chip google-chip text-[10px] cursor-pointer';
       btn.setAttribute('data-prompt', item.prompt);
       btn.textContent = item.label;
       btn.addEventListener('click', () => {
@@ -958,16 +954,16 @@ function applyBaseMapTiles() {
   }
 
   if (tomtomApiKey) {
-    // If TomTom developer API key is configured, use official TomTom Night tiles
+    // Official TomTom Main Day tiles (Clean Google Maps style)
     baseMapLayer = L.tileLayer(
-      `https://api.tomtom.com/map/1/tile/basic/night/{z}/{x}/{y}.png?key=${tomtomApiKey}`,
+      `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${tomtomApiKey}`,
       { maxZoom: 18, zIndex: 1 }
     ).addTo(flightMap);
   } else {
-    // Zero-Key Native Dark Slate Canvas (ESRI Dark Gray - No Watermark, 100% Free)
+    // High-Clarity Google Maps style CartoDB Voyager tiles (Clean, Free, Zero-Watermark)
     baseMapLayer = L.tileLayer(
-      'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-      { maxZoom: 16, zIndex: 1, attribution: 'Tiles &copy; Esri' }
+      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      { maxZoom: 18, zIndex: 1, attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd' }
     ).addTo(flightMap);
   }
 }
@@ -1101,9 +1097,9 @@ async function updateMap(route, travelMode = 'air', halts = [], stays = []) {
 
     polylineCoords.forEach(pt => allCoords.push(pt));
 
-    // Draw Real Highway Polyline (Emerald Green)
+    // Draw Real Highway Polyline (Google Green)
     L.polyline(polylineCoords, {
-      color: '#10b981',
+      color: '#188038',
       weight: 5,
       opacity: 0.95,
       smoothFactor: 1,
@@ -1111,24 +1107,24 @@ async function updateMap(route, travelMode = 'air', halts = [], stays = []) {
 
     // Origin Road Marker
     const origIcon = L.divIcon({
-      className: 'road-pin origin',
+      className: 'google-map-pin origin',
       html: `<span>START: ${route.origin.iata}</span>`,
-      iconSize: [80, 24],
-      iconAnchor: [40, 12],
+      iconSize: [88, 26],
+      iconAnchor: [44, 13],
     });
     L.marker([origLat, origLon], { icon: origIcon })
-      .bindTooltip(`<b>Origin: ${route.origin.name}</b><br><span class="text-xs text-emerald-300">Departure Highway Gateway</span>`, { direction: 'top' })
+      .bindTooltip(`<b>Origin: ${route.origin.name}</b><br><span class="text-xs text-[#188038]">Departure Highway Gateway</span>`, { direction: 'top' })
       .addTo(flightMap);
 
     // Destination Road Marker
     const destIcon = L.divIcon({
-      className: 'road-pin dest',
+      className: 'google-map-pin dest',
       html: `<span>END: ${route.destination.iata}</span>`,
-      iconSize: [80, 24],
-      iconAnchor: [40, 12],
+      iconSize: [88, 26],
+      iconAnchor: [44, 13],
     });
     L.marker([destLat, destLon], { icon: destIcon })
-      .bindTooltip(`<b>Destination: ${route.destination.name}</b><br><span class="text-xs text-emerald-300">Arrival Corridor Terminal</span>`, { direction: 'top' })
+      .bindTooltip(`<b>Destination: ${route.destination.name}</b><br><span class="text-xs text-[#188038]">Arrival Corridor Terminal</span>`, { direction: 'top' })
       .addTo(flightMap);
 
     // Snap Intermediate Halts directly onto the real road polyline
@@ -1151,10 +1147,10 @@ async function updateMap(route, travelMode = 'air', halts = [], stays = []) {
         if (hLat && hLon) {
           allCoords.push([hLat, hLon]);
           const haltIcon = L.divIcon({
-            className: 'road-pin halt',
+            className: 'google-map-pin halt',
             html: `<span>HALT ${idx + 1}</span>`,
-            iconSize: [64, 22],
-            iconAnchor: [32, 11],
+            iconSize: [68, 24],
+            iconAnchor: [34, 12],
           });
           const haltTitle = halt.location_name || halt.name || `Waypoint Halt ${idx + 1}`;
           const haltTime = halt.estimated_drive_time || halt.recommended_stop_after || '2-3 hrs';
@@ -1162,7 +1158,7 @@ async function updateMap(route, travelMode = 'air', halts = [], stays = []) {
           const haltReason = halt.rationale || halt.primary_reason || 'Fuel / EV recharge & rest';
           const facs = (halt.facilities || []).slice(0, 3).join(', ');
           L.marker([hLat, hLon], { icon: haltIcon })
-            .bindTooltip(`<b>${haltTitle}</b><br><span class="text-xs text-blue-300">Stop at ~${haltTime} (${haltDist})</span><br><span class="text-xs text-gray-300">${haltReason}</span><br><span class="text-xs text-gray-400">Facilities: ${facs}</span>`, { direction: 'top' })
+            .bindTooltip(`<b>${haltTitle}</b><br><span class="text-xs text-[#1a73e8]">Stop at ~${haltTime} (${haltDist})</span><br><span class="text-xs text-[#5f6368]">${haltReason}</span><br><span class="text-xs text-[#80868b]">Facilities: ${facs}</span>`, { direction: 'top' })
             .addTo(flightMap);
         }
       });
@@ -1187,16 +1183,16 @@ async function updateMap(route, travelMode = 'air', halts = [], stays = []) {
         if (sLat && sLon) {
           allCoords.push([sLat, sLon]);
           const stayIcon = L.divIcon({
-            className: 'road-pin stay',
+            className: 'google-map-pin stay',
             html: `<span>LODGE</span>`,
-            iconSize: [58, 22],
-            iconAnchor: [29, 11],
+            iconSize: [64, 24],
+            iconAnchor: [32, 12],
           });
           const stayLoc = stay.location || stay.city_state || 'Corridor Exit';
           const stayExit = stay.highway_exit || 'Exit';
           const stayRole = stay.strategic_role || stay.contingency_trigger || 'Rest Stop';
           L.marker([sLat, sLon], { icon: stayIcon })
-            .bindTooltip(`<b>${stay.name}</b> (${(stay.tier || 'HOTEL').toUpperCase()})<br><span class="text-xs text-purple-300">${stayLoc} • ${stayExit}</span><br><span class="text-xs text-amber-300">Contingency: ${stayRole}</span>`, { direction: 'top' })
+            .bindTooltip(`<b>${stay.name}</b> (${(stay.tier || 'HOTEL').toUpperCase()})<br><span class="text-xs text-[#9334e6]">${stayLoc} • ${stayExit}</span><br><span class="text-xs text-[#b45309]">Contingency: ${stayRole}</span>`, { direction: 'top' })
             .addTo(flightMap);
         }
       });
@@ -1221,34 +1217,34 @@ async function updateMap(route, travelMode = 'air', halts = [], stays = []) {
       points.push([lat, lon]);
     }
 
-    // Draw Route Polyline
+    // Draw Route Polyline (Google Blue)
     L.polyline(points, {
-      color: '#3b82f6',
-      weight: 3,
+      color: '#1a73e8',
+      weight: 3.5,
       dashArray: '6, 6',
-      opacity: 0.85,
+      opacity: 0.9,
     }).addTo(flightMap);
 
     // Markers
     const origIcon = L.divIcon({
-      className: 'airport-pin origin',
+      className: 'google-map-pin origin',
       html: `<span>${route.origin.iata}</span>`,
-      iconSize: [42, 22],
-      iconAnchor: [21, 11],
+      iconSize: [52, 24],
+      iconAnchor: [26, 12],
     });
 
     const destIcon = L.divIcon({
-      className: 'airport-pin dest-mod',
+      className: 'google-map-pin dest',
       html: `<span>${route.destination.iata}</span>`,
-      iconSize: [42, 22],
-      iconAnchor: [21, 11],
+      iconSize: [52, 24],
+      iconAnchor: [26, 12],
     });
 
     const midIcon = L.divIcon({
-      className: 'airport-pin',
+      className: 'google-map-pin',
       html: `<span>MID</span>`,
-      iconSize: [36, 18],
-      iconAnchor: [18, 9],
+      iconSize: [44, 22],
+      iconAnchor: [22, 11],
     });
 
     L.marker([origLat, origLon], { icon: origIcon })
@@ -1298,32 +1294,32 @@ function renderHourlyTimeline(timeline) {
 
   timeline.forEach(item => {
     const card = document.createElement('div');
-    card.className = 'flex-shrink-0 w-24 bg-surface-900/90 rounded-xl p-2.5 border border-surface-700/70 text-center flex flex-col justify-between';
+    card.className = 'flex-shrink-0 w-28 bg-white rounded-xl p-3 border border-[#dadce0] text-center flex flex-col justify-between shadow-sm';
 
-    let badgeClass = 'text-emerald-400 bg-emerald-500/10';
+    let badgeClass = 'text-[#137333] bg-[#e6f4ea] border border-[#a8dab5]';
     if (item.risk_level === 'high' || item.risk_level === 'critical') {
-      badgeClass = 'text-rose-400 bg-rose-500/10 border-rose-500/30';
+      badgeClass = 'text-[#c5221f] bg-[#fce8e6] border border-[#f5c2c7]';
     } else if (item.risk_level === 'medium') {
-      badgeClass = 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+      badgeClass = 'text-[#b45309] bg-[#fef7e0] border border-[#fdd663]';
     }
 
     card.innerHTML = `
-      <div class="text-[11px] font-mono text-gray-400">${item.hour_label}</div>
+      <div class="text-[11px] font-mono text-[#5f6368] font-medium">${item.hour_label}</div>
       <div class="my-1.5">
-        <div class="text-xs font-bold text-white">${item.temp_f}°F</div>
-        <div class="text-[10px] text-gray-400 truncate" title="${item.weather_desc}">${item.weather_desc}</div>
+        <div class="text-xs font-bold text-[#202124]">${item.temp_f}°F</div>
+        <div class="text-[10px] text-[#5f6368] truncate" title="${item.weather_desc}">${item.weather_desc}</div>
       </div>
-      <div class="text-[10px] space-y-1 pt-1 border-t border-surface-700/50">
-        <div class="flex items-center justify-between text-gray-400">
+      <div class="text-[10px] space-y-1 pt-1.5 border-t border-[#e8eaed]">
+        <div class="flex items-center justify-between text-[#5f6368]">
           <span>Precip</span>
-          <span class="text-blue-300 font-mono font-medium">${item.precip_prob}%</span>
+          <span class="text-[#1a73e8] font-mono font-medium">${item.precip_prob}%</span>
         </div>
-        <div class="flex items-center justify-between text-gray-400">
+        <div class="flex items-center justify-between text-[#5f6368]">
           <span>Gusts</span>
-          <span class="text-gray-200 font-mono font-medium">${item.wind_gusts_mph} mph</span>
+          <span class="text-[#202124] font-mono font-medium">${item.wind_gusts_mph} mph</span>
         </div>
       </div>
-      <div class="mt-2 text-[9px] uppercase font-bold px-1 py-0.5 rounded border ${badgeClass}">
+      <div class="mt-2 text-[9px] uppercase font-bold px-2 py-0.5 rounded-full border ${badgeClass}">
         ${item.risk_level}
       </div>
     `;
@@ -1342,20 +1338,20 @@ function renderActions(actions) {
 
   actions.forEach(rec => {
     const el = document.createElement('div');
-    el.className = 'p-3 rounded-xl bg-surface-900/80 border border-surface-700/80 space-y-1';
+    el.className = 'p-3.5 rounded-xl bg-white border border-[#dadce0] space-y-1.5 shadow-sm hover:shadow transition';
 
-    let priorityBadge = '<span class="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded font-semibold uppercase">Recommended</span>';
+    let priorityBadge = '<span class="text-[10px] bg-[#e8f0fe] text-[#1a73e8] border border-[#aecbfa] px-2.5 py-0.5 rounded-full font-semibold uppercase">Recommended</span>';
     if (rec.priority === 'high') {
-      priorityBadge = '<span class="text-[10px] bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded font-semibold uppercase">High Priority</span>';
+      priorityBadge = '<span class="text-[10px] bg-[#fce8e6] text-[#d93025] border border-[#f5c2c7] px-2.5 py-0.5 rounded-full font-semibold uppercase">High Priority</span>';
     }
 
     el.innerHTML = `
       <div class="flex items-center justify-between">
-        <h4 class="text-xs font-bold text-white">${rec.title}</h4>
+        <h4 class="text-xs font-bold text-[#202124]">${rec.title}</h4>
         ${priorityBadge}
       </div>
-      <p class="text-xs text-blue-300 font-medium">${rec.action}</p>
-      <p class="text-[11px] text-gray-400 leading-relaxed">${rec.rationale}</p>
+      <p class="text-xs text-[#1a73e8] font-semibold">${rec.action}</p>
+      <p class="text-[11px] text-[#5f6368] leading-relaxed">${rec.rationale}</p>
     `;
 
     if (rec.target === 'traveler') {
@@ -1366,10 +1362,10 @@ function renderActions(actions) {
   });
 
   if (travelerList.children.length === 0) {
-    travelerList.innerHTML = '<div class="text-xs text-gray-400 p-2">Standard travel protocols apply.</div>';
+    travelerList.innerHTML = '<div class="text-xs text-[#5f6368] p-2">Standard travel protocols apply.</div>';
   }
   if (opsList.children.length === 0) {
-    opsList.innerHTML = '<div class="text-xs text-gray-400 p-2">Standard monitoring protocols apply.</div>';
+    opsList.innerHTML = '<div class="text-xs text-[#5f6368] p-2">Standard monitoring protocols apply.</div>';
   }
 }
 
@@ -1409,32 +1405,32 @@ function renderEvidence() {
 
   items.forEach((item, idx) => {
     const card = document.createElement('div');
-    card.className = 'bg-surface-900/90 rounded-xl border border-surface-700/80 p-3.5 space-y-2 flex flex-col justify-between';
+    card.className = 'bg-white rounded-xl border border-[#dadce0] p-4 space-y-2.5 flex flex-col justify-between shadow-sm hover:border-[#bdc1c6] transition';
 
-    let sevBadge = 'text-gray-300 bg-surface-700';
-    if (item.severity === 'critical') sevBadge = 'text-rose-400 bg-rose-500/20 border border-rose-500/30';
-    else if (item.severity === 'high') sevBadge = 'text-amber-400 bg-amber-500/20 border border-amber-500/30';
-    else if (item.severity === 'medium') sevBadge = 'text-blue-400 bg-blue-500/20 border border-blue-500/30';
+    let sevBadge = 'text-[#5f6368] bg-[#f1f3f4]';
+    if (item.severity === 'critical') sevBadge = 'text-[#c5221f] bg-[#fce8e6] border border-[#f5c2c7]';
+    else if (item.severity === 'high') sevBadge = 'text-[#b45309] bg-[#fef7e0] border border-[#fdd663]';
+    else if (item.severity === 'medium') sevBadge = 'text-[#1a73e8] bg-[#e8f0fe] border border-[#aecbfa]';
 
     const rawId = `raw-telemetry-${idx}`;
 
     card.innerHTML = `
       <div>
-        <div class="flex items-center justify-between text-[11px] mb-1">
-          <span class="font-semibold text-blue-400 font-mono">${item.source}</span>
-          <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded ${sevBadge}">${item.severity}</span>
+        <div class="flex items-center justify-between text-[11px] mb-1.5">
+          <span class="font-bold text-[#1a73e8] font-mono">${item.source}</span>
+          <span class="text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full ${sevBadge}">${item.severity}</span>
         </div>
-        <h4 class="text-xs font-bold text-white">${item.title}</h4>
-        <p class="text-xs text-gray-300 mt-1 leading-relaxed">${item.detail}</p>
+        <h4 class="text-xs font-bold text-[#202124]">${item.title}</h4>
+        <p class="text-xs text-[#5f6368] mt-1 leading-relaxed">${item.detail}</p>
       </div>
 
       ${item.raw_data ? `
-        <div class="pt-2 border-t border-surface-700/50">
-          <button class="text-[11px] text-gray-400 hover:text-white flex items-center gap-1 font-mono toggle-raw-btn" data-target="${rawId}">
+        <div class="pt-2 border-t border-[#e8eaed]">
+          <button class="text-[11px] text-[#1a73e8] hover:underline flex items-center gap-1 font-mono toggle-raw-btn" data-target="${rawId}">
             <span>Inspect Raw Telemetry</span>
-            <span class="text-gray-500 text-[10px]">&darr;</span>
+            <span class="text-[#80868b] text-[10px]">&darr;</span>
           </button>
-          <pre id="${rawId}" class="hidden mt-1.5 p-2 bg-black/60 rounded border border-surface-700 text-[10px] text-emerald-400 font-mono whitespace-pre-wrap overflow-x-auto max-h-36">${escapeHtml(item.raw_data)}</pre>
+          <pre id="${rawId}" class="hidden mt-2 p-2.5 bg-[#f8f9fa] rounded-lg border border-[#dadce0] text-[10px] text-[#188038] font-mono whitespace-pre-wrap overflow-x-auto max-h-36">${escapeHtml(item.raw_data)}</pre>
         </div>
       ` : ''}
     `;
@@ -1465,11 +1461,11 @@ function escapeHtml(text) {
 function formatMarkdown(md) {
   if (!md) return '';
   let html = md
-    .replace(/^### (.*$)/gim, '<h3 class="text-sm font-bold text-white uppercase tracking-wider mt-3 mb-1">$1</h3>')
-    .replace(/^## (.*$)/gim, '<h2 class="text-base font-bold text-white mt-4 mb-2">$1</h2>')
-    .replace(/^\*\*([^*]+)\*\*/gim, '<strong class="text-white">$1</strong>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-white">$1</strong>')
-    .replace(/^- (.*$)/gim, '<li class="ml-4 list-disc text-gray-300 my-0.5">$1</li>')
+    .replace(/^### (.*$)/gim, '<h3 class="text-xs font-bold text-[#202124] uppercase tracking-wider mt-3 mb-1">$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2 class="text-sm font-bold text-[#202124] mt-3.5 mb-1.5">$1</h2>')
+    .replace(/^\*\*([^*]+)\*\*/gim, '<strong class="text-[#202124] font-semibold">$1</strong>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-[#202124] font-semibold">$1</strong>')
+    .replace(/^- (.*$)/gim, '<li class="ml-4 list-disc text-[#3c4043] my-0.5">$1</li>')
     .replace(/\n\n/g, '<div class="h-2"></div>')
     .replace(/\n/g, '<br>');
   return html;
@@ -1482,32 +1478,32 @@ function renderRoadwayAndStays(data) {
   const badge = document.getElementById('roadwayStatsBadge');
   const route = data.route;
   const interstates = (route.primary_interstates || []).join(' / ');
-  badge.innerHTML = `<span class="text-emerald-400 font-semibold uppercase tracking-wider text-[11px] mr-1">Corridor:</span><strong>${route.driving_distance_miles?.toLocaleString() || 'N/A'} mi</strong> <span class="text-gray-400 font-normal">(~${route.driving_time_est || 'N/A'})</span> &bull; <span class="text-blue-300 font-mono">${interstates}</span>`;
+  badge.innerHTML = `<span class="text-[#188038] font-semibold uppercase tracking-wider text-[11px] mr-1">Corridor:</span><strong>${route.driving_distance_miles?.toLocaleString() || 'N/A'} mi</strong> <span class="text-[#5f6368] font-normal">(~${route.driving_time_est || 'N/A'})</span> &bull; <span class="text-[#1a73e8] font-mono">${interstates}</span>`;
 
   // 1. Roadway Disruptions
   const dispList = document.getElementById('roadwayDisruptionsList');
   dispList.innerHTML = '';
   const roadDisruptions = data.roadway_disruptions || [];
   if (roadDisruptions.length === 0) {
-    dispList.innerHTML = '<div class="col-span-2 text-xs text-gray-400 p-2">Standard highway conditions. No road weather advisories.</div>';
+    dispList.innerHTML = '<div class="col-span-2 text-xs text-[#5f6368] p-3 bg-white rounded-xl border border-[#dadce0] text-center shadow-sm">Standard highway conditions. No road weather advisories.</div>';
   } else {
     roadDisruptions.forEach(rd => {
       const el = document.createElement('div');
-      let badgeColor = 'text-blue-400 bg-blue-500/10 border-blue-500/30';
+      let badgeColor = 'text-[#1a73e8] bg-[#e8f0fe] border border-[#aecbfa]';
       if (rd.severity === 'critical' || rd.severity === 'high') {
-        badgeColor = 'text-rose-400 bg-rose-500/10 border-rose-500/30';
+        badgeColor = 'text-[#c5221f] bg-[#fce8e6] border border-[#f5c2c7]';
       } else if (rd.severity === 'medium') {
-        badgeColor = 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+        badgeColor = 'text-[#b45309] bg-[#fef7e0] border border-[#fdd663]';
       }
-      el.className = 'p-3 bg-surface-900/90 rounded-xl border border-surface-700/80 space-y-1';
+      el.className = 'p-3.5 bg-white rounded-xl border border-[#dadce0] space-y-1.5 shadow-sm hover:border-[#bdc1c6] transition';
       el.innerHTML = `
         <div class="flex items-center justify-between text-[11px]">
-          <span class="font-bold text-white font-mono">${rd.highway}</span>
-          <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${badgeColor}">${rd.condition_type}</span>
+          <span class="font-bold text-[#202124] font-mono">${rd.highway}</span>
+          <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${badgeColor}">${rd.condition_type}</span>
         </div>
-        <div class="text-xs text-amber-300 font-medium">${rd.segment}</div>
-        <p class="text-[11px] text-gray-300 leading-relaxed">${rd.description}</p>
-        <div class="text-[10px] text-gray-500 pt-1 flex justify-between">
+        <div class="text-xs text-[#1a73e8] font-semibold">${rd.segment}</div>
+        <p class="text-[11px] text-[#3c4043] leading-relaxed">${rd.description}</p>
+        <div class="text-[10px] text-[#5f6368] pt-1 border-t border-[#e8eaed] flex justify-between">
           <span>Est. Highway Delay: +${rd.delay_estimate_minutes}m</span>
           <span>Source: ${rd.source}</span>
         </div>
@@ -1522,34 +1518,34 @@ function renderRoadwayAndStays(data) {
   const halts = data.halt_suggestions || [];
   if (halts.length === 0) {
     haltList.innerHTML = `
-      <div class="p-3 bg-surface-900/80 rounded-xl border border-surface-700/70 text-center text-xs text-gray-400 space-y-1">
-        <div class="text-emerald-400 font-semibold flex items-center justify-center gap-1.5">
+      <div class="p-3.5 bg-white rounded-xl border border-[#dadce0] text-center text-xs text-[#5f6368] space-y-1 shadow-sm">
+        <div class="text-[#188038] font-semibold flex items-center justify-center gap-1.5">
           <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
           <span>Nonstop Express Highway Routing</span>
         </div>
-        <p class="text-[11px] text-gray-400">Continuous direct driving: total transit duration is within standard driver alertness thresholds (~2.5–3 hours), or nonstop mode was selected.</p>
+        <p class="text-[11px] text-[#5f6368]">Continuous direct driving: total transit duration is within standard driver alertness thresholds (~2.5–3 hours), or nonstop mode was selected.</p>
       </div>
     `;
     lucide.createIcons();
   } else {
     halts.forEach(h => {
       const el = document.createElement('div');
-      el.className = 'p-3 bg-surface-900/90 rounded-xl border border-surface-700/80 space-y-1.5 shadow';
+      el.className = 'p-3.5 bg-white rounded-xl border border-[#dadce0] space-y-2 shadow-sm hover:border-[#bdc1c6] transition';
       el.innerHTML = `
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-1.5 flex-wrap">
-            <span class="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] flex items-center justify-center font-mono font-bold">${h.stop_number}</span>
-            <span class="text-xs font-bold text-white">${h.location_name}</span>
-            ${h.city ? `<span class="text-[10px] font-semibold bg-blue-500/15 text-blue-300 border border-blue-500/30 px-1.5 py-0.5 rounded font-sans">📍 ${h.city}${h.state ? ', ' + h.state : ''}</span>` : ''}
+            <span class="w-5 h-5 rounded-full bg-[#e8f0fe] text-[#1a73e8] text-[10px] flex items-center justify-center font-mono font-bold">${h.stop_number}</span>
+            <span class="text-xs font-bold text-[#202124]">${h.location_name}</span>
+            ${h.city ? `<span class="text-[10px] font-semibold bg-[#e8f0fe] text-[#1a73e8] border border-[#aecbfa] px-2 py-0.5 rounded-full font-sans">📍 ${h.city}${h.state ? ', ' + h.state : ''}</span>` : ''}
           </div>
-          <span class="text-[10px] font-mono text-emerald-400 font-semibold">${h.estimated_drive_time} (~${h.distance_from_origin_miles} mi)</span>
+          <span class="text-[10px] font-mono text-[#188038] font-semibold">${h.estimated_drive_time} (~${h.distance_from_origin_miles} mi)</span>
         </div>
-        <div class="text-[10px] font-mono text-gray-400">
-          <span class="text-gray-300 font-semibold">${h.highway}</span> &bull; <span>${h.mile_marker || 'MM Transit'}</span>
+        <div class="text-[10px] font-mono text-[#5f6368]">
+          <span class="text-[#202124] font-semibold">${h.highway}</span> &bull; <span>${h.mile_marker || 'MM Transit'}</span>
         </div>
-        <p class="text-[11px] text-gray-300 leading-relaxed"><strong class="text-blue-300">Driver Focus & Recharge:</strong> ${h.rationale}</p>
+        <p class="text-[11px] text-[#3c4043] leading-relaxed"><strong class="text-[#1a73e8]">Driver Focus & Recharge:</strong> ${h.rationale}</p>
         <div class="flex flex-wrap gap-1 pt-0.5">
-          ${(h.facilities || []).map(f => `<span class="text-[9px] bg-surface-800 text-gray-300 px-1.5 py-0.5 rounded border border-surface-700/60">${f}</span>`).join('')}
+          ${(h.facilities || []).map(f => `<span class="text-[9px] bg-[#f1f3f4] text-[#3c4043] px-2 py-0.5 rounded-full border border-[#dadce0] font-medium">${f}</span>`).join('')}
         </div>
       `;
       haltList.appendChild(el);
@@ -1562,28 +1558,28 @@ function renderRoadwayAndStays(data) {
   const stays = data.stay_recommendations || [];
   stays.forEach(s => {
     const el = document.createElement('div');
-    el.className = 'p-3 bg-surface-900/80 rounded-xl border border-surface-700/70 space-y-1.5';
-    let tierBadge = 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-    if (s.tier === 'emergency_shelter') tierBadge = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
-    else if (s.tier === 'budget_motel') tierBadge = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+    el.className = 'p-3.5 bg-white rounded-xl border border-[#dadce0] space-y-2 shadow-sm hover:border-[#bdc1c6] transition';
+    let tierBadge = 'bg-[#e8f0fe] text-[#1a73e8] border border-[#aecbfa]';
+    if (s.tier === 'emergency_shelter') tierBadge = 'bg-[#fce8e6] text-[#c5221f] border border-[#f5c2c7]';
+    else if (s.tier === 'budget_motel') tierBadge = 'bg-[#fef7e0] text-[#b45309] border border-[#fdd663]';
 
     el.innerHTML = `
       <div class="flex items-center justify-between">
         <div>
-          <h5 class="text-xs font-bold text-white">${s.name}</h5>
-          <span class="text-[10px] text-gray-400 font-mono">${s.location} (${s.highway_exit})</span>
+          <h5 class="text-xs font-bold text-[#202124]">${s.name}</h5>
+          <span class="text-[10px] text-[#5f6368] font-mono">${s.location} (${s.highway_exit})</span>
         </div>
         <div class="text-right">
-          <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded border ${tierBadge}">${s.tier.replace('_', ' ')}</span>
-          <span class="text-[10px] font-mono text-gray-400 block">${s.price_tier}</span>
+          <span class="text-[9px] uppercase font-bold px-2 py-0.5 rounded-full border ${tierBadge}">${s.tier.replace('_', ' ')}</span>
+          <span class="text-[10px] font-mono text-[#5f6368] block mt-0.5">${s.price_tier}</span>
         </div>
       </div>
-      <p class="text-[11px] text-gray-300 leading-relaxed">${s.strategic_role}</p>
-      <div class="bg-surface-800/80 p-2 rounded-lg border border-surface-700/60 text-[10px] text-amber-300">
-        <span class="text-gray-400 font-bold uppercase tracking-wider text-[9px] mr-1">Contingency Trigger:</span>${s.contingency_trigger}
+      <p class="text-[11px] text-[#3c4043] leading-relaxed">${s.strategic_role}</p>
+      <div class="bg-[#f8f9fa] p-2.5 rounded-lg border border-[#dadce0] text-[10px] text-[#202124]">
+        <span class="text-[#5f6368] font-bold uppercase tracking-wider text-[9px] mr-1">Contingency Trigger:</span>${s.contingency_trigger}
       </div>
       <div class="flex flex-wrap gap-1 pt-0.5">
-        ${(s.amenities || []).map(a => `<span class="text-[9px] bg-surface-700/60 text-gray-400 px-1.5 py-0.5 rounded">${a}</span>`).join('')}
+        ${(s.amenities || []).map(a => `<span class="text-[9px] bg-[#f1f3f4] text-[#5f6368] px-2 py-0.5 rounded-full border border-[#dadce0]">${a}</span>`).join('')}
       </div>
     `;
     stayList.appendChild(el);
@@ -1602,7 +1598,7 @@ function renderAlternateRoutes(alternateRoutes) {
 
   if (!alternateRoutes || alternateRoutes.length === 0) {
     container.innerHTML = `
-      <div class="col-span-2 p-4 bg-surface-900/80 rounded-xl border border-surface-700 text-center text-xs text-gray-400">
+      <div class="col-span-2 p-4 bg-white rounded-xl border border-[#dadce0] text-center text-xs text-[#5f6368] shadow-sm">
         Direct route corridor is currently optimal. No higher-efficiency alternate bypasses required.
       </div>
     `;
@@ -1611,46 +1607,46 @@ function renderAlternateRoutes(alternateRoutes) {
 
   alternateRoutes.forEach(alt => {
     const card = document.createElement('div');
-    card.className = 'p-4 bg-surface-900/90 rounded-xl border border-surface-700/80 hover:border-indigo-500/50 transition shadow-lg flex flex-col justify-between space-y-3';
+    card.className = 'p-5 bg-white rounded-2xl border border-[#dadce0] hover:border-[#1a73e8] hover:shadow-md transition shadow-sm flex flex-col justify-between space-y-3';
 
     const isRoad = alt.travel_mode === 'road';
-    const modeBadge = isRoad ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+    const modeBadge = isRoad ? 'bg-[#e6f4ea] text-[#188038] border border-[#a8dab5]' : 'bg-[#e8f0fe] text-[#1a73e8] border border-[#aecbfa]';
     const reductionBadge = alt.risk_reduction_points > 0 
-      ? `<span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-500/30">-${alt.risk_reduction_points} PTS RISK REDUCTION</span>`
-      : `<span class="text-[10px] bg-surface-700 text-gray-300 px-2 py-0.5 rounded">ALTERNATIVE CORRIDOR</span>`;
+      ? `<span class="text-[10px] bg-[#e6f4ea] text-[#137333] font-bold px-2.5 py-0.5 rounded-full border border-[#a8dab5]">-${alt.risk_reduction_points} PTS RISK REDUCTION</span>`
+      : `<span class="text-[10px] bg-[#f1f3f4] text-[#5f6368] px-2.5 py-0.5 rounded-full border border-[#dadce0]">ALTERNATIVE CORRIDOR</span>`;
 
     card.innerHTML = `
       <div>
         <div class="flex items-center justify-between text-xs mb-2">
           <div class="flex items-center gap-1.5">
-            <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded border ${modeBadge}">${alt.travel_mode.toUpperCase()}</span>
+            <span class="text-[9px] uppercase font-bold px-2 py-0.5 rounded-full border ${modeBadge}">${alt.travel_mode.toUpperCase()}</span>
             ${reductionBadge}
           </div>
-          <span class="text-[11px] font-mono font-bold text-gray-300">Projected: ${alt.projected_risk_score}/100 (${alt.projected_risk_level})</span>
+          <span class="text-[11px] font-mono font-bold text-[#202124]">Projected: ${alt.projected_risk_score}/100 (${alt.projected_risk_level})</span>
         </div>
 
-        <h4 class="text-sm font-bold text-white mb-1">${escapeHtml(alt.title)}</h4>
-        <div class="text-[11px] text-gray-400 font-mono mb-2">
+        <h4 class="text-sm font-bold text-[#202124] mb-1">${escapeHtml(alt.title)}</h4>
+        <div class="text-[11px] text-[#5f6368] font-mono mb-2.5">
           ${alt.origin_code} → ${alt.destination_code} • ${escapeHtml(alt.estimated_duration)}
         </div>
 
-        <div class="space-y-1.5 text-xs">
-          <div class="flex items-start gap-1.5 text-emerald-300 bg-emerald-950/20 p-2 rounded-lg border border-emerald-800/40">
-            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-emerald-400"></i>
+        <div class="space-y-2 text-xs">
+          <div class="flex items-start gap-2 text-[#137333] bg-[#e6f4ea] p-2.5 rounded-xl border border-[#ceead6]">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-[#188038]"></i>
             <span class="leading-relaxed"><strong>Operational Advantage:</strong> ${escapeHtml(alt.key_benefit)}</span>
           </div>
-          <div class="flex items-start gap-1.5 text-amber-300 bg-amber-950/20 p-2 rounded-lg border border-amber-800/40">
-            <i data-lucide="clock" class="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-amber-400"></i>
+          <div class="flex items-start gap-2 text-[#b45309] bg-[#fef7e0] p-2.5 rounded-xl border border-[#feefc3]">
+            <i data-lucide="clock" class="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-[#f29900]"></i>
             <span class="leading-relaxed"><strong>Tradeoff:</strong> ${escapeHtml(alt.tradeoff)}</span>
           </div>
         </div>
       </div>
 
-      <div class="pt-2 border-t border-surface-700/50 flex items-center justify-between">
-        <span class="text-[10px] text-gray-400 font-mono">One-Click Reroute</span>
-        <button type="button" class="switch-route-btn px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition shadow"
+      <div class="pt-3 border-t border-[#e8eaed] flex items-center justify-between">
+        <span class="text-[10px] text-[#5f6368] font-mono">One-Click Reroute</span>
+        <button type="button" class="switch-route-btn btn-google-primary px-3.5 py-1.5 text-xs font-semibold flex items-center gap-1 shadow-sm"
           data-orig="${alt.origin_code}" data-dest="${alt.destination_code}" data-mode="${alt.travel_mode}">
-          <i data-lucide="corner-down-right" class="w-3 h-3"></i>
+          <i data-lucide="corner-down-right" class="w-3.5 h-3.5"></i>
           <span>Switch to This Route</span>
         </button>
       </div>
@@ -1755,11 +1751,11 @@ function initJourneyChatAssistant() {
   if (clearBtn) {
     clearBtn.addEventListener('click', () => {
       stream.innerHTML = `
-        <div class="flex items-start gap-2">
-          <div class="w-6 h-6 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
-          <div class="bg-surface-800 border border-surface-700/80 p-2.5 rounded-xl text-gray-200 space-y-1">
-            <p class="font-semibold text-white">Chat history cleared.</p>
-            <p class="text-gray-300 leading-relaxed text-[11px]">How can I assist you with your travel route?</p>
+        <div class="flex items-start gap-2.5">
+          <div class="w-6 h-6 rounded-full bg-[#e8f0fe] text-[#1a73e8] flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
+          <div class="bg-white border border-[#dadce0] p-3 rounded-2xl text-[#202124] space-y-1 shadow-sm">
+            <p class="font-semibold text-[#202124]">Chat history cleared.</p>
+            <p class="text-[#5f6368] leading-relaxed text-[11px]">How can I assist you with your travel route?</p>
           </div>
         </div>
       `;
@@ -1801,9 +1797,9 @@ function initJourneyChatAssistant() {
     typingEl.id = typingId;
     typingEl.className = 'flex items-start gap-2.5';
     typingEl.innerHTML = `
-      <div class="w-6 h-6 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
-      <div class="bg-surface-800 border border-surface-700/80 p-3 rounded-xl max-w-2xl text-gray-400 italic flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+      <div class="w-6 h-6 rounded-full bg-[#e8f0fe] text-[#1a73e8] flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
+      <div class="bg-white border border-[#dadce0] p-3 rounded-2xl max-w-2xl text-[#5f6368] italic flex items-center gap-2 shadow-sm text-xs">
+        <span class="w-2 h-2 rounded-full bg-[#1a73e8] animate-ping"></span>
         <span>Evaluating operational telemetry & synthesizing guidance...</span>
       </div>
     `;
@@ -1840,7 +1836,7 @@ function initJourneyChatAssistant() {
         data.suggested_questions.forEach(q => {
           const btn = document.createElement('button');
           btn.type = 'button';
-          btn.className = 'journey-chip text-[11px] px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition';
+          btn.className = 'journey-chip google-chip text-[11px] cursor-pointer';
           btn.setAttribute('data-prompt', q);
           btn.textContent = `💡 ${q}`;
           btn.addEventListener('click', () => {
@@ -1868,15 +1864,15 @@ function initJourneyChatAssistant() {
 
     if (sender === 'user') {
       msgEl.innerHTML = `
-        <div class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">YOU</div>
-        <div class="bg-indigo-950/40 border border-indigo-700/50 p-3 rounded-xl max-w-2xl text-white font-medium">
+        <div class="w-6 h-6 rounded-full bg-[#1a73e8] text-white flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono shadow-sm">YOU</div>
+        <div class="bg-[#e8f0fe] border border-[#aecbfa] p-3 rounded-2xl max-w-2xl text-[#174ea6] font-medium text-xs leading-relaxed shadow-sm">
           ${escapeHtml(text)}
         </div>
       `;
     } else {
       msgEl.innerHTML = `
-        <div class="w-6 h-6 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
-        <div class="bg-surface-800 border border-surface-700/80 p-3 rounded-xl max-w-2xl text-gray-200 space-y-2 leading-relaxed">
+        <div class="w-6 h-6 rounded-full bg-[#e8f0fe] text-[#1a73e8] flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
+        <div class="bg-white border border-[#dadce0] p-3.5 rounded-2xl max-w-2xl text-[#202124] space-y-2 leading-relaxed text-xs shadow-sm">
           ${formatMarkdown(text)}
         </div>
       `;

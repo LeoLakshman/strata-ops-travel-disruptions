@@ -1,31 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Strata Ops // U.S. Corporate Travel Disruption Intelligence</title>
   
+  <!-- Google Fonts: Plus Jakarta Sans & Roboto Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"Roboto Mono"', 'monospace'],
+          },
           colors: {
-            brand: {
-              50: '#eff6ff',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              900: '#1e3a8a',
-            },
-            surface: {
-              950: '#060911',
-              900: '#0b0f19',
-              800: '#111827',
-              700: '#1f2937',
-              600: '#374151',
+            google: {
+              blue: '#1a73e8',
+              blueHover: '#1557b0',
+              blueLight: '#e8f0fe',
+              green: '#188038',
+              greenLight: '#e6f4ea',
+              yellow: '#f29900',
+              yellowLight: '#fef7e0',
+              red: '#d93025',
+              redLight: '#fce8e6',
+              purple: '#9334e6',
+              purpleLight: '#f3e8ff',
+              ink: '#202124',
+              secondary: '#5f6368',
+              border: '#dadce0',
+              canvas: '#f8fafd',
             }
           }
         }
@@ -40,105 +51,115 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="/static/style.css?v=20261011_9">
+  <link rel="stylesheet" href="/static/style.css?v=20261011_10">
 </head>
-<body class="bg-surface-900 text-gray-100 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
+<body class="bg-[#f8fafd] text-[#202124] min-h-screen flex flex-col font-sans antialiased selection:bg-[#e8f0fe] selection:text-[#1a73e8]">
 
-  <!-- Top Navigation Bar -->
-  <header class="border-b border-surface-700 bg-surface-800/90 backdrop-blur sticky top-0 z-40">
+  <!-- Top Google & Firebase Inspired Navigation Bar -->
+  <header class="border-b border-[#dadce0] bg-white sticky top-0 z-40 shadow-[0_1px_2px_rgba(60,64,67,0.06)]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Product Title -->
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-          <i data-lucide="shield-alert" class="w-5 h-5 text-white"></i>
+        <!-- Google 4-Color Cluster Icon -->
+        <div class="flex items-center space-x-1 p-2 bg-[#f8fafd] rounded-xl border border-[#e8eaed]">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#4285f4]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#ea4335]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#fbbc05]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#34a853]"></span>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="font-bold tracking-tight text-white text-lg">STRATA OPS</span>
-            <span class="text-xs bg-blue-500/20 text-blue-400 font-mono font-medium px-2 py-0.5 rounded border border-blue-500/30">TRAVEL DISRUPTION AI</span>
+            <span class="font-bold tracking-tight text-[#202124] text-lg">Strata Ops</span>
+            <span class="text-[11px] bg-[#e8f0fe] text-[#1a73e8] font-semibold px-2 py-0.5 rounded-full border border-[#aecbfa]">Travel Disruption Intelligence</span>
           </div>
-          <p class="text-xs text-gray-400 hidden sm:block">Multi-Source Flight Risk & Operational Decision Support</p>
+          <p class="text-xs text-[#5f6368] hidden sm:block">Real-time FAA Airspace, NOAA Weather & Multimodal Decision Support</p>
         </div>
       </div>
 
-      <!-- Live Data Telemetry Status Badges -->
-      <div class="hidden lg:flex items-center space-x-3 text-xs">
-        <div class="flex items-center space-x-1.5 bg-surface-700/60 px-2.5 py-1 rounded-full border border-surface-600 text-gray-300">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>FAA NAS: <strong class="text-emerald-400">Live</strong></span>
+      <!-- Live Telemetry Badges (Google Pill Style) -->
+      <div class="hidden lg:flex items-center space-x-2 text-xs">
+        <div class="flex items-center space-x-1.5 bg-[#e6f4ea] text-[#137333] px-2.5 py-1 rounded-full border border-[#a8dab5] font-medium">
+          <span class="w-2 h-2 rounded-full bg-[#188038] animate-pulse"></span>
+          <span>FAA NAS: <strong>Live</strong></span>
         </div>
-        <div class="flex items-center space-x-1.5 bg-surface-700/60 px-2.5 py-1 rounded-full border border-surface-600 text-gray-300">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>NOAA NWS: <strong class="text-emerald-400">Live</strong></span>
+        <div class="flex items-center space-x-1.5 bg-[#e6f4ea] text-[#137333] px-2.5 py-1 rounded-full border border-[#a8dab5] font-medium">
+          <span class="w-2 h-2 rounded-full bg-[#188038] animate-pulse"></span>
+          <span>NOAA NWS: <strong>Live</strong></span>
         </div>
-        <div class="flex items-center space-x-1.5 bg-surface-700/60 px-2.5 py-1 rounded-full border border-surface-600 text-gray-300">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>METAR / TAF: <strong class="text-emerald-400">Live</strong></span>
+        <div class="flex items-center space-x-1.5 bg-[#e6f4ea] text-[#137333] px-2.5 py-1 rounded-full border border-[#a8dab5] font-medium">
+          <span class="w-2 h-2 rounded-full bg-[#188038] animate-pulse"></span>
+          <span>METAR / TAF: <strong>Live</strong></span>
         </div>
-        <div class="flex items-center space-x-1.5 bg-surface-700/60 px-2.5 py-1 rounded-full border border-surface-600 text-gray-300">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Atmospheric: <strong class="text-emerald-400">Live</strong></span>
+        <div class="flex items-center space-x-1.5 bg-[#e6f4ea] text-[#137333] px-2.5 py-1 rounded-full border border-[#a8dab5] font-medium">
+          <span class="w-2 h-2 rounded-full bg-[#188038] animate-pulse"></span>
+          <span>Sensors: <strong>Live</strong></span>
         </div>
       </div>
 
-      <div class="flex items-center space-x-2.5">
+      <!-- Right Action Controls -->
+      <div class="flex items-center space-x-2">
         <!-- Live Journey Companion Sidecar Trigger -->
-        <button id="navOpenChatBtn" class="flex items-center space-x-1.5 text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-3 py-1.5 rounded-lg border border-indigo-400/40 shadow transition">
+        <button id="navOpenChatBtn" class="flex items-center space-x-1.5 text-xs bg-[#e8f0fe] hover:bg-[#d2e3fc] text-[#1a73e8] font-semibold px-3.5 py-1.5 rounded-full border border-[#aecbfa] transition">
           <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
           <span>Ops AI Chat</span>
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[#188038] animate-pulse"></span>
         </button>
         <!-- Settings Modal Trigger -->
-        <button id="settingsBtn" class="flex items-center space-x-2 text-xs bg-surface-700 hover:bg-surface-600 text-gray-300 px-3 py-1.5 rounded-lg border border-surface-600 transition">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
+        <button id="settingsBtn" class="flex items-center space-x-1.5 text-xs bg-white hover:bg-gray-50 text-[#3c4043] px-3.5 py-1.5 rounded-full border border-[#dadce0] font-medium transition shadow-sm">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#1a73e8]"></i>
           <span id="aiEngineLabel">AI Engine</span>
         </button>
         <!-- Print / Export Button -->
-        <button id="exportBriefingBtn" class="hidden text-xs bg-surface-700 hover:bg-surface-600 text-gray-300 px-3 py-1.5 rounded-lg border border-surface-600 transition items-center space-x-1.5">
+        <button id="exportBriefingBtn" class="hidden text-xs bg-white hover:bg-gray-50 text-[#3c4043] px-3 py-1.5 rounded-full border border-[#dadce0] font-medium transition items-center space-x-1.5 shadow-sm">
           <i data-lucide="printer" class="w-3.5 h-3.5"></i>
           <span>Export Briefing</span>
         </button>
       </div>
+
     </div>
   </header>
 
   <!-- Main Content Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
 
-    <!-- Search & Route Input Card -->
-    <section id="searchCard" class="ops-glass-panel rounded-2xl p-5 shadow-2xl relative overflow-hidden">
-      <div class="absolute -top-24 -right-24 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- Hero Header & Route Search Card (Careers.google.com + Google Flights style) -->
+    <section id="searchCard" class="google-card p-6 sm:p-8 space-y-6">
       
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+      <!-- Friendly Google Headline -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <span id="formTitleText">U.S. Flight Disruption Risk Assessment</span>
+          <h1 class="text-2xl sm:text-3xl font-bold text-[#202124] tracking-tight flex items-center gap-2">
+            <span id="formTitleText">Plan & Assess U.S. Travel Disruptions</span>
           </h1>
-          <p id="formSubTitleText" class="text-sm text-gray-400">Query real-time FAA airspace status, NOAA terminal meteorology, NWS advisories, and corridor atmospheric forecasts.</p>
+          <p id="formSubTitleText" class="text-sm text-[#5f6368] mt-1.5 max-w-3xl leading-relaxed">
+            Multi-source operational intelligence querying FAA command delays, NOAA radar reflectivity, NWS atmospheric warnings, and interstate highway corridors.
+          </p>
         </div>
 
-        <!-- Presets Bar -->
-        <div class="flex flex-wrap items-center gap-1.5 text-xs text-gray-400">
-          <span class="font-medium mr-1 text-gray-500">Fast Presets:</span>
-          <button class="preset-btn px-2.5 py-1 bg-surface-700/80 hover:bg-surface-600 text-gray-300 rounded border border-surface-600 transition" data-orig="JFK" data-dest="SFO" data-date="tomorrow">JFK → SFO (Tomorrow)</button>
-          <button class="preset-btn px-2.5 py-1 bg-surface-700/80 hover:bg-surface-600 text-gray-300 rounded border border-surface-600 transition" data-orig="ORD" data-dest="BOS" data-date="today">ORD → BOS (Today)</button>
-          <button class="preset-btn px-2.5 py-1 bg-surface-700/80 hover:bg-surface-600 text-gray-300 rounded border border-surface-600 transition" data-orig="ATL" data-dest="MIA" data-date="tomorrow">ATL → MIA (Tomorrow)</button>
-          <button class="preset-btn px-2.5 py-1 bg-surface-700/80 hover:bg-surface-600 text-gray-300 rounded border border-surface-600 transition" data-orig="DEN" data-dest="SEA" data-date="tomorrow">DEN → SEA (Tomorrow)</button>
+        <!-- Fast Presets Bar (Google Pill Chips) -->
+        <div class="flex flex-wrap items-center gap-1.5 text-xs">
+          <span class="text-[#80868b] font-medium mr-1">Popular routes:</span>
+          <button class="preset-btn google-chip" data-orig="JFK" data-dest="SFO" data-date="tomorrow">JFK → SFO (Tomorrow)</button>
+          <button class="preset-btn google-chip" data-orig="ORD" data-dest="BOS" data-date="today">ORD → BOS (Today)</button>
+          <button class="preset-btn google-chip" data-orig="ATL" data-dest="MIA" data-date="tomorrow">ATL → MIA (Tomorrow)</button>
+          <button class="preset-btn google-chip" data-orig="DEN" data-dest="SEA" data-date="tomorrow">DEN → SEA (Tomorrow)</button>
         </div>
       </div>
 
-      <!-- Corridor Travel Mode Selector -->
-      <div class="flex items-center gap-2 mb-3 pb-3 border-b border-surface-700/60 text-xs">
-        <span class="text-gray-400 font-medium">Corridor Mode:</span>
-        <div class="inline-flex bg-surface-900 p-0.5 rounded-lg border border-surface-700">
-          <button type="button" class="mode-tab-btn px-3 py-1 rounded-md font-medium text-white bg-blue-600 transition flex items-center gap-1.5" data-mode="air">
+      <!-- Corridor Mode Segmented Tabs -->
+      <div class="flex items-center gap-3 pt-2 border-t border-[#e8eaed] text-xs">
+        <span class="text-[#5f6368] font-medium">Corridor Mode:</span>
+        <div class="google-segmented-group">
+          <button type="button" class="mode-tab-btn px-3.5 py-1.5 rounded-lg font-semibold text-white bg-[#1a73e8] transition flex items-center gap-1.5 shadow-sm" data-mode="air">
             <i data-lucide="plane" class="w-3.5 h-3.5"></i>
-            <span>Airway (Default)</span>
+            <span>Airway Flight</span>
           </button>
-          <button type="button" class="mode-tab-btn px-3 py-1 rounded-md font-medium text-gray-400 hover:text-white transition flex items-center gap-1.5" data-mode="road">
+          <button type="button" class="mode-tab-btn px-3.5 py-1.5 rounded-lg font-medium text-[#5f6368] hover:text-[#202124] transition flex items-center gap-1.5" data-mode="road">
             <i data-lucide="truck" class="w-3.5 h-3.5"></i>
-            <span>Roadway / Driving</span>
+            <span>Roadway Driving</span>
           </button>
-          <button type="button" class="mode-tab-btn px-3 py-1 rounded-md font-medium text-gray-400 hover:text-white transition flex items-center gap-1.5" data-mode="multimodal">
+          <button type="button" class="mode-tab-btn px-3.5 py-1.5 rounded-lg font-medium text-[#5f6368] hover:text-[#202124] transition flex items-center gap-1.5" data-mode="multimodal">
             <i data-lucide="network" class="w-3.5 h-3.5"></i>
             <span>Multimodal Corridor</span>
           </button>
@@ -146,24 +167,24 @@
         <input type="hidden" id="travelModeInput" value="air">
       </div>
 
-      <!-- Highway Routing Preferences & Halt Frequency Controls (Active for Roadway or Multimodal) -->
-      <div id="highwayPrefContainer" class="hidden flex flex-col md:flex-row md:items-center justify-between gap-2.5 mb-3 pb-3 border-b border-surface-700/60 text-xs transition">
+      <!-- Highway Routing Preferences & Halt Frequency Controls (Visible for Roadway or Multimodal) -->
+      <div id="highwayPrefContainer" class="hidden flex flex-col md:flex-row md:items-center justify-between gap-3 p-3.5 bg-[#f8f9fa] rounded-xl border border-[#dadce0] text-xs transition">
         <!-- Highway Corridor Type -->
         <div class="flex flex-wrap items-center gap-2">
-          <span class="text-emerald-400 font-semibold flex items-center gap-1">
+          <span class="text-[#137333] font-semibold flex items-center gap-1">
             <i data-lucide="compass" class="w-3.5 h-3.5"></i>
             <span>Highway Corridor:</span>
           </span>
-          <div class="inline-flex bg-surface-900 p-0.5 rounded-lg border border-surface-700">
-            <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-white bg-emerald-600 transition flex items-center gap-1" data-pref="interstate">
+          <div class="inline-flex bg-white p-0.5 rounded-lg border border-[#dadce0]">
+            <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-white bg-[#188038] transition flex items-center gap-1" data-pref="interstate">
               <i data-lucide="navigation" class="w-3 h-3"></i>
               <span>Interstate (Fastest)</span>
             </button>
-            <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-gray-400 hover:text-white transition flex items-center gap-1" data-pref="state_highway">
+            <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-[#5f6368] hover:text-[#202124] transition flex items-center gap-1" data-pref="state_highway">
               <i data-lucide="map-pin" class="w-3 h-3"></i>
               <span>State Highways (Scenic)</span>
             </button>
-            <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-gray-400 hover:text-white transition flex items-center gap-1" data-pref="weather_optimized">
+            <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-[#5f6368] hover:text-[#202124] transition flex items-center gap-1" data-pref="weather_optimized">
               <i data-lucide="shield-check" class="w-3 h-3"></i>
               <span>Weather Bypass</span>
             </button>
@@ -173,24 +194,24 @@
 
         <!-- Halt Frequency Selection -->
         <div class="flex flex-wrap items-center gap-2">
-          <span class="text-blue-400 font-semibold flex items-center gap-1">
+          <span class="text-[#1a73e8] font-semibold flex items-center gap-1">
             <i data-lucide="coffee" class="w-3.5 h-3.5"></i>
             <span>Driving Halts:</span>
           </span>
-          <div class="inline-flex bg-surface-900 p-0.5 rounded-lg border border-surface-700">
-            <button type="button" class="halt-count-btn px-2.5 py-1 rounded-md font-medium text-white bg-blue-600 transition flex items-center gap-1" data-halts="auto" title="Auto: 1 halt roughly every 2.5 to 3 hours in major hub cities">
+          <div class="inline-flex bg-white p-0.5 rounded-lg border border-[#dadce0]">
+            <button type="button" class="halt-count-btn px-2.5 py-1 rounded-md font-medium text-white bg-[#1a73e8] transition flex items-center gap-1" data-halts="auto" title="Auto: 1 halt roughly every 2.5 to 3 hours in major hub cities">
               <span>Auto (2.5–3h Hubs)</span>
             </button>
-            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-gray-400 hover:text-white transition" data-halts="0" title="0 Halts: Nonstop express transit">
+            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-[#5f6368] hover:text-[#202124] transition" data-halts="0" title="0 Halts: Nonstop express transit">
               <span>0 (Nonstop)</span>
             </button>
-            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-gray-400 hover:text-white transition" data-halts="1" title="1 Major City Halt (e.g. Abilene, TX)">
+            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-[#5f6368] hover:text-[#202124] transition" data-halts="1" title="1 Major City Halt (e.g. Abilene, TX)">
               <span>1 City Halt</span>
             </button>
-            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-gray-400 hover:text-white transition" data-halts="2" title="2 Major City Halts">
+            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-[#5f6368] hover:text-[#202124] transition" data-halts="2" title="2 Major City Halts">
               <span>2 Halts</span>
             </button>
-            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-gray-400 hover:text-white transition" data-halts="3" title="3 Halts">
+            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-[#5f6368] hover:text-[#202124] transition" data-halts="3" title="3 Halts">
               <span>3 Halts</span>
             </button>
           </div>
@@ -198,68 +219,66 @@
         </div>
       </div>
 
-      <!-- Unified Form -->
-      <form id="assessmentForm" class="space-y-3">
+      <!-- Unified Form Controls (Clean Google Elevation) -->
+      <form id="assessmentForm" class="space-y-4">
         
-        <!-- Primary Route & Parameter Row (Uniform 40px Control Heights) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
           
           <!-- Origin -->
           <div class="lg:col-span-3">
-            <label class="block text-xs font-semibold text-gray-300 mb-1 flex items-center justify-between">
-              <span>Origin Location</span>
-              <span class="text-[10px] text-gray-500 font-normal font-mono">IATA / City</span>
+            <label class="block text-xs font-semibold text-[#3c4043] mb-1.5 flex items-center justify-between">
+              <span>Origin</span>
+              <span class="text-[10px] text-[#80868b] font-mono">IATA / City</span>
             </label>
             <div class="relative">
-              <i data-lucide="plane-takeoff" class="w-4 h-4 text-blue-400 absolute left-3 top-3 pointer-events-none"></i>
+              <i data-lucide="plane-takeoff" class="w-4 h-4 text-[#1a73e8] absolute left-3.5 top-3 pointer-events-none"></i>
               <input type="text" id="originInput" value="JFK" placeholder="JFK or New York" required autocomplete="off"
-                class="w-full pl-9 pr-3 py-2 bg-surface-900 border border-surface-700 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition uppercase tracking-wider font-semibold font-mono h-10">
-              <div id="originSuggestions" class="hidden absolute left-0 right-0 top-11 bg-surface-900 border border-surface-700 rounded-xl shadow-2xl z-50 max-h-56 overflow-y-auto divide-y divide-surface-800"></div>
+                class="w-full pl-10 pr-3 py-2 bg-white border border-[#dadce0] rounded-xl text-[#202124] text-sm focus:outline-none focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/20 transition uppercase tracking-wider font-semibold font-mono h-11">
+              <div id="originSuggestions" class="hidden absolute left-0 right-0 top-12 bg-white border border-[#dadce0] rounded-xl shadow-xl z-50 max-h-56 overflow-y-auto divide-y divide-gray-100"></div>
             </div>
           </div>
 
           <!-- Route Swap Icon Button -->
           <div class="lg:col-span-1 flex items-center justify-center">
             <button type="button" id="swapAirportsBtn" title="Swap Route"
-              class="w-full h-10 bg-surface-700/70 hover:bg-surface-600 rounded-xl text-gray-300 hover:text-white border border-surface-600 flex items-center justify-center transition">
+              class="w-full h-11 bg-white hover:bg-gray-50 rounded-xl text-[#5f6368] hover:text-[#202124] border border-[#dadce0] flex items-center justify-center transition shadow-sm">
               <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
             </button>
           </div>
 
           <!-- Destination -->
           <div class="lg:col-span-3">
-            <label class="block text-xs font-semibold text-gray-300 mb-1 flex items-center justify-between">
-              <span>Destination Location</span>
-              <span class="text-[10px] text-gray-500 font-normal font-mono">IATA / City</span>
+            <label class="block text-xs font-semibold text-[#3c4043] mb-1.5 flex items-center justify-between">
+              <span>Destination</span>
+              <span class="text-[10px] text-[#80868b] font-mono">IATA / City</span>
             </label>
             <div class="relative">
-              <i data-lucide="plane-landing" class="w-4 h-4 text-emerald-400 absolute left-3 top-3 pointer-events-none"></i>
+              <i data-lucide="plane-landing" class="w-4 h-4 text-[#188038] absolute left-3.5 top-3 pointer-events-none"></i>
               <input type="text" id="destinationInput" value="SFO" placeholder="SFO or San Francisco" required autocomplete="off"
-                class="w-full pl-9 pr-3 py-2 bg-surface-900 border border-surface-700 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition uppercase tracking-wider font-semibold font-mono h-10">
-              <div id="destinationSuggestions" class="hidden absolute left-0 right-0 top-11 bg-surface-900 border border-surface-700 rounded-xl shadow-2xl z-50 max-h-56 overflow-y-auto divide-y divide-surface-800"></div>
+                class="w-full pl-10 pr-3 py-2 bg-white border border-[#dadce0] rounded-xl text-[#202124] text-sm focus:outline-none focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/20 transition uppercase tracking-wider font-semibold font-mono h-11">
+              <div id="destinationSuggestions" class="hidden absolute left-0 right-0 top-12 bg-white border border-[#dadce0] rounded-xl shadow-xl z-50 max-h-56 overflow-y-auto divide-y divide-gray-100"></div>
             </div>
           </div>
 
-          <!-- Travel Date: Direct Native Date Input with Micro Presets -->
+          <!-- Travel Date -->
           <div class="lg:col-span-3">
-            <div class="flex items-center justify-between mb-1">
-              <label class="block text-xs font-semibold text-gray-300">Travel Date</label>
-              <!-- Micro Quick Presets -->
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-xs font-semibold text-[#3c4043]">Travel Date</label>
               <div class="flex items-center gap-1">
-                <button type="button" id="datePresetTodayBtn" class="text-[10px] px-2 py-0.5 rounded bg-surface-700 hover:bg-surface-600 text-gray-300 transition font-medium">Today</button>
-                <button type="button" id="datePresetTomorrowBtn" class="text-[10px] px-2 py-0.5 rounded bg-blue-600 text-white font-semibold transition">Tomorrow</button>
+                <button type="button" id="datePresetTodayBtn" class="text-[10px] px-2 py-0.5 rounded-full bg-[#f1f3f4] hover:bg-gray-200 text-[#5f6368] transition font-medium">Today</button>
+                <button type="button" id="datePresetTomorrowBtn" class="text-[10px] px-2 py-0.5 rounded-full bg-[#1a73e8] text-white font-semibold transition">Tomorrow</button>
               </div>
             </div>
             <div class="relative">
               <input type="date" id="travelDateInput" required
-                class="w-full px-3 py-2 bg-surface-900 border border-surface-700 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition font-mono h-10">
+                class="w-full px-3 py-2 bg-white border border-[#dadce0] rounded-xl text-[#202124] text-sm focus:outline-none focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/20 transition font-mono h-11">
             </div>
           </div>
 
           <!-- Time Window -->
           <div class="lg:col-span-2">
-            <label class="block text-xs font-semibold text-gray-300 mb-1">Window</label>
-            <select id="timeWindowSelect" class="w-full px-3 py-2 bg-surface-900 border border-surface-700 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 transition h-10">
+            <label class="block text-xs font-semibold text-[#3c4043] mb-1.5">Time Window</label>
+            <select id="timeWindowSelect" class="w-full px-3 py-2 bg-white border border-[#dadce0] rounded-xl text-[#202124] text-sm focus:outline-none focus:border-[#1a73e8] transition h-11">
               <option value="all_day" selected>All Day</option>
               <option value="morning">Morning (06-12)</option>
               <option value="afternoon">Afternoon (12-18)</option>
@@ -270,32 +289,32 @@
         </div>
 
         <!-- Auxiliary Bar: Quick Hub Shortcuts & Action Submit Button -->
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-surface-700/50">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-[#e8eaed]">
           
           <!-- Quick Airport Chips -->
-          <div class="flex flex-wrap items-center gap-1.5 text-xs text-gray-400">
-            <span class="text-gray-500 text-[11px] font-medium">Hub Shortcuts:</span>
+          <div class="flex flex-wrap items-center gap-1.5 text-xs text-[#5f6368]">
+            <span class="text-[#80868b] text-[11px] font-medium">Hub shortcuts:</span>
             <div class="flex items-center gap-1 text-[11px]">
-              <span class="text-gray-500">Origin:</span>
-              <button type="button" class="quick-chip px-1.5 py-0.5 bg-surface-700/60 hover:bg-surface-600 text-gray-300 rounded font-mono" data-target="originInput" data-code="JFK">JFK</button>
-              <button type="button" class="quick-chip px-1.5 py-0.5 bg-surface-700/60 hover:bg-surface-600 text-gray-300 rounded font-mono" data-target="originInput" data-code="ORD">ORD</button>
-              <button type="button" class="quick-chip px-1.5 py-0.5 bg-surface-700/60 hover:bg-surface-600 text-gray-300 rounded font-mono" data-target="originInput" data-code="ATL">ATL</button>
-              <button type="button" class="quick-chip px-1.5 py-0.5 bg-surface-700/60 hover:bg-surface-600 text-gray-300 rounded font-mono" data-target="originInput" data-code="DFW">DFW</button>
+              <span class="text-[#80868b]">Origin:</span>
+              <button type="button" class="quick-chip px-2 py-0.5 bg-[#f1f3f4] hover:bg-gray-200 text-[#3c4043] rounded-full font-mono font-medium transition" data-target="originInput" data-code="JFK">JFK</button>
+              <button type="button" class="quick-chip px-2 py-0.5 bg-[#f1f3f4] hover:bg-gray-200 text-[#3c4043] rounded-full font-mono font-medium transition" data-target="originInput" data-code="ORD">ORD</button>
+              <button type="button" class="quick-chip px-2 py-0.5 bg-[#f1f3f4] hover:bg-gray-200 text-[#3c4043] rounded-full font-mono font-medium transition" data-target="originInput" data-code="ATL">ATL</button>
+              <button type="button" class="quick-chip px-2 py-0.5 bg-[#f1f3f4] hover:bg-gray-200 text-[#3c4043] rounded-full font-mono font-medium transition" data-target="originInput" data-code="DFW">DFW</button>
             </div>
-            <span class="text-gray-600">•</span>
+            <span class="text-gray-300">•</span>
             <div class="flex items-center gap-1 text-[11px]">
-              <span class="text-gray-500">Dest:</span>
-              <button type="button" class="quick-chip px-1.5 py-0.5 bg-surface-700/60 hover:bg-surface-600 text-gray-300 rounded font-mono" data-target="destinationInput" data-code="SFO">SFO</button>
-              <button type="button" class="quick-chip px-1.5 py-0.5 bg-surface-700/60 hover:bg-surface-600 text-gray-300 rounded font-mono" data-target="destinationInput" data-code="BOS">BOS</button>
-              <button type="button" class="quick-chip px-1.5 py-0.5 bg-surface-700/60 hover:bg-surface-600 text-gray-300 rounded font-mono" data-target="destinationInput" data-code="MIA">MIA</button>
-              <button type="button" class="quick-chip px-1.5 py-0.5 bg-surface-700/60 hover:bg-surface-600 text-gray-300 rounded font-mono" data-target="destinationInput" data-code="SEA">SEA</button>
+              <span class="text-[#80868b]">Dest:</span>
+              <button type="button" class="quick-chip px-2 py-0.5 bg-[#f1f3f4] hover:bg-gray-200 text-[#3c4043] rounded-full font-mono font-medium transition" data-target="destinationInput" data-code="SFO">SFO</button>
+              <button type="button" class="quick-chip px-2 py-0.5 bg-[#f1f3f4] hover:bg-gray-200 text-[#3c4043] rounded-full font-mono font-medium transition" data-target="destinationInput" data-code="BOS">BOS</button>
+              <button type="button" class="quick-chip px-2 py-0.5 bg-[#f1f3f4] hover:bg-gray-200 text-[#3c4043] rounded-full font-mono font-medium transition" data-target="destinationInput" data-code="MIA">MIA</button>
+              <button type="button" class="quick-chip px-2 py-0.5 bg-[#f1f3f4] hover:bg-gray-200 text-[#3c4043] rounded-full font-mono font-medium transition" data-target="destinationInput" data-code="SEA">SEA</button>
             </div>
           </div>
 
-          <!-- Submit CTA Button -->
+          <!-- Submit CTA Button (Google Blue Pill) -->
           <div class="w-full sm:w-auto">
             <button type="submit" id="submitBtn"
-              class="w-full sm:w-auto py-2 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm rounded-xl shadow-lg shadow-blue-600/25 transition flex items-center justify-center space-x-2 h-10">
+              class="btn-google-primary w-full sm:w-auto py-2.5 px-7 rounded-full text-white font-semibold text-sm flex items-center justify-center space-x-2 h-11 transition shadow-md">
               <i data-lucide="search" class="w-4 h-4"></i>
               <span>Assess Disruption Risk</span>
             </button>
@@ -306,55 +325,51 @@
       </form>
     </section>
 
-    <!-- Loading State View (Modern Operations Scanning HUD & Shimmer Preview) -->
-    <div id="loadingState" class="hidden py-8 space-y-6">
+    <!-- Loading State View (Google Clean Light Telemetry Animation) -->
+    <div id="loadingState" class="hidden py-10 space-y-6">
       <div class="flex flex-col items-center justify-center space-y-3 text-center">
-        <div class="relative w-16 h-16 flex items-center justify-center">
-          <div class="absolute inset-0 rounded-full border-2 border-blue-500/20"></div>
-          <div class="absolute inset-0 rounded-full border-2 border-blue-400 border-t-transparent animate-spin"></div>
-          <div class="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center">
-            <i data-lucide="radio" class="w-5 h-5 text-blue-400 animate-pulse"></i>
-          </div>
+        <!-- Google Circular Animated Spinner -->
+        <div class="relative w-14 h-14 flex items-center justify-center">
+          <div class="absolute inset-0 rounded-full border-4 border-[#e8f0fe]"></div>
+          <div class="absolute inset-0 rounded-full border-4 border-[#1a73e8] border-t-transparent animate-spin"></div>
+          <i data-lucide="compass" class="w-6 h-6 text-[#1a73e8] animate-pulse"></i>
         </div>
         <div>
-          <h3 class="text-sm font-bold text-white tracking-wide uppercase flex items-center justify-center gap-2">
-            <span>Telemetry Ingestion & Risk Fusion Active</span>
-            <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
-          </h3>
-          <p id="loadingStatusText" class="text-xs text-blue-300 font-mono mt-1">Connecting to FAA Command Center & NOAA Aviation Weather</p>
+          <h3 class="text-base font-bold text-[#202124]">Querying Live Telemetry & Fusing Signals</h3>
+          <p id="loadingStatusText" class="text-xs text-[#5f6368] font-mono mt-1">Connecting to FAA Command Center & NOAA Aviation Weather...</p>
         </div>
       </div>
 
       <!-- Shimmer Skeleton Preview Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 opacity-60 pointer-events-none">
-        <div class="lg:col-span-12 ops-glass-panel p-6 rounded-2xl space-y-3">
-          <div class="h-6 w-1/3 ops-shimmer-box"></div>
-          <div class="h-4 w-2/3 ops-shimmer-box"></div>
+        <div class="lg:col-span-12 google-card p-6 space-y-3">
+          <div class="h-6 w-1/3 google-shimmer"></div>
+          <div class="h-4 w-2/3 google-shimmer"></div>
         </div>
-        <div class="lg:col-span-7 ops-glass-panel p-6 rounded-2xl space-y-4">
-          <div class="h-56 ops-shimmer-box rounded-xl"></div>
-          <div class="h-4 w-1/2 ops-shimmer-box"></div>
+        <div class="lg:col-span-7 google-card p-6 space-y-4">
+          <div class="h-56 google-shimmer rounded-xl"></div>
+          <div class="h-4 w-1/2 google-shimmer"></div>
         </div>
-        <div class="lg:col-span-5 ops-glass-panel p-6 rounded-2xl space-y-3">
-          <div class="h-6 w-1/2 ops-shimmer-box"></div>
-          <div class="h-14 ops-shimmer-box rounded-xl"></div>
-          <div class="h-14 ops-shimmer-box rounded-xl"></div>
-          <div class="h-14 ops-shimmer-box rounded-xl"></div>
+        <div class="lg:col-span-5 google-card p-6 space-y-3">
+          <div class="h-6 w-1/2 google-shimmer"></div>
+          <div class="h-14 google-shimmer rounded-xl"></div>
+          <div class="h-14 google-shimmer rounded-xl"></div>
+          <div class="h-14 google-shimmer rounded-xl"></div>
         </div>
       </div>
     </div>
 
     <!-- Error Alert Box -->
-    <div id="errorBox" class="hidden bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 text-rose-300 text-sm flex items-start space-x-3">
-      <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
-      <div id="errorMessage">An error occurred while assessing travel disruptions.</div>
+    <div id="errorBox" class="hidden bg-[#fce8e6] border border-[#f5c2c7] rounded-2xl p-5 text-[#c5221f] text-sm flex items-start space-x-3 shadow-sm">
+      <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0 mt-0.5 text-[#d93025]"></i>
+      <div id="errorMessage" class="font-medium">An error occurred while assessing travel disruptions.</div>
     </div>
 
     <!-- Main Results Container -->
-    <div id="resultsContainer" class="hidden space-y-6">
+    <div id="resultsContainer" class="hidden space-y-8">
 
-      <!-- Executive Risk Banner -->
-      <section id="riskBanner" class="ops-glass-panel rounded-2xl p-6 border transition-all duration-300 relative overflow-hidden">
+      <!-- Executive Risk Banner (Google & Firebase Severity Card) -->
+      <section id="riskBanner" class="google-card p-6 sm:p-7 border transition-all duration-300 relative overflow-hidden">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
           
           <!-- Risk Score & Level Visual -->
@@ -362,12 +377,12 @@
             <!-- Circular Dial / Gauge -->
             <div class="relative w-24 h-24 flex items-center justify-center flex-shrink-0">
               <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="8" class="text-surface-700 fill-none" />
-                <circle id="riskMeterCircle" cx="50" cy="50" r="40" stroke="currentColor" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="60" stroke-linecap="round" class="text-red-500 fill-none transition-all duration-1000" />
+                <circle cx="50" cy="50" r="40" stroke="#e8eaed" stroke-width="8" class="fill-none" />
+                <circle id="riskMeterCircle" cx="50" cy="50" r="40" stroke="currentColor" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="60" stroke-linecap="round" class="text-[#d93025] fill-none transition-all duration-1000" />
               </svg>
               <div class="absolute flex flex-col items-center justify-center text-center">
-                <span id="riskScoreNumber" class="text-2xl font-black text-white tracking-tighter">74</span>
-                <span class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">/ 100</span>
+                <span id="riskScoreNumber" class="text-2xl font-black text-[#202124] tracking-tight">74</span>
+                <span class="text-[10px] text-[#5f6368] uppercase tracking-widest font-semibold">/ 100</span>
               </div>
             </div>
 
@@ -377,14 +392,14 @@
                 <span id="riskLevelBadge" class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full border">
                   HIGH DISRUPTION RISK
                 </span>
-                <span id="routeHeadlineBadge" class="text-xs text-gray-400 font-mono">
+                <span id="routeHeadlineBadge" class="text-xs text-[#5f6368] font-mono font-medium">
                   JFK → SFO
                 </span>
               </div>
-              <h2 id="executiveVerdictText" class="text-lg lg:text-xl font-bold text-white mt-1.5 leading-snug">
+              <h2 id="executiveVerdictText" class="text-lg lg:text-xl font-bold text-[#202124] mt-1.5 leading-snug">
                 FAA Ground Delay Program Active at Destination & Heavy Storm Front
               </h2>
-              <p id="headlineRiskSummary" class="text-xs text-gray-300 mt-1 max-w-3xl">
+              <p id="headlineRiskSummary" class="text-xs text-[#5f6368] mt-1 max-w-3xl leading-relaxed">
                 Meaningful operational bottlenecks identified across flight corridor. Multiple signals point to elevated probability of delay.
               </p>
             </div>
@@ -392,172 +407,169 @@
 
           <!-- 3 High-Impact Probability Metric Cards -->
           <div class="grid grid-cols-3 gap-3 w-full lg:w-auto flex-shrink-0">
-            <div class="bg-surface-900/80 rounded-xl p-3 border border-surface-700/80 text-center min-w-[105px]">
-              <span id="delayProbTitle" class="text-[10px] uppercase font-semibold text-gray-400 block">Delay Risk</span>
-              <span id="delayProbVal" class="text-lg font-bold text-amber-400 block mt-0.5">75%</span>
-              <span id="delayRangeVal" class="text-[10px] text-gray-400 block">45-90 min</span>
+            <div class="bg-white rounded-xl p-3 border border-[#dadce0] text-center min-w-[110px] shadow-sm">
+              <span id="delayProbTitle" class="text-[10px] uppercase font-semibold text-[#5f6368] block">Delay Risk</span>
+              <span id="delayProbVal" class="text-xl font-bold text-[#f29900] block mt-0.5">75%</span>
+              <span id="delayRangeVal" class="text-[10px] text-[#5f6368] block">45-90 min</span>
             </div>
-            <div class="bg-surface-900/80 rounded-xl p-3 border border-surface-700/80 text-center min-w-[105px]">
-              <span id="cancelProbTitle" class="text-[10px] uppercase font-semibold text-gray-400 block">Cancellation</span>
-              <span id="cancelProbVal" class="text-lg font-bold text-blue-400 block mt-0.5">18%</span>
-              <span class="text-[10px] text-gray-400 block">Moderate</span>
+            <div class="bg-white rounded-xl p-3 border border-[#dadce0] text-center min-w-[110px] shadow-sm">
+              <span id="cancelProbTitle" class="text-[10px] uppercase font-semibold text-[#5f6368] block">Cancellation</span>
+              <span id="cancelProbVal" class="text-xl font-bold text-[#1a73e8] block mt-0.5">18%</span>
+              <span class="text-[10px] text-[#5f6368] block">Moderate</span>
             </div>
-            <div class="bg-surface-900/80 rounded-xl p-3 border border-surface-700/80 text-center min-w-[105px]">
-              <span id="connRiskTitle" class="text-[10px] uppercase font-semibold text-gray-400 block">Connection Risk</span>
-              <span id="connRiskVal" class="text-lg font-bold text-rose-400 block mt-0.5">82%</span>
-              <span class="text-[10px] text-gray-400 block">High Risk</span>
+            <div class="bg-white rounded-xl p-3 border border-[#dadce0] text-center min-w-[110px] shadow-sm">
+              <span id="connRiskTitle" class="text-[10px] uppercase font-semibold text-[#5f6368] block">Connection Risk</span>
+              <span id="connRiskVal" class="text-xl font-bold text-[#d93025] block mt-0.5">82%</span>
+              <span class="text-[10px] text-[#5f6368] block">High Risk</span>
             </div>
           </div>
 
         </div>
       </section>
 
-      <!-- Two-Column Operational Core: Left (Map & Dimension Meters), Right (Actions & Guidance) -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Two-Column Operational Core -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-        <!-- Left Column (6 cols): Route Map & 4 Sub-Scores -->
+        <!-- Left Column (7 cols): Route Map & Dimensions -->
         <div class="lg:col-span-7 space-y-6">
           
           <!-- Interactive Route & Geometry Map -->
-          <div class="ops-glass-panel rounded-2xl p-4 shadow-xl overflow-hidden">
-            <div class="flex items-center justify-between mb-2">
+          <div class="google-card p-5 space-y-3">
+            <div class="flex items-center justify-between">
               <div class="flex items-center space-x-2">
-                <i data-lucide="map" class="w-4 h-4 text-blue-400"></i>
-                <h3 id="mapSectionTitle" class="text-xs font-bold uppercase tracking-wider text-gray-300">Airspace Corridor & Route Geometry</h3>
+                <i data-lucide="map" class="w-4 h-4 text-[#1a73e8]"></i>
+                <h3 id="mapSectionTitle" class="text-xs font-bold uppercase tracking-wider text-[#202124]">Airspace Corridor & Route Geometry</h3>
               </div>
-              <div id="routeFlightStats" class="text-xs text-gray-400 font-mono">
+              <div id="routeFlightStats" class="text-xs text-[#5f6368] font-mono">
                 2,580 mi • Est. 6h 10m
               </div>
             </div>
 
             <!-- Map Visual Layer Toggles -->
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-surface-700/60 text-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-1 border-b border-[#e8eaed] text-xs">
               <div class="flex flex-wrap items-center gap-1.5">
-                <span class="text-gray-400 text-[11px] font-medium mr-1">Live Overlays:</span>
-                <button type="button" id="toggleTomTomTrafficBtn" class="px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 border border-surface-600 flex items-center gap-1.5 transition text-[11px]" title="Toggle TomTom Live Highway Traffic Flow (Green/Orange/Red)">
-                  <span id="tomtomTrafficDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                <span class="text-[#80868b] text-[11px] font-medium mr-1">Overlays:</span>
+                <button type="button" id="toggleTomTomTrafficBtn" class="google-chip" title="Toggle TomTom Live Highway Traffic Flow (Green/Orange/Red)">
+                  <span id="tomtomTrafficDot" class="w-2 h-2 rounded-full bg-gray-400"></span>
                   <span>TomTom Traffic Flow</span>
                 </button>
-                <button type="button" id="toggleTomTomIncidentsBtn" class="px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 border border-surface-600 flex items-center gap-1.5 transition text-[11px]" title="Toggle TomTom Real-Time Road Closures & Incidents">
-                  <span id="tomtomIncidentsDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                <button type="button" id="toggleTomTomIncidentsBtn" class="google-chip" title="Toggle TomTom Real-Time Road Closures & Incidents">
+                  <span id="tomtomIncidentsDot" class="w-2 h-2 rounded-full bg-gray-400"></span>
                   <span>TomTom Incidents</span>
                 </button>
-                <button type="button" id="toggleNexradRadarBtn" class="px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 border border-surface-600 flex items-center gap-1.5 transition text-[11px]" title="Toggle NOAA NEXRAD Precipitation Storm Radar (Free)">
-                  <span id="nexradRadarDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                <button type="button" id="toggleNexradRadarBtn" class="google-chip" title="Toggle NOAA NEXRAD Precipitation Storm Radar (Free)">
+                  <span id="nexradRadarDot" class="w-2 h-2 rounded-full bg-gray-400"></span>
                   <span>NOAA Storm Radar</span>
                 </button>
               </div>
-              <div id="tomtomStatusIndicator" class="text-[10px] text-gray-400 font-mono"></div>
+              <div id="tomtomStatusIndicator" class="text-[10px] text-[#5f6368] font-mono"></div>
             </div>
-            <!-- Leaflet Container with HUD Corner Brackets -->
-            <div class="map-hud-frame">
-              <span class="map-hud-corner tl"></span>
-              <span class="map-hud-corner tr"></span>
-              <span class="map-hud-corner bl"></span>
-              <span class="map-hud-corner br"></span>
-              <div id="mapContainer" class="w-full h-72 rounded-xl z-10"></div>
+
+            <!-- Leaflet Container in Clean Frame -->
+            <div class="google-map-frame w-full h-80 rounded-xl">
+              <div id="mapContainer" class="w-full h-full z-10"></div>
             </div>
           </div>
 
           <!-- 4 Component Dimension Risk Meters -->
-          <div class="ops-glass-panel rounded-2xl p-5 shadow-xl">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-gray-300 mb-4 flex items-center justify-between">
+          <div class="google-card p-6 space-y-4">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#202124] flex items-center justify-between">
               <span id="dimensionsSectionTitle">Risk Decomposition by Dimension</span>
-              <span class="text-[10px] text-gray-500 font-normal">Bayesian Fused Scores</span>
+              <span class="text-[10px] text-[#5f6368] font-normal">Bayesian Fused Scores</span>
             </h3>
 
-            <div class="space-y-3.5">
+            <div class="space-y-4">
               <!-- Airspace ATC / Pass Controls -->
               <div>
-                <div class="flex justify-between text-xs mb-1">
-                  <span class="text-gray-300 font-medium flex items-center gap-1.5">
-                    <i id="airspaceDimIcon" data-lucide="shield" class="w-3.5 h-3.5 text-blue-400"></i>
+                <div class="flex justify-between text-xs mb-1.5 font-medium">
+                  <span class="text-[#3c4043] flex items-center gap-1.5">
+                    <i id="airspaceDimIcon" data-lucide="shield" class="w-3.5 h-3.5 text-[#1a73e8]"></i>
                     <span id="airspaceScoreLabel">FAA Airspace Programs & Capacity</span>
                   </span>
-                  <span id="airspaceScoreVal" class="font-bold text-gray-200">80 / 100</span>
+                  <span id="airspaceScoreVal" class="font-bold text-[#202124]">80 / 100</span>
                 </div>
-                <div class="w-full h-2 bg-surface-900 rounded-full overflow-hidden">
-                  <div id="airspaceScoreBar" class="h-full bg-blue-500 rounded-full transition-all duration-700" style="width: 80%"></div>
+                <div class="w-full h-2.5 bg-[#f1f3f4] rounded-full overflow-hidden">
+                  <div id="airspaceScoreBar" class="h-full bg-[#1a73e8] rounded-full transition-all duration-700" style="width: 80%"></div>
                 </div>
               </div>
 
               <!-- Arrival Terminal / Destination Approach -->
               <div>
-                <div class="flex justify-between text-xs mb-1">
-                  <span class="text-gray-300 font-medium flex items-center gap-1.5">
-                    <i id="arrWeatherDimIcon" data-lucide="cloud-rain" class="w-3.5 h-3.5 text-amber-400"></i>
+                <div class="flex justify-between text-xs mb-1.5 font-medium">
+                  <span class="text-[#3c4043] flex items-center gap-1.5">
+                    <i id="arrWeatherDimIcon" data-lucide="cloud-rain" class="w-3.5 h-3.5 text-[#f29900]"></i>
                     <span id="arrWeatherScoreLabel">Destination Terminal Conditions</span>
                   </span>
-                  <span id="arrWeatherScoreVal" class="font-bold text-gray-200">75 / 100</span>
+                  <span id="arrWeatherScoreVal" class="font-bold text-[#202124]">75 / 100</span>
                 </div>
-                <div class="w-full h-2 bg-surface-900 rounded-full overflow-hidden">
-                  <div id="arrWeatherScoreBar" class="h-full bg-amber-500 rounded-full transition-all duration-700" style="width: 75%"></div>
+                <div class="w-full h-2.5 bg-[#f1f3f4] rounded-full overflow-hidden">
+                  <div id="arrWeatherScoreBar" class="h-full bg-[#f29900] rounded-full transition-all duration-700" style="width: 75%"></div>
                 </div>
               </div>
 
               <!-- Departure Terminal / Departure Beltway -->
               <div>
-                <div class="flex justify-between text-xs mb-1">
-                  <span class="text-gray-300 font-medium flex items-center gap-1.5">
-                    <i id="depWeatherDimIcon" data-lucide="cloud" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <div class="flex justify-between text-xs mb-1.5 font-medium">
+                  <span class="text-[#3c4043] flex items-center gap-1.5">
+                    <i id="depWeatherDimIcon" data-lucide="cloud" class="w-3.5 h-3.5 text-[#188038]"></i>
                     <span id="depWeatherScoreLabel">Departure Terminal Conditions</span>
                   </span>
-                  <span id="depWeatherScoreVal" class="font-bold text-gray-200">20 / 100</span>
+                  <span id="depWeatherScoreVal" class="font-bold text-[#202124]">20 / 100</span>
                 </div>
-                <div class="w-full h-2 bg-surface-900 rounded-full overflow-hidden">
-                  <div id="depWeatherScoreBar" class="h-full bg-emerald-500 rounded-full transition-all duration-700" style="width: 20%"></div>
+                <div class="w-full h-2.5 bg-[#f1f3f4] rounded-full overflow-hidden">
+                  <div id="depWeatherScoreBar" class="h-full bg-[#188038] rounded-full transition-all duration-700" style="width: 20%"></div>
                 </div>
               </div>
 
               <!-- En-Route Airspace / Highway Corridor -->
               <div>
-                <div class="flex justify-between text-xs mb-1">
-                  <span class="text-gray-300 font-medium flex items-center gap-1.5">
-                    <i id="enrouteDimIcon" data-lucide="wind" class="w-3.5 h-3.5 text-purple-400"></i>
+                <div class="flex justify-between text-xs mb-1.5 font-medium">
+                  <span class="text-[#3c4043] flex items-center gap-1.5">
+                    <i id="enrouteDimIcon" data-lucide="wind" class="w-3.5 h-3.5 text-[#9334e6]"></i>
                     <span id="enrouteScoreLabel">En-Route Turbulence & AIRSIGMETs</span>
                   </span>
-                  <span id="enrouteScoreVal" class="font-bold text-gray-200">45 / 100</span>
+                  <span id="enrouteScoreVal" class="font-bold text-[#202124]">45 / 100</span>
                 </div>
-                <div class="w-full h-2 bg-surface-900 rounded-full overflow-hidden">
-                  <div id="enrouteScoreBar" class="h-full bg-purple-500 rounded-full transition-all duration-700" style="width: 45%"></div>
+                <div class="w-full h-2.5 bg-[#f1f3f4] rounded-full overflow-hidden">
+                  <div id="enrouteScoreBar" class="h-full bg-[#9334e6] rounded-full transition-all duration-700" style="width: 45%"></div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Hour-by-Hour Travel Day Risk Timeline -->
-          <div class="ops-glass-panel rounded-2xl p-5 shadow-xl">
-            <div class="flex items-center justify-between mb-3">
+          <div class="google-card p-6 space-y-3">
+            <div class="flex items-center justify-between">
               <div>
-                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-300">Hour-by-Hour Disruption Trajectory</h3>
-                <p class="text-[11px] text-gray-400">Identify the safest flight windows across the travel day</p>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-[#202124]">Hour-by-Hour Disruption Trajectory</h3>
+                <p class="text-[11px] text-[#5f6368]">Safest operating windows across the scheduled travel day</p>
               </div>
-              <span id="bestWindowBadge" class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-medium">
+              <span id="bestWindowBadge" class="text-[11px] bg-[#e6f4ea] text-[#137333] border border-[#a8dab5] px-3 py-1 rounded-full font-semibold">
                 Best Window: Morning
               </span>
             </div>
             <!-- Horizontal Hourly Timeline Slider -->
-            <div id="hourlyTimelineScroll" class="flex gap-2 overflow-x-auto pb-2 pt-1 scrollbar-thin">
+            <div id="hourlyTimelineScroll" class="flex gap-2.5 overflow-x-auto pb-2 pt-1 scrollbar-thin">
               <!-- Rendered via JS -->
             </div>
           </div>
 
         </div>
 
-        <!-- Right Column (5 cols): Action Matrix & Uncertainty -->
+        <!-- Right Column (5 cols): Actions & Uncertainty -->
         <div class="lg:col-span-5 space-y-6">
 
           <!-- Actionable Guidance Matrix Card -->
-          <div class="ops-glass-panel rounded-2xl p-5 shadow-xl">
-            <div class="flex items-center justify-between mb-4">
+          <div class="google-card p-6 space-y-4">
+            <div class="flex items-center justify-between">
               <div class="flex items-center space-x-2">
-                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-300">Operational Action Matrix</h3>
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#188038]"></i>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-[#202124]">Operational Action Matrix</h3>
               </div>
               <!-- Role Tabs -->
-              <div class="flex bg-surface-900 p-0.5 rounded-lg border border-surface-700 text-xs">
-                <button id="travelerTabBtn" class="px-2.5 py-1 rounded-md font-medium text-white bg-blue-600 transition">Traveler</button>
-                <button id="opsTabBtn" class="px-2.5 py-1 rounded-md font-medium text-gray-400 hover:text-white transition">Ops Team</button>
+              <div class="google-segmented-group">
+                <button id="travelerTabBtn" class="px-3 py-1 rounded-md font-semibold text-white bg-[#1a73e8] transition text-xs shadow-sm">Traveler</button>
+                <button id="opsTabBtn" class="px-3 py-1 rounded-md font-medium text-[#5f6368] hover:text-[#202124] transition text-xs">Ops Team</button>
               </div>
             </div>
 
@@ -566,88 +578,88 @@
               <!-- Injected by JS -->
             </div>
 
-            <!-- Ops Team Actions List (Hidden by default) -->
+            <!-- Ops Team Actions List -->
             <div id="opsActionsList" class="hidden space-y-3">
               <!-- Injected by JS -->
             </div>
           </div>
 
           <!-- Uncertainty & Confidence Quantification Panel -->
-          <div class="ops-glass-panel rounded-2xl p-5 shadow-xl">
-            <div class="flex items-center justify-between mb-3">
+          <div class="google-card p-6 space-y-4">
+            <div class="flex items-center justify-between">
               <div class="flex items-center space-x-2">
-                <i data-lucide="help-circle" class="w-4 h-4 text-blue-400"></i>
-                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-300">Uncertainty & Decision Sensitivity</h3>
+                <i data-lucide="help-circle" class="w-4 h-4 text-[#1a73e8]"></i>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-[#202124]">Uncertainty & Decision Sensitivity</h3>
               </div>
               <div class="flex items-center space-x-1.5">
-                <span id="confidenceScoreVal" class="text-xs font-bold text-blue-400">86%</span>
-                <span class="text-[10px] text-gray-400">Confidence</span>
+                <span id="confidenceScoreVal" class="text-xs font-bold text-[#1a73e8]">86%</span>
+                <span class="text-[10px] text-[#5f6368]">Confidence</span>
               </div>
             </div>
 
             <div class="space-y-3 text-xs">
               <!-- Confirmed Ground Truth -->
-              <div class="bg-surface-900/80 rounded-xl p-3 border border-surface-700/60">
+              <div class="bg-[#f0fdf4] rounded-xl p-3.5 border border-[#bbf7d0]">
                 <div class="flex items-center space-x-1.5 mb-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                  <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
+                  <span class="w-2 h-2 rounded-full bg-[#188038]"></span>
+                  <span class="text-[10px] font-bold text-[#15803d] uppercase tracking-wider">
                     Confirmed Real-Time Ground Truth
                   </span>
                 </div>
-                <ul id="confirmedFactorsList" class="space-y-1 text-gray-300 list-disc list-inside">
+                <ul id="confirmedFactorsList" class="space-y-1 text-[#166534] list-disc list-inside">
                   <!-- JS -->
                 </ul>
               </div>
 
               <!-- Forecast Model Variables -->
-              <div class="bg-surface-900/80 rounded-xl p-3 border border-surface-700/60">
+              <div class="bg-[#fffbeb] rounded-xl p-3.5 border border-[#fef08a]">
                 <div class="flex items-center space-x-1.5 mb-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                  <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
+                  <span class="w-2 h-2 rounded-full bg-[#f29900]"></span>
+                  <span class="text-[10px] font-bold text-[#b45309] uppercase tracking-wider">
                     Model Forecast Variables & Timing Variance
                   </span>
                 </div>
-                <ul id="forecastVariablesList" class="space-y-1 text-gray-300 list-disc list-inside">
+                <ul id="forecastVariablesList" class="space-y-1 text-[#92400e] list-disc list-inside">
                   <!-- JS -->
                 </ul>
               </div>
 
               <!-- Sensitivity Tipping Points -->
-              <div class="bg-surface-900/80 rounded-xl p-3 border border-surface-700/60">
+              <div class="bg-[#faf5ff] rounded-xl p-3.5 border border-[#e9d5ff]">
                 <div class="flex items-center space-x-1.5 mb-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-                  <span class="text-[10px] font-bold text-purple-400 uppercase tracking-wider">
+                  <span class="w-2 h-2 rounded-full bg-[#9334e6]"></span>
+                  <span class="text-[10px] font-bold text-[#7e22ce] uppercase tracking-wider">
                     Decision Sensitivity Drivers
                   </span>
                 </div>
-                <ul id="sensitivityDriversList" class="space-y-1 text-gray-300 list-disc list-inside">
+                <ul id="sensitivityDriversList" class="space-y-1 text-[#6b21a8] list-disc list-inside">
                   <!-- JS -->
                 </ul>
               </div>
 
               <!-- Interactive What-If Scenario Simulator -->
-              <div class="bg-surface-900/80 rounded-xl p-3 border border-surface-700/60">
-                <div class="flex items-center justify-between mb-1.5">
+              <div class="bg-[#f8f9fa] rounded-xl p-3.5 border border-[#dadce0]">
+                <div class="flex items-center justify-between mb-2">
                   <div class="flex items-center space-x-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-                    <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">
-                      Interactive What-If Scenario Simulation
+                    <span class="w-2 h-2 rounded-full bg-[#0284c7]"></span>
+                    <span class="text-[10px] font-bold text-[#0369a1] uppercase tracking-wider">
+                      Interactive What-If Simulation
                     </span>
                   </div>
-                  <span class="text-[9px] text-gray-500 font-mono">Real-Time Tester</span>
+                  <span class="text-[10px] text-[#80868b] font-mono">Live Tester</span>
                 </div>
-                <div class="flex flex-wrap gap-1.5 pt-1">
-                  <button type="button" class="whatif-btn text-[10px] px-2 py-0.5 rounded bg-surface-800 hover:bg-surface-700 text-gray-300 border border-surface-700 transition" data-scenario="early_window">
-                    ⏱️ Shift to Early Morning (06:00-09:00)
+                <div class="flex flex-wrap gap-1.5">
+                  <button type="button" class="whatif-btn google-chip text-[11px]" data-scenario="early_window">
+                    ⏱️ Early Morning Window (06:00-09:00)
                   </button>
-                  <button type="button" class="whatif-btn text-[10px] px-2 py-0.5 rounded bg-surface-800 hover:bg-surface-700 text-gray-300 border border-surface-700 transition" data-scenario="storm_intensifies">
-                    ⛈️ Severe Storm Front (+30% Precip)
+                  <button type="button" class="whatif-btn google-chip text-[11px]" data-scenario="storm_intensifies">
+                    ⛈️ Severe Front (+30% Precip)
                   </button>
-                  <button type="button" class="whatif-btn text-[10px] px-2 py-0.5 rounded bg-surface-800 hover:bg-surface-700 text-gray-300 border border-surface-700 transition" data-scenario="ground_stop_lifted">
-                    🟢 Ground Stop Cleared / Visual VFR
+                  <button type="button" class="whatif-btn google-chip text-[11px]" data-scenario="ground_stop_lifted">
+                    🟢 Ground Stop Cleared / VFR
                   </button>
                 </div>
-                <div id="whatIfResultBox" class="hidden mt-2 p-2 bg-black/40 rounded border border-cyan-500/30 text-[11px] text-cyan-300 leading-relaxed font-mono"></div>
+                <div id="whatIfResultBox" class="hidden mt-2.5 p-3 bg-white rounded-lg border border-[#bae6fd] text-[11px] text-[#0369a1] leading-relaxed font-mono shadow-sm"></div>
               </div>
 
             </div>
@@ -657,23 +669,23 @@
 
       </div>
 
-      <!-- Operational Alternate Routes & Bypasses -->
-      <section id="alternateRoutesSection" class="ops-glass-panel rounded-2xl p-6 shadow-2xl space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-700 pb-3">
-          <div class="flex items-center space-x-2.5">
-            <div class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+      <!-- Operational Alternate Routes & Bypasses (Google Flights Style) -->
+      <section id="alternateRoutesSection" class="google-card p-6 sm:p-7 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e8eaed] pb-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-[#e8f0fe] text-[#1a73e8] flex items-center justify-center">
               <i data-lucide="git-fork" class="w-4 h-4"></i>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <h3 class="text-sm font-bold text-[#202124] uppercase tracking-wider flex items-center gap-2">
                 <span>Evaluated Alternate Routes & Bypasses</span>
-                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 font-mono px-2 py-0.5 rounded border border-indigo-500/30">Dynamic Contingency Planning</span>
+                <span class="text-[10px] bg-[#e8f0fe] text-[#1a73e8] font-semibold px-2 py-0.5 rounded-full border border-[#aecbfa]">Dynamic Contingency Planning</span>
               </h3>
-              <p class="text-xs text-gray-400">Co-terminal regional airport bypasses, storm reroutes, and multimodal alternatives to avoid bottlenecks</p>
+              <p class="text-xs text-[#5f6368]">Co-terminal regional airport bypasses, storm reroutes, and highway driving alternatives</p>
             </div>
           </div>
-          <div class="text-xs text-gray-400 font-mono flex items-center gap-1.5">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <div class="text-xs text-[#5f6368] flex items-center gap-1.5 font-medium">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-[#188038]"></i>
             <span>Interactive Rerouting Enabled</span>
           </div>
         </div>
@@ -683,30 +695,30 @@
         </div>
       </section>
 
-      <!-- Highway Corridor, Halts & Strategic Stay Recommendations -->
-      <section id="roadwayStaySection" class="ops-glass-panel rounded-2xl p-6 shadow-2xl space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-700 pb-3">
-          <div class="flex items-center space-x-2.5">
-            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+      <!-- Highway Corridor, Halts & Strategic Stays -->
+      <section id="roadwayStaySection" class="google-card p-6 sm:p-7 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e8eaed] pb-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-[#e6f4ea] text-[#188038] flex items-center justify-center">
               <i data-lucide="car" class="w-4 h-4"></i>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <h3 class="text-sm font-bold text-[#202124] uppercase tracking-wider flex items-center gap-2">
                 <span>Interstate Roadway Corridor & Strategic Stays</span>
-                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-mono px-2 py-0.5 rounded border border-emerald-500/30">Extensible Roadway Module</span>
+                <span class="text-[10px] bg-[#e6f4ea] text-[#188038] font-semibold px-2 py-0.5 rounded-full border border-[#a8dab5]">Roadway Telemetry</span>
               </h3>
-              <p class="text-xs text-gray-400">Ground transit disruption monitoring, driver fatigue rest halts, and vetted emergency motel/stay contingencies</p>
+              <p class="text-xs text-[#5f6368]">Ground transit disruption monitoring, driver fatigue rest halts, and vetted lodging contingencies</p>
             </div>
           </div>
-          <div id="roadwayStatsBadge" class="text-xs text-gray-300 font-mono bg-surface-900 px-3 py-1.5 rounded-lg border border-surface-700">
+          <div id="roadwayStatsBadge" class="text-xs text-[#202124] font-mono font-medium bg-[#f1f3f4] px-3.5 py-1.5 rounded-full border border-[#dadce0]">
             <!-- Driving Distance & Time injected by JS -->
           </div>
         </div>
 
         <!-- Roadway Surface Hazards Grid -->
         <div>
-          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300 mb-2.5 flex items-center gap-2">
-            <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-400"></i>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[#3c4043] mb-3 flex items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-[#f29900]"></i>
             <span>Road Weather Hazards & DOT Advisories</span>
           </h4>
           <div id="roadwayDisruptionsList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -714,31 +726,31 @@
           </div>
         </div>
 
-        <!-- Two Columns: Halts along the way (Left) & Stay/Motel Recommendations (Right) -->
+        <!-- Two Columns: Halts along the way & Stays -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
           
-          <!-- Tactical Highway Halts (6 cols) -->
+          <!-- Tactical Highway Halts -->
           <div class="lg:col-span-6 space-y-3">
             <div class="flex items-center justify-between">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-2">
-                <i data-lucide="navigation" class="w-3.5 h-3.5 text-blue-400"></i>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-[#3c4043] flex items-center gap-2">
+                <i data-lucide="navigation" class="w-3.5 h-3.5 text-[#1a73e8]"></i>
                 <span>Tactical Halts & Waypoint Suggestions</span>
               </h4>
-              <span class="text-[10px] text-gray-500">Fatigue & Charging Hubs</span>
+              <span class="text-[10px] text-[#80868b]">Fatigue & Charging Hubs</span>
             </div>
             <div id="haltSuggestionsList" class="space-y-3">
               <!-- Injected by JS -->
             </div>
           </div>
 
-          <!-- Strategic Stay & Motel Recommendations (6 cols) -->
+          <!-- Strategic Stay & Motel Recommendations -->
           <div class="lg:col-span-6 space-y-3">
             <div class="flex items-center justify-between">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-2">
-                <i data-lucide="bed" class="w-3.5 h-3.5 text-purple-400"></i>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-[#3c4043] flex items-center gap-2">
+                <i data-lucide="bed" class="w-3.5 h-3.5 text-[#9334e6]"></i>
                 <span>Strategic Stays & Motel Contingencies</span>
               </h4>
-              <span class="text-[10px] text-gray-500">Vetted Refuge Lodging</span>
+              <span class="text-[10px] text-[#80868b]">Vetted Refuge Lodging</span>
             </div>
             <div id="stayRecommendationsList" class="space-y-3">
               <!-- Injected by JS -->
@@ -749,50 +761,50 @@
       </section>
 
       <!-- AI Synthesis & Operations Executive Briefing -->
-      <section class="ops-glass-panel rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-        <div class="flex items-center justify-between mb-4 border-b border-surface-700 pb-3">
-          <div class="flex items-center space-x-2.5">
-            <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
+      <section class="google-card p-6 sm:p-7 space-y-4">
+        <div class="flex items-center justify-between border-b border-[#e8eaed] pb-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-[#e8f0fe] text-[#1a73e8] flex items-center justify-center">
               <i data-lucide="cpu" class="w-4 h-4"></i>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Operational Intelligence Briefing</h3>
-              <p class="text-[11px] text-gray-400">Multi-source cognitive synthesis for Operations Leadership</p>
+              <h3 class="text-sm font-bold text-[#202124] uppercase tracking-wider">Operational Intelligence Briefing</h3>
+              <p class="text-[11px] text-[#5f6368]">Multi-source cognitive synthesis for Operations Leadership</p>
             </div>
           </div>
-          <span id="aiEngineBadge" class="text-xs bg-surface-700 text-gray-300 font-mono px-2.5 py-1 rounded-lg border border-surface-600">
+          <span id="aiEngineBadge" class="text-xs bg-[#f1f3f4] text-[#3c4043] font-mono px-3 py-1 rounded-full border border-[#dadce0] font-medium">
             AeroGuard Bayesian Engine
           </span>
         </div>
 
-        <div id="aiBriefingText" class="prose prose-invert max-w-none text-xs text-gray-300 leading-relaxed space-y-3 font-sans">
+        <div id="aiBriefingText" class="prose max-w-none text-xs text-[#3c4043] leading-relaxed space-y-3 font-sans">
           <!-- Briefing content injected by JS -->
         </div>
       </section>
 
-      <!-- Traceable Evidence Dossier (What the evidence is behind each recommendation) -->
-      <section id="evidenceDossier" class="ops-glass-panel rounded-2xl p-6 shadow-2xl">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-surface-700 pb-3">
+      <!-- Traceable Evidence Dossier -->
+      <section id="evidenceDossier" class="google-card p-6 sm:p-7 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e8eaed] pb-3">
           <div>
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <i data-lucide="database" class="w-4 h-4 text-blue-400"></i>
+            <h3 class="text-sm font-bold text-[#202124] uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="database" class="w-4 h-4 text-[#1a73e8]"></i>
               <span>Traceable Evidence Dossier</span>
             </h3>
-            <p class="text-xs text-gray-400">Verifiable telemetry from official government feeds and atmospheric sensor networks</p>
+            <p class="text-xs text-[#5f6368]">Verifiable telemetry from official government feeds and atmospheric sensor networks</p>
           </div>
 
-          <!-- Evidence Filters -->
+          <!-- Evidence Filters (Google Pill Group) -->
           <div class="flex flex-wrap gap-1 text-xs">
-            <button class="ev-filter-btn px-2.5 py-1 rounded bg-blue-600 text-white font-medium" data-filter="all">All Signals</button>
-            <button class="ev-filter-btn px-2.5 py-1 rounded bg-surface-700 hover:bg-surface-600 text-gray-300" data-filter="airspace">FAA Airspace</button>
-            <button class="ev-filter-btn px-2.5 py-1 rounded bg-surface-700 hover:bg-surface-600 text-gray-300" data-filter="arrival_weather">Destination</button>
-            <button class="ev-filter-btn px-2.5 py-1 rounded bg-surface-700 hover:bg-surface-600 text-gray-300" data-filter="departure_weather">Origin</button>
-            <button class="ev-filter-btn px-2.5 py-1 rounded bg-surface-700 hover:bg-surface-600 text-gray-300" data-filter="enroute">En-Route</button>
+            <button class="ev-filter-btn google-chip active" data-filter="all">All Signals</button>
+            <button class="ev-filter-btn google-chip" data-filter="airspace">FAA Airspace</button>
+            <button class="ev-filter-btn google-chip" data-filter="arrival_weather">Destination</button>
+            <button class="ev-filter-btn google-chip" data-filter="departure_weather">Origin</button>
+            <button class="ev-filter-btn google-chip" data-filter="enroute">En-Route</button>
           </div>
         </div>
 
         <!-- Evidence Cards Container -->
-        <div id="evidenceList" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div id="evidenceList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Injected via JS -->
         </div>
       </section>
@@ -801,143 +813,145 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-surface-700 bg-surface-800/80 py-4 mt-8 text-center text-xs text-gray-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>
-        <span>Strata Ops Disruption Intelligence Prototype</span> • <span>Built for Corporate Travel Operations</span>
+  <!-- Clean Google Style Footer -->
+  <footer class="border-t border-[#dadce0] bg-white py-6 mt-12 text-center text-xs text-[#5f6368]">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center space-x-2">
+        <span class="font-semibold text-[#202124]">Strata Ops</span>
+        <span>•</span>
+        <span>Enterprise Travel Disruption Intelligence</span>
       </div>
-      <div class="flex items-center space-x-3 text-gray-400">
+      <div class="flex items-center space-x-3 text-[#5f6368]">
         <span>FAA ATCSCC</span>
         <span>•</span>
         <span>NOAA NWS</span>
         <span>•</span>
-        <span>AviationWeather AWC</span>
+        <span>AviationWeather</span>
         <span>•</span>
         <span>Open-Meteo</span>
       </div>
     </div>
   </footer>
 
-  <!-- Persistent Right-Side AI Journey Companion Dock -->
-  <aside id="journeyChatSidePanel" class="fixed right-3 bottom-3 md:right-5 md:bottom-5 z-40 w-[350px] sm:w-[390px] lg:w-[410px] h-[560px] max-h-[85vh] flex flex-col bg-surface-800/95 backdrop-blur-xl border border-surface-600 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
+  <!-- Persistent Right-Side AI Journey Companion Dock (Google Gemini Aesthetic) -->
+  <aside id="journeyChatSidePanel" class="fixed right-3 bottom-3 md:right-5 md:bottom-5 z-40 w-[350px] sm:w-[390px] lg:w-[410px] h-[580px] max-h-[85vh] flex flex-col rounded-2xl overflow-hidden shadow-2xl">
     
     <!-- Dock Header -->
-    <div class="px-3.5 py-2.5 bg-surface-900/95 border-b border-surface-700/80 flex items-center justify-between flex-shrink-0">
-      <div class="flex items-center space-x-2">
-        <div class="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center flex-shrink-0">
-          <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+    <div class="px-4 py-3 bg-white border-b border-[#dadce0] flex items-center justify-between flex-shrink-0 shadow-sm">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-7 h-7 rounded-full bg-[#e8f0fe] text-[#1a73e8] flex items-center justify-center flex-shrink-0">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
         </div>
         <div>
           <div class="flex items-center gap-1.5">
-            <h3 class="text-xs font-bold text-white uppercase tracking-wider">Ops AI Companion</h3>
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <h3 class="text-xs font-bold text-[#202124] tracking-tight">Ops AI Companion</h3>
+            <span class="w-2 h-2 rounded-full bg-[#188038] animate-pulse"></span>
           </div>
-          <span id="chatRouteContextBadge" class="text-[10px] text-gray-400 font-mono block truncate max-w-[190px]">
+          <span id="chatRouteContextBadge" class="text-[10px] text-[#5f6368] font-mono block truncate max-w-[200px]">
             JFK → SFO (Live Route)
           </span>
         </div>
       </div>
 
       <div class="flex items-center space-x-1">
-        <button type="button" id="clearChatBtn" class="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-surface-700/70 transition" title="Clear Chat History">
+        <button type="button" id="clearChatBtn" class="p-1.5 text-[#5f6368] hover:text-[#202124] rounded-full hover:bg-gray-100 transition" title="Clear Chat History">
           <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
         </button>
-        <button type="button" id="expandChatBtn" class="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-surface-700/70 transition" title="Expand Chat Screen">
+        <button type="button" id="expandChatBtn" class="p-1.5 text-[#5f6368] hover:text-[#202124] rounded-full hover:bg-gray-100 transition" title="Expand Chat Screen">
           <i data-lucide="maximize-2" id="expandChatIcon" class="w-3.5 h-3.5"></i>
         </button>
-        <button type="button" id="minimizeChatBtn" class="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-surface-700/70 transition" title="Minimize to Dock">
+        <button type="button" id="minimizeChatBtn" class="p-1.5 text-[#5f6368] hover:text-[#202124] rounded-full hover:bg-gray-100 transition" title="Minimize to Dock">
           <i data-lucide="minus" class="w-3.5 h-3.5"></i>
         </button>
       </div>
     </div>
 
     <!-- Scrollable Chat Stream (flex-1) -->
-    <div id="journeyChatStream" class="flex-1 overflow-y-auto p-3.5 space-y-3 bg-surface-950/70 text-xs">
+    <div id="journeyChatStream" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#f8fafd] text-xs">
       <!-- Initial greeting -->
-      <div class="flex items-start gap-2">
-        <div class="w-6 h-6 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
-        <div class="bg-surface-800 border border-surface-700/80 p-2.5 rounded-xl text-gray-200 space-y-1">
-          <p class="font-semibold text-white">Hello! I am your real-time Journey Disruption Assistant.</p>
-          <p class="text-gray-300 leading-relaxed text-[11px]">I am tracking live FAA ground programs, NOAA radar, road surface sensors, and vetted alternate routes. Ask me anything or choose a quick inquiry below.</p>
+      <div class="flex items-start gap-2.5">
+        <div class="w-6 h-6 rounded-full bg-[#e8f0fe] text-[#1a73e8] flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
+        <div class="bg-white border border-[#dadce0] p-3 rounded-2xl text-[#202124] space-y-1 shadow-sm">
+          <p class="font-semibold text-[#1a73e8]">Hello! I am your real-time Journey Disruption Assistant.</p>
+          <p class="text-[#5f6368] leading-relaxed text-[11px]">I monitor FAA ground programs, NOAA precipitation radar, road hazards, and recommended bypasses. Ask me anything or select a quick question below.</p>
         </div>
       </div>
     </div>
 
     <!-- Quick Prompt Chips Area -->
-    <div class="px-3 py-2 bg-surface-900/80 border-t border-surface-700/60 flex-shrink-0">
+    <div class="px-3.5 py-2.5 bg-white border-t border-[#dadce0] flex-shrink-0">
       <div id="journeyChatChips" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto">
-        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="Where should I stop for fuel and fatigue breaks?">
+        <button type="button" class="journey-chip google-chip text-[10px]" data-prompt="Where should I stop for fuel and fatigue breaks?">
           ⛽ Fuel & Fatigue Stops
         </button>
-        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="What if I need only one halt?">
+        <button type="button" class="journey-chip google-chip text-[10px]" data-prompt="What if I need only one halt?">
           📍 Only One Halt
         </button>
-        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="What is the best departure window to avoid traffic?">
+        <button type="button" class="journey-chip google-chip text-[10px]" data-prompt="What is the best departure window to avoid traffic?">
           ⏱️ Best Departure Window
         </button>
-        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="Draft an email to my manager about my road trip schedule">
+        <button type="button" class="journey-chip google-chip text-[10px]" data-prompt="Draft an email to my manager about my road trip schedule">
           📋 Draft Manager Email
         </button>
       </div>
     </div>
 
     <!-- Chat Input Footer -->
-    <form id="journeyChatForm" class="p-2.5 bg-surface-900 border-t border-surface-700/80 flex items-center gap-1.5 flex-shrink-0">
+    <form id="journeyChatForm" class="p-3 bg-white border-t border-[#dadce0] flex items-center gap-2 flex-shrink-0">
       <input type="text" id="journeyChatInput" placeholder="Ask about stops, departure windows, alternates, hotels..." 
-        class="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-400 text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-sans h-10 shadow-inner">
-      <button type="submit" id="journeyChatSendBtn" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs flex items-center justify-center transition h-10 shadow" title="Send message">
+        class="flex-1 px-3.5 py-2 bg-white border border-[#dadce0] rounded-full text-[#202124] placeholder-gray-400 text-xs focus:outline-none focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/20 font-sans h-10 shadow-sm">
+      <button type="submit" id="journeyChatSendBtn" class="px-4 py-2 bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold rounded-full text-xs flex items-center justify-center transition h-10 shadow" title="Send message">
         <i data-lucide="send" class="w-3.5 h-3.5"></i>
       </button>
     </form>
   </aside>
 
   <!-- Minimized Floating Pill Button (When panel is minimized) -->
-  <button type="button" id="floatingChatTriggerBtn" class="hidden fixed right-4 bottom-4 md:right-6 md:bottom-6 z-40 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-2xl shadow-2xl border border-blue-400/40 flex items-center gap-2 transition transform hover:scale-105">
-    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-    <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+  <button type="button" id="floatingChatTriggerBtn" class="hidden fixed right-4 bottom-4 md:right-6 md:bottom-6 z-40 px-4 py-2.5 bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold rounded-full shadow-xl border border-blue-400 flex items-center gap-2 transition transform hover:scale-105">
+    <span class="w-2 h-2 rounded-full bg-[#34a853] animate-pulse"></span>
+    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
     <span class="text-xs">Ops AI Assistant</span>
-    <span id="floatingChatRouteBadge" class="text-[10px] bg-black/40 font-mono px-1.5 py-0.5 rounded">Live Telemetry</span>
+    <span id="floatingChatRouteBadge" class="text-[10px] bg-white/20 font-mono px-2 py-0.5 rounded-full">Live Telemetry</span>
   </button>
 
-  <!-- Settings / Gemini Key Modal -->
-  <div id="settingsModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-surface-800 border border-surface-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="text-base font-bold text-white flex items-center gap-2">
-          <i data-lucide="sparkles" class="w-5 h-5 text-blue-400"></i>
+  <!-- Settings / Gemini Key Modal (Clean Google Modal) -->
+  <div id="settingsModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="google-card bg-white max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[#e8eaed] pb-3">
+        <h3 class="text-base font-bold text-[#202124] flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-5 h-5 text-[#1a73e8]"></i>
           <span>AI Engine Configuration</span>
         </h3>
-        <button id="closeSettingsBtn" class="text-gray-400 hover:text-white">
+        <button id="closeSettingsBtn" class="text-[#5f6368] hover:text-[#202124] rounded-full p-1 hover:bg-gray-100">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <p class="text-xs text-gray-300 leading-relaxed">
-        Strata Ops features a high-performance <strong>Built-in Bayesian Intelligence Engine</strong> that runs without any API key.
-        Optionally, you can connect your Google Gemini API key to unlock LLM generative briefings with <strong>Gemini 2.5 Flash</strong>.
+      <p class="text-xs text-[#5f6368] leading-relaxed">
+        Strata Ops runs on our <strong>Built-in Bayesian Intelligence Engine</strong> without any external keys required.
+        Optionally, you can attach a Google Gemini key to unlock LLM generative briefings powered by <strong>Gemini 2.5 Flash</strong>.
       </p>
 
       <div>
-        <label class="block text-xs font-semibold text-gray-300 mb-1">Google Gemini API Key (Optional)</label>
+        <label class="block text-xs font-semibold text-[#3c4043] mb-1">Google Gemini API Key (Optional)</label>
         <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." 
-          class="w-full px-3 py-2 bg-surface-900 border border-surface-700 rounded-xl text-white text-xs focus:outline-none focus:border-blue-500 font-mono">
-        <span class="text-[11px] text-gray-500 mt-1 block">Free tier available from <a href="https://aistudio.google.com/" target="_blank" class="text-blue-400 underline">Google AI Studio</a>.</span>
+          class="w-full px-3 py-2 bg-white border border-[#dadce0] rounded-xl text-[#202124] text-xs focus:outline-none focus:border-[#1a73e8] font-mono">
+        <span class="text-[11px] text-[#80868b] mt-1 block">Get a free key from <a href="https://aistudio.google.com/" target="_blank" class="text-[#1a73e8] underline">Google AI Studio</a>.</span>
       </div>
 
-      <div class="pt-2 border-t border-surface-700/60">
-        <label class="block text-xs font-semibold text-gray-300 mb-1 flex items-center justify-between">
+      <div class="pt-2 border-t border-[#e8eaed]">
+        <label class="block text-xs font-semibold text-[#3c4043] mb-1 flex items-center justify-between">
           <span>TomTom Developer API Key (Traffic & Maps)</span>
-          <span class="text-[10px] text-emerald-400 font-mono">Live Visuals</span>
+          <span class="text-[10px] text-[#188038] font-mono font-semibold">Live Visuals</span>
         </label>
         <input type="password" id="tomtomApiKeyInput" placeholder="Paste your TomTom API key..." 
-          class="w-full px-3 py-2 bg-surface-900 border border-surface-700 rounded-xl text-white text-xs focus:outline-none focus:border-blue-500 font-mono">
-        <span class="text-[11px] text-gray-500 mt-1 block">Unlocks real-time highway traffic flow layers (relative/absolute delay) & incident markers from <a href="https://developer.tomtom.com/" target="_blank" class="text-blue-400 underline">developer.tomtom.com</a>.</span>
+          class="w-full px-3 py-2 bg-white border border-[#dadce0] rounded-xl text-[#202124] text-xs focus:outline-none focus:border-[#1a73e8] font-mono">
+        <span class="text-[11px] text-[#80868b] mt-1 block">Enables live highway traffic flows and real-time road incidents from <a href="https://developer.tomtom.com/" target="_blank" class="text-[#1a73e8] underline">developer.tomtom.com</a>.</span>
       </div>
 
-      <div class="flex items-center justify-end space-x-2 pt-2">
-        <button id="clearKeyBtn" class="px-3 py-1.5 text-xs text-gray-400 hover:text-white rounded-lg">Clear Keys</button>
-        <button id="saveKeyBtn" class="px-4 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg shadow">Save & Apply</button>
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-[#e8eaed]">
+        <button id="clearKeyBtn" class="px-3.5 py-1.5 text-xs text-[#5f6368] hover:text-[#202124] rounded-lg">Clear Keys</button>
+        <button id="saveKeyBtn" class="btn-google-primary px-4 py-2 text-xs rounded-full shadow">Save & Apply</button>
       </div>
     </div>
   </div>
@@ -945,6 +959,6 @@
   <!-- Operational Floating Toast Notifications Container -->
   <div id="opsToastContainer" aria-live="polite" aria-atomic="true"></div>
 
-  <script src="/static/app.js?v=20261011_9"></script>
+  <script src="/static/app.js?v=20261011_10"></script>
 </body>
 </html>
