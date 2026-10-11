@@ -140,6 +140,7 @@ async function initSettings() {
       }
 
       updateTomTomUIStatus();
+      applyBaseMapTiles();
       refreshActiveTomTomLayers();
 
       settingsModal.classList.add('hidden');
@@ -155,6 +156,7 @@ async function initSettings() {
       tomtomApiKey = '';
       aiEngineLabel.textContent = 'AI Engine';
       updateTomTomUIStatus();
+      applyBaseMapTiles();
       refreshActiveTomTomLayers();
       settingsModal.classList.add('hidden');
     });
@@ -796,6 +798,30 @@ function setMeter(textId, barId, score) {
 /**
  * Leaflet Map Render
  */
+let baseMapLayer = null;
+
+function applyBaseMapTiles() {
+  if (!flightMap) return;
+  if (baseMapLayer) {
+    flightMap.removeLayer(baseMapLayer);
+    baseMapLayer = null;
+  }
+
+  if (tomtomApiKey) {
+    // If TomTom developer API key is configured, use official TomTom Night tiles
+    baseMapLayer = L.tileLayer(
+      `https://api.tomtom.com/map/1/tile/basic/night/{z}/{x}/{y}.png?key=${tomtomApiKey}`,
+      { maxZoom: 18, zIndex: 1 }
+    ).addTo(flightMap);
+  } else {
+    // Zero-Key Native Dark Slate Canvas (ESRI Dark Gray - No Watermark, 100% Free)
+    baseMapLayer = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 16, zIndex: 1, attribution: 'Tiles &copy; Esri' }
+    ).addTo(flightMap);
+  }
+}
+
 function initMap() {
   const mapEl = document.getElementById('mapContainer');
   if (!mapEl) return;
@@ -804,10 +830,7 @@ function initMap() {
     attributionControl: false,
   }).setView([39.8283, -98.5795], 4);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 18,
-    subdomains: 'abcd',
-  }).addTo(flightMap);
+  applyBaseMapTiles();
 }
 
 function updateMap(route, travelMode = 'air', halts = [], stays = []) {
