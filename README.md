@@ -118,8 +118,9 @@ Operations decisions require knowing *how sure* the system is:
      - **Upper Plains / Weather-Resilient Highway Bypasses**: Flat terrain corridors (e.g., US-287/US-82) avoiding mountain gradients and metro choke points.
    - **One-Click Reroute Execution**: Clicking **[Switch to This Route]** auto-populates the assessment form and instantly runs live telemetry for the new route.
 
-3. **Interactive Journey Companion AI Assistant (Ask Ops AI)**:
-   - An interactive conversational dispatcher embedded directly into the live dashboard (`POST /api/chat-assistant`).
+3. **Interactive Journey Companion AI Assistant (Persistent Right-Side Dock)**:
+   - A persistent right-side docked assistant (`#journeyChatSidePanel`, fixed at bottom-right viewport `z-40`) allowing users to interactively query the route while viewing the live map, telemetry gauges, and parameter controls side-by-side without scrolling away.
+   - Includes minimize-to-pill (`#floatingChatTriggerBtn`), clear history, and live route context badges (`chatRouteContextBadge`).
    - Context-aware intelligence grounded in the trip's live telemetry, FAA notices, METAR observations, road conditions, and alternate routes.
    - Handles situational inquiries:
      - *Delay & Cancellation Recovery Protocols* (airline app rebooking rules, carry-on guidance).

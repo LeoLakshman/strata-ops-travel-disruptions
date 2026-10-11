@@ -780,6 +780,13 @@ function renderResults(data) {
   // Evidence Dossier
   renderEvidence();
 
+  // Update Right-Side Chat Dock Context Badges
+  const routeBadgeText = `${data.route.origin.iata} → ${data.route.destination.iata} (${data.travel_mode.toUpperCase()})`;
+  const chatRouteBadge = document.getElementById('chatRouteContextBadge');
+  const floatRouteBadge = document.getElementById('floatingChatRouteBadge');
+  if (chatRouteBadge) chatRouteBadge.textContent = routeBadgeText;
+  if (floatRouteBadge) floatRouteBadge.textContent = routeBadgeText;
+
   lucide.createIcons();
 }
 
@@ -1500,6 +1507,53 @@ function initJourneyChatAssistant() {
   const chipsContainer = document.getElementById('journeyChatChips');
 
   if (!form || !input || !stream) return;
+
+  const sidePanel = document.getElementById('journeyChatSidePanel');
+  const floatingBtn = document.getElementById('floatingChatTriggerBtn');
+  const minimizeBtn = document.getElementById('minimizeChatBtn');
+  const clearBtn = document.getElementById('clearChatBtn');
+  const navChatBtn = document.getElementById('navOpenChatBtn');
+
+  // Minimize Side Dock
+  if (minimizeBtn) {
+    minimizeBtn.addEventListener('click', () => {
+      if (sidePanel) sidePanel.classList.add('hidden');
+      if (floatingBtn) floatingBtn.classList.remove('hidden');
+    });
+  }
+
+  // Open & Focus Side Dock
+  function openChatDock() {
+    if (sidePanel) {
+      sidePanel.classList.remove('hidden');
+      lucide.createIcons();
+    }
+    if (floatingBtn) floatingBtn.classList.add('hidden');
+    if (input) input.focus();
+  }
+
+  if (floatingBtn) {
+    floatingBtn.addEventListener('click', openChatDock);
+  }
+
+  if (navChatBtn) {
+    navChatBtn.addEventListener('click', openChatDock);
+  }
+
+  // Clear Chat History
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      stream.innerHTML = `
+        <div class="flex items-start gap-2">
+          <div class="w-6 h-6 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
+          <div class="bg-surface-800 border border-surface-700/80 p-2.5 rounded-xl text-gray-200 space-y-1">
+            <p class="font-semibold text-white">Chat history cleared.</p>
+            <p class="text-gray-300 leading-relaxed text-[11px]">How can I assist you with your travel route?</p>
+          </div>
+        </div>
+      `;
+    });
+  }
 
   // Handle Quick Chips
   document.querySelectorAll('.journey-chip').forEach(chip => {
