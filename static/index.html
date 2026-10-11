@@ -21,6 +21,7 @@
               900: '#1e3a8a',
             },
             surface: {
+              950: '#060911',
               900: '#0b0f19',
               800: '#111827',
               700: '#1f2937',
@@ -39,7 +40,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="/static/style.css?v=20261011_7">
+  <link rel="stylesheet" href="/static/style.css?v=20261011_8">
 </head>
 <body class="bg-surface-900 text-gray-100 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
 
@@ -813,6 +814,9 @@
         <button type="button" id="clearChatBtn" class="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-surface-700/70 transition" title="Clear Chat History">
           <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
         </button>
+        <button type="button" id="expandChatBtn" class="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-surface-700/70 transition" title="Expand Chat Screen">
+          <i data-lucide="maximize-2" id="expandChatIcon" class="w-3.5 h-3.5"></i>
+        </button>
         <button type="button" id="minimizeChatBtn" class="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-surface-700/70 transition" title="Minimize to Dock">
           <i data-lucide="minus" class="w-3.5 h-3.5"></i>
         </button>
@@ -834,26 +838,26 @@
     <!-- Quick Prompt Chips Area -->
     <div class="px-3 py-2 bg-surface-900/80 border-t border-surface-700/60 flex-shrink-0">
       <div id="journeyChatChips" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto">
-        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="What should I do if my flight or drive is delayed?">
-          🛡️ Delay Protocol
+        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="Where should I stop for fuel and fatigue breaks?">
+          ⛽ Fuel & Fatigue Stops
         </button>
-        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="Is driving better or faster than flying for this route?">
-          🚗 Flight vs Drive
+        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="What if I need only one halt?">
+          📍 Only One Halt
         </button>
-        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="Draft a delay update email for my team or client">
+        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="What is the best departure window to avoid traffic?">
+          ⏱️ Best Departure Window
+        </button>
+        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="Draft an email to my manager about my road trip schedule">
           📋 Draft Manager Email
-        </button>
-        <button type="button" class="journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="What alternate routes or airports can I take?">
-          🔄 Alternate Routes
         </button>
       </div>
     </div>
 
     <!-- Chat Input Footer -->
     <form id="journeyChatForm" class="p-2.5 bg-surface-900 border-t border-surface-700/80 flex items-center gap-1.5 flex-shrink-0">
-      <input type="text" id="journeyChatInput" placeholder="Ask about delay impacts, alternates, hotel vouchers..." 
-        class="flex-1 px-3 py-2 bg-surface-950 border border-surface-700 rounded-xl text-white text-xs focus:outline-none focus:border-blue-500 font-sans h-9">
-      <button type="submit" id="journeyChatSendBtn" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs flex items-center justify-center transition h-9 shadow" title="Send message">
+      <input type="text" id="journeyChatInput" placeholder="Ask about stops, departure windows, alternates, hotels..." 
+        class="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-400 text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-sans h-10 shadow-inner">
+      <button type="submit" id="journeyChatSendBtn" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs flex items-center justify-center transition h-10 shadow" title="Send message">
         <i data-lucide="send" class="w-3.5 h-3.5"></i>
       </button>
     </form>
@@ -909,6 +913,6 @@
     </div>
   </div>
 
-  <script src="/static/app.js?v=20261011_7"></script>
+  <script src="/static/app.js?v=20261011_8"></script>
 </body>
 </html>

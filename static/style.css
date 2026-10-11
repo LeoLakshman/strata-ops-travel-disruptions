@@ -161,3 +161,45 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     color: #475569 !important;
   }
 }
+
+/* Chatbot Input High-Contrast Visual Styling */
+#journeyChatInput {
+  background-color: #0b0f19 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid #374151 !important;
+  font-size: 13px !important;
+}
+
+#journeyChatInput::placeholder {
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+}
+
+#journeyChatInput:focus {
+  background-color: #111827 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-color: #3b82f6 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Chatbot Expanded Mode */
+#journeyChatSidePanel.chat-expanded {
+  width: calc(100vw - 1.5rem) !important;
+  max-width: 840px !important;
+  height: 84vh !important;
+  max-height: 880px !important;
+  right: 0.75rem !important;
+  bottom: 0.75rem !important;
+  border-color: rgba(99, 102, 241, 0.5) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(59, 130, 246, 0.25) !important;
+}
+
+@media (min-width: 768px) {
+  #journeyChatSidePanel.chat-expanded {
+    right: 1.5rem !important;
+    bottom: 1.5rem !important;
+  }
+}

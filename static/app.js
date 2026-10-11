@@ -798,12 +798,45 @@ function renderResults(data) {
   // Evidence Dossier
   renderEvidence();
 
-  // Update Right-Side Chat Dock Context Badges
+  // Update Right-Side Chat Dock Context Badges & Chips
   const routeBadgeText = `${data.route.origin.iata} → ${data.route.destination.iata} (${data.travel_mode.toUpperCase()})`;
   const chatRouteBadge = document.getElementById('chatRouteContextBadge');
   const floatRouteBadge = document.getElementById('floatingChatRouteBadge');
   if (chatRouteBadge) chatRouteBadge.textContent = routeBadgeText;
   if (floatRouteBadge) floatRouteBadge.textContent = routeBadgeText;
+
+  const chatChipsEl = document.getElementById('journeyChatChips');
+  if (chatChipsEl) {
+    chatChipsEl.innerHTML = '';
+    const chipItems = data.travel_mode === 'road' ? [
+      { label: '⛽ Fuel & Fatigue Stops', prompt: 'Where should I stop for fuel and fatigue breaks?' },
+      { label: '📍 Only One Halt', prompt: 'What if I need only one halt?' },
+      { label: '⏱️ Best Departure Window', prompt: 'What is the best departure window to avoid traffic?' },
+      { label: '📋 Draft Manager Email', prompt: 'Draft an email to my manager about my road trip schedule' },
+    ] : [
+      { label: '🛡️ Delay Protocol', prompt: 'What should I do if my flight or drive is delayed?' },
+      { label: '🚗 Flight vs Drive', prompt: 'Is driving better or faster than flying for this route?' },
+      { label: '📋 Draft Manager Email', prompt: 'Draft a delay update email for my team or client' },
+      { label: '🔄 Alternate Routes', prompt: 'What alternate routes or airports can I take?' },
+    ];
+
+    chipItems.forEach(item => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'journey-chip text-[10px] px-2 py-0.5 rounded-md bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition';
+      btn.setAttribute('data-prompt', item.prompt);
+      btn.textContent = item.label;
+      btn.addEventListener('click', () => {
+        const chatInput = document.getElementById('journeyChatInput');
+        const chatForm = document.getElementById('journeyChatForm');
+        if (chatInput && chatForm) {
+          chatInput.value = item.prompt;
+          chatForm.dispatchEvent(new Event('submit'));
+        }
+      });
+      chatChipsEl.appendChild(btn);
+    });
+  }
 
   lucide.createIcons();
 }
@@ -1582,6 +1615,21 @@ function initJourneyChatAssistant() {
     minimizeBtn.addEventListener('click', () => {
       if (sidePanel) sidePanel.classList.add('hidden');
       if (floatingBtn) floatingBtn.classList.remove('hidden');
+    });
+  }
+
+  // Expand / Maximize Side Dock
+  const expandBtn = document.getElementById('expandChatBtn');
+  const expandIcon = document.getElementById('expandChatIcon');
+  if (expandBtn) {
+    expandBtn.addEventListener('click', () => {
+      if (!sidePanel) return;
+      const isExpanded = sidePanel.classList.toggle('chat-expanded');
+      expandBtn.setAttribute('title', isExpanded ? 'Restore Compact Dock' : 'Expand Chat Screen');
+      if (expandIcon) {
+        expandIcon.setAttribute('data-lucide', isExpanded ? 'minimize-2' : 'maximize-2');
+        lucide.createIcons();
+      }
     });
   }
 
