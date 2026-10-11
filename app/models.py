@@ -142,6 +142,24 @@ class HourlyForecastItem(BaseModel):
     risk_level: str
 
 
+class AlternateRouteSuggestion(BaseModel):
+    route_id: str
+    title: str
+    travel_mode: str = "air"  # "air", "road", "multimodal"
+    origin_code: str
+    origin_name: str
+    destination_code: str
+    destination_name: str
+    via: Optional[str] = None
+    estimated_duration: str
+    projected_risk_score: int
+    projected_risk_level: str
+    risk_reduction_points: int
+    key_benefit: str
+    tradeoff: str
+    action_type: str = "switch_route"  # "switch_route", "shift_window", "multimodal"
+
+
 class AssessmentResponse(BaseModel):
     route: RouteSummary
     travel_mode: TravelMode = TravelMode.AIR
@@ -172,7 +190,22 @@ class AssessmentResponse(BaseModel):
     halt_suggestions: List[HaltSuggestion] = Field(default_factory=list)
     stay_recommendations: List[StayRecommendation] = Field(default_factory=list)
     
+    # Alternate Routes & Bypasses
+    alternate_routes: List[AlternateRouteSuggestion] = Field(default_factory=list)
+    
     # AI synthesis briefing
     ai_briefing: str
     engine_used: str
     generated_at: str
+
+
+class JourneyChatRequest(BaseModel):
+    message: str
+    assessment_context: Optional[Dict[str, Any]] = None
+    gemini_api_key: Optional[str] = None
+
+
+class JourneyChatResponse(BaseModel):
+    reply: str
+    suggested_questions: List[str] = Field(default_factory=list)
+

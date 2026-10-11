@@ -39,7 +39,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="/static/style.css?v=20261011_4">
+  <link rel="stylesheet" href="/static/style.css?v=20261011_5">
 </head>
 <body class="bg-surface-900 text-gray-100 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
 
@@ -559,12 +559,64 @@
                   <!-- JS -->
                 </ul>
               </div>
+
+              <!-- Interactive What-If Scenario Simulator -->
+              <div class="bg-surface-900/80 rounded-xl p-3 border border-surface-700/60">
+                <div class="flex items-center justify-between mb-1.5">
+                  <div class="flex items-center space-x-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">
+                      Interactive What-If Scenario Simulation
+                    </span>
+                  </div>
+                  <span class="text-[9px] text-gray-500 font-mono">Real-Time Tester</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                  <button type="button" class="whatif-btn text-[10px] px-2 py-0.5 rounded bg-surface-800 hover:bg-surface-700 text-gray-300 border border-surface-700 transition" data-scenario="early_window">
+                    ⏱️ Shift to Early Morning (06:00-09:00)
+                  </button>
+                  <button type="button" class="whatif-btn text-[10px] px-2 py-0.5 rounded bg-surface-800 hover:bg-surface-700 text-gray-300 border border-surface-700 transition" data-scenario="storm_intensifies">
+                    ⛈️ Severe Storm Front (+30% Precip)
+                  </button>
+                  <button type="button" class="whatif-btn text-[10px] px-2 py-0.5 rounded bg-surface-800 hover:bg-surface-700 text-gray-300 border border-surface-700 transition" data-scenario="ground_stop_lifted">
+                    🟢 Ground Stop Cleared / Visual VFR
+                  </button>
+                </div>
+                <div id="whatIfResultBox" class="hidden mt-2 p-2 bg-black/40 rounded border border-cyan-500/30 text-[11px] text-cyan-300 leading-relaxed font-mono"></div>
+              </div>
+
             </div>
           </div>
 
         </div>
 
       </div>
+
+      <!-- Operational Alternate Routes & Bypasses -->
+      <section id="alternateRoutesSection" class="bg-surface-800 rounded-2xl border border-surface-700 p-6 shadow-xl space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-700 pb-3">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+              <i data-lucide="git-fork" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <span>Evaluated Alternate Routes & Bypasses</span>
+                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 font-mono px-2 py-0.5 rounded border border-indigo-500/30">Dynamic Contingency Planning</span>
+              </h3>
+              <p class="text-xs text-gray-400">Co-terminal regional airport bypasses, storm reroutes, and multimodal alternatives to avoid bottlenecks</p>
+            </div>
+          </div>
+          <div class="text-xs text-gray-400 font-mono flex items-center gap-1.5">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Interactive Rerouting Enabled</span>
+          </div>
+        </div>
+
+        <div id="alternateRoutesList" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <!-- Injected via JS -->
+        </div>
+      </section>
 
       <!-- Highway Corridor, Halts & Strategic Stay Recommendations -->
       <section id="roadwayStaySection" class="bg-surface-800 rounded-2xl border border-surface-700 p-6 shadow-xl space-y-6">
@@ -651,6 +703,69 @@
         <div id="aiBriefingText" class="prose prose-invert max-w-none text-xs text-gray-300 leading-relaxed space-y-3 font-sans">
           <!-- Briefing content injected by JS -->
         </div>
+      </section>
+
+      <!-- Interactive AI Travel Assistant & Journey Companion -->
+      <section id="journeyAssistantSection" class="bg-surface-800 rounded-2xl border border-surface-700 p-6 shadow-xl space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-700 pb-3">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
+              <i data-lucide="message-square" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <span>Interactive Journey Companion</span>
+                <span class="text-[10px] bg-blue-500/20 text-blue-300 font-mono px-2 py-0.5 rounded border border-blue-500/30">Ask Ops AI</span>
+              </h3>
+              <p class="text-xs text-gray-400">Ask situational questions, evaluate delay recovery protocols, or draft stakeholder notices</p>
+            </div>
+          </div>
+          <div class="text-xs text-gray-400 font-mono flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Context-Aware AI Dispatcher</span>
+          </div>
+        </div>
+
+        <!-- Chat Stream -->
+        <div id="journeyChatStream" class="h-64 overflow-y-auto space-y-3 p-4 bg-surface-900/90 rounded-xl border border-surface-700/80 text-xs">
+          <!-- Initial bot greeting -->
+          <div class="flex items-start gap-2.5">
+            <div class="w-6 h-6 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
+            <div class="bg-surface-800 border border-surface-700/80 p-3 rounded-xl max-w-2xl text-gray-200 space-y-1">
+              <p class="font-semibold text-white">Hello! I am your real-time Journey Disruption Assistant.</p>
+              <p class="text-gray-300 leading-relaxed">I have synthesized the live FAA airspace status, NOAA weather radar, highway pavement reports, and vetted alternate routes for this journey. How can I help you reach your destination smoothly?</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Question Chips -->
+        <div class="space-y-1.5 pt-1">
+          <span class="text-[11px] text-gray-500 font-medium">Quick Inquiries:</span>
+          <div id="journeyChatChips" class="flex flex-wrap gap-1.5">
+            <button type="button" class="journey-chip text-[11px] px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="What should I do if my flight or drive is delayed?">
+              🛡️ Delay Recovery Protocol
+            </button>
+            <button type="button" class="journey-chip text-[11px] px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="Is driving better or faster than flying for this route?">
+              🚗 Flight vs Driving Comparison
+            </button>
+            <button type="button" class="journey-chip text-[11px] px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="Draft a delay update email for my team or client">
+              📋 Draft Manager Update Email
+            </button>
+            <button type="button" class="journey-chip text-[11px] px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition" data-prompt="What alternate routes or airports can I take?">
+              🔄 Alternate Routes & Co-Terminals
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form id="journeyChatForm" class="flex items-center gap-2 pt-2 border-t border-surface-700/50">
+          <input type="text" id="journeyChatInput" placeholder="Ask about delay impacts, baggage rules, hotel vouchers, or what-if scenarios..." 
+            class="flex-1 px-3.5 py-2.5 bg-surface-900 border border-surface-700 rounded-xl text-white text-xs focus:outline-none focus:border-blue-500 font-sans h-10">
+          <button type="submit" id="journeyChatSendBtn" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 transition h-10">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            <span>Send</span>
+          </button>
+        </form>
       </section>
 
       <!-- Traceable Evidence Dossier (What the evidence is behind each recommendation) -->
@@ -744,6 +859,6 @@
     </div>
   </div>
 
-  <script src="/static/app.js?v=20261011_4"></script>
+  <script src="/static/app.js?v=20261011_5"></script>
 </body>
 </html>

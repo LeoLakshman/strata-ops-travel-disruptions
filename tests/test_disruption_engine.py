@@ -295,3 +295,57 @@ def test_lubbock_airport_resolution():
     preston_smith = resolve_airport("Preston Smith")
     assert preston_smith is not None
     assert preston_smith["iata"] == "LBB"
+
+
+def test_rerouting_service():
+    from app.services.rerouting_service import ReroutingService
+    jfk = resolve_airport("JFK")
+    sfo = resolve_airport("SFO")
+
+    # High risk into SFO should suggest OAK co-terminal bypass
+    alts = ReroutingService.generate_alternate_routes(
+        origin=jfk,
+        destination=sfo,
+        travel_mode="air",
+        composite_risk_score=78,
+        driving_distance_miles=2900.0,
+        flight_distance_miles=2580.0,
+        faa_dest={"has_disruption": True},
+        forecast_dest={},
+        roadway_hazards=[],
+    )
+    assert len(alts) >= 1
+    assert any(a.destination_code == "OAK" or a.destination_code == "SJC" for a in alts)
+    assert all(a.risk_reduction_points >= 0 for a in alts)
+
+
+@pytest.mark.asyncio
+async def test_journey_chat_assistant():
+    from app.ai.chat_assistant import JourneyChatAssistant
+    from app.models import JourneyChatRequest
+
+    req = JourneyChatRequest(
+        message="What alternate route can I take?",
+        assessment_context={
+            "route": {"origin": {"iata": "JFK", "city": "New York"}, "destination": {"iata": "SFO", "city": "San Francisco"}},
+            "travel_mode": "air",
+            "composite_risk_score": 75,
+            "risk_level": "HIGH",
+            "delay_probability": 75,
+            "expected_delay_range": "45-90 min",
+            "alternate_routes": [
+                {
+                    "title": "Fly into OAK instead of SFO",
+                    "projected_risk_score": 25,
+                    "risk_reduction_points": 50,
+                    "key_benefit": "Bypasses SFO ground delay program.",
+                    "tradeoff": "+20 min BART into city.",
+                }
+            ],
+        },
+    )
+    res = await JourneyChatAssistant.process_chat(req)
+    assert res.reply is not None
+    assert "Alternate" in res.reply or "OAK" in res.reply or "SFO" in res.reply
+    assert len(res.suggested_questions) >= 2
+

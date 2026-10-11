@@ -25,6 +25,9 @@ from app.models import (
     RouteAirportInfo,
     HourlyForecastItem,
     RiskLevel,
+    AlternateRouteSuggestion,
+    JourneyChatRequest,
+    JourneyChatResponse,
 )
 from app.airports import (
     resolve_airport,
@@ -38,9 +41,11 @@ from app.services.nws_service import NWSService
 from app.services.forecast_service import ForecastService
 from app.services.roadway_service import RoadwayService
 from app.services.stay_service import StayService
+from app.services.rerouting_service import ReroutingService
 from app.ai.risk_fusion import RiskFusionEngine
 from app.ai.synthesizer import DisruptionSynthesizer
 from app.ai.llm_client import GeminiAIClient
+from app.ai.chat_assistant import JourneyChatAssistant
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("app.main")
@@ -233,6 +238,17 @@ async def assess_travel_disruption(req: AssessmentRequest):
         roadway_hazards=roadway_disruptions,
         composite_risk_score=fusion_result["composite_score"],
     )
+    alternate_routes = ReroutingService.generate_alternate_routes(
+        origin=orig_airport,
+        destination=dest_airport,
+        travel_mode=req.travel_mode.value,
+        composite_risk_score=fusion_result["composite_score"],
+        driving_distance_miles=road_route["driving_distance_miles"],
+        flight_distance_miles=route_calc["distance_miles"],
+        faa_dest=faa_dest,
+        forecast_dest=forecast_dest,
+        roadway_hazards=roadway_disruptions,
+    )
 
     # 6. Synthesize Traceable Evidence Dossier
     evidence_items = DisruptionSynthesizer.build_evidence_dossier(
@@ -372,10 +388,21 @@ async def assess_travel_disruption(req: AssessmentRequest):
         roadway_disruptions=roadway_disruptions,
         halt_suggestions=halts_and_stays["halts"],
         stay_recommendations=halts_and_stays["stays"],
+        alternate_routes=alternate_routes,
         ai_briefing=ai_briefing,
         engine_used=engine_used,
         generated_at=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
     )
+
+
+@app.post("/api/chat-assistant", response_model=JourneyChatResponse)
+async def chat_journey_assistant(req: JourneyChatRequest):
+    """
+    Real-Time Conversational Journey Disruption Assistant.
+    Provides interactive answers, delay mitigations, draft stakeholder notices,
+    and rerouting recommendations grounded in the live assessment context.
+    """
+    return await JourneyChatAssistant.process_chat(req)
 
 
 # Serve Static Assets for the frontend

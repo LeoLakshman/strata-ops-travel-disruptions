@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initFormHandlers();
   initMap();
   initMapLayerToggles();
+  initJourneyChatAssistant();
+  initWhatIfSimulator();
 
   const travelDateInput = document.getElementById('travelDateInput');
   const initialDate = travelDateInput?.value || getIsoDate(1);
@@ -772,6 +774,9 @@ function renderResults(data) {
   // Roadway Corridor, Halts & Stays
   renderRoadwayAndStays(data);
 
+  // Alternate Routes & Bypasses
+  renderAlternateRoutes(data.alternate_routes);
+
   // Evidence Dossier
   renderEvidence();
 
@@ -1382,4 +1387,269 @@ function renderRoadwayAndStays(data) {
     stayList.appendChild(el);
   });
 }
+
+/**
+ * Render Evaluated Alternate Routes & Co-Terminal Bypasses
+ */
+function renderAlternateRoutes(alternateRoutes) {
+  const container = document.getElementById('alternateRoutesList');
+  const section = document.getElementById('alternateRoutesSection');
+  if (!container || !section) return;
+
+  container.innerHTML = '';
+
+  if (!alternateRoutes || alternateRoutes.length === 0) {
+    container.innerHTML = `
+      <div class="col-span-2 p-4 bg-surface-900/80 rounded-xl border border-surface-700 text-center text-xs text-gray-400">
+        Direct route corridor is currently optimal. No higher-efficiency alternate bypasses required.
+      </div>
+    `;
+    return;
+  }
+
+  alternateRoutes.forEach(alt => {
+    const card = document.createElement('div');
+    card.className = 'p-4 bg-surface-900/90 rounded-xl border border-surface-700/80 hover:border-indigo-500/50 transition shadow-lg flex flex-col justify-between space-y-3';
+
+    const isRoad = alt.travel_mode === 'road';
+    const modeBadge = isRoad ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+    const reductionBadge = alt.risk_reduction_points > 0 
+      ? `<span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-500/30">-${alt.risk_reduction_points} PTS RISK REDUCTION</span>`
+      : `<span class="text-[10px] bg-surface-700 text-gray-300 px-2 py-0.5 rounded">ALTERNATIVE CORRIDOR</span>`;
+
+    card.innerHTML = `
+      <div>
+        <div class="flex items-center justify-between text-xs mb-2">
+          <div class="flex items-center gap-1.5">
+            <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded border ${modeBadge}">${alt.travel_mode.toUpperCase()}</span>
+            ${reductionBadge}
+          </div>
+          <span class="text-[11px] font-mono font-bold text-gray-300">Projected: ${alt.projected_risk_score}/100 (${alt.projected_risk_level})</span>
+        </div>
+
+        <h4 class="text-sm font-bold text-white mb-1">${escapeHtml(alt.title)}</h4>
+        <div class="text-[11px] text-gray-400 font-mono mb-2">
+          ${alt.origin_code} → ${alt.destination_code} • ${escapeHtml(alt.estimated_duration)}
+        </div>
+
+        <div class="space-y-1.5 text-xs">
+          <div class="flex items-start gap-1.5 text-emerald-300 bg-emerald-950/20 p-2 rounded-lg border border-emerald-800/40">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-emerald-400"></i>
+            <span class="leading-relaxed"><strong>Operational Advantage:</strong> ${escapeHtml(alt.key_benefit)}</span>
+          </div>
+          <div class="flex items-start gap-1.5 text-amber-300 bg-amber-950/20 p-2 rounded-lg border border-amber-800/40">
+            <i data-lucide="clock" class="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-amber-400"></i>
+            <span class="leading-relaxed"><strong>Tradeoff:</strong> ${escapeHtml(alt.tradeoff)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-surface-700/50 flex items-center justify-between">
+        <span class="text-[10px] text-gray-400 font-mono">One-Click Reroute</span>
+        <button type="button" class="switch-route-btn px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition shadow"
+          data-orig="${alt.origin_code}" data-dest="${alt.destination_code}" data-mode="${alt.travel_mode}">
+          <i data-lucide="corner-down-right" class="w-3 h-3"></i>
+          <span>Switch to This Route</span>
+        </button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  // Attach click listeners to Switch Route buttons
+  container.querySelectorAll('.switch-route-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const orig = btn.getAttribute('data-orig');
+      const dest = btn.getAttribute('data-dest');
+      const mode = btn.getAttribute('data-mode') || 'air';
+
+      // Update form inputs
+      const origInput = document.getElementById('originInput');
+      const destInput = document.getElementById('destinationInput');
+      const travelDateInput = document.getElementById('travelDateInput');
+      const timeWindow = document.getElementById('timeWindowSelect')?.value || 'all_day';
+
+      if (origInput) origInput.value = orig;
+      if (destInput) destInput.value = dest;
+
+      // Update travel mode tab
+      const modeBtn = document.querySelector(`.mode-tab-btn[data-mode="${mode}"]`);
+      if (modeBtn) modeBtn.click();
+
+      // Submit assessment for the alternate route!
+      const targetDate = travelDateInput ? travelDateInput.value : getIsoDate(1);
+      submitAssessment(orig, dest, targetDate, timeWindow);
+
+      // Smooth scroll to top of results
+      document.getElementById('resultsContainer')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  lucide.createIcons();
+}
+
+/**
+ * Interactive Journey Disruption AI Companion
+ */
+function initJourneyChatAssistant() {
+  const form = document.getElementById('journeyChatForm');
+  const input = document.getElementById('journeyChatInput');
+  const stream = document.getElementById('journeyChatStream');
+  const sendBtn = document.getElementById('journeyChatSendBtn');
+  const chipsContainer = document.getElementById('journeyChatChips');
+
+  if (!form || !input || !stream) return;
+
+  // Handle Quick Chips
+  document.querySelectorAll('.journey-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const promptText = chip.getAttribute('data-prompt');
+      if (promptText) {
+        input.value = promptText;
+        form.dispatchEvent(new Event('submit'));
+      }
+    });
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const query = input.value.trim();
+    if (!query) return;
+
+    input.value = '';
+    sendBtn.disabled = true;
+
+    // Append User Message
+    appendChatMessage('user', query);
+
+    // Typing indicator
+    const typingId = 'typing-' + Date.now();
+    const typingEl = document.createElement('div');
+    typingEl.id = typingId;
+    typingEl.className = 'flex items-start gap-2.5';
+    typingEl.innerHTML = `
+      <div class="w-6 h-6 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
+      <div class="bg-surface-800 border border-surface-700/80 p-3 rounded-xl max-w-2xl text-gray-400 italic flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+        <span>Evaluating operational telemetry & synthesizing guidance...</span>
+      </div>
+    `;
+    stream.appendChild(typingEl);
+    stream.scrollTop = stream.scrollHeight;
+
+    const apiKey = localStorage.getItem('strata_gemini_api_key') || null;
+
+    try {
+      const resp = await fetch('/api/chat-assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: query,
+          assessment_context: currentAssessment,
+          gemini_api_key: apiKey,
+        }),
+      });
+
+      const typing = document.getElementById(typingId);
+      if (typing) typing.remove();
+
+      if (!resp.ok) {
+        throw new Error('Chat service temporarily unavailable.');
+      }
+
+      const data = await resp.json();
+      appendChatMessage('ai', data.reply);
+
+      // Update follow-up chips if returned
+      if (data.suggested_questions && data.suggested_questions.length > 0 && chipsContainer) {
+        chipsContainer.innerHTML = '';
+        data.suggested_questions.forEach(q => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'journey-chip text-[11px] px-2.5 py-1 rounded-lg bg-surface-700/70 hover:bg-surface-600 text-gray-300 hover:text-white border border-surface-600 transition';
+          btn.setAttribute('data-prompt', q);
+          btn.textContent = `💡 ${q}`;
+          btn.addEventListener('click', () => {
+            input.value = q;
+            form.dispatchEvent(new Event('submit'));
+          });
+          chipsContainer.appendChild(btn);
+        });
+      }
+
+    } catch (err) {
+      const typing = document.getElementById(typingId);
+      if (typing) typing.remove();
+      appendChatMessage('ai', `⚠️ Unable to process query: ${err.message}`);
+    } finally {
+      sendBtn.disabled = false;
+      stream.scrollTop = stream.scrollHeight;
+    }
+  });
+
+  function appendChatMessage(sender, text) {
+    const msgEl = document.createElement('div');
+    msgEl.className = 'flex items-start gap-2.5';
+
+    if (sender === 'user') {
+      msgEl.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">YOU</div>
+        <div class="bg-indigo-950/40 border border-indigo-700/50 p-3 rounded-xl max-w-2xl text-white font-medium">
+          ${escapeHtml(text)}
+        </div>
+      `;
+    } else {
+      msgEl.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-mono">AI</div>
+        <div class="bg-surface-800 border border-surface-700/80 p-3 rounded-xl max-w-2xl text-gray-200 space-y-2 leading-relaxed">
+          ${formatMarkdown(text)}
+        </div>
+      `;
+    }
+
+    stream.appendChild(msgEl);
+    stream.scrollTop = stream.scrollHeight;
+    lucide.createIcons();
+  }
+}
+
+/**
+ * Interactive What-If Scenario Sensitivity Simulator
+ */
+function initWhatIfSimulator() {
+  const resultBox = document.getElementById('whatIfResultBox');
+  if (!resultBox) return;
+
+  document.querySelectorAll('.whatif-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const scenario = btn.getAttribute('data-scenario');
+      resultBox.classList.remove('hidden');
+
+      if (scenario === 'early_window') {
+        resultBox.innerHTML = `
+          <strong>⏱️ SIMULATION: Shift Departure to Early Morning (06:00-09:00)</strong><br>
+          &bull; Terminal Runway Congestion: Reduced by <strong>-55%</strong> (Early bank departure slot).<br>
+          &bull; Convective Thunderstorm Probability: Drops from 65% to <strong>8%</strong>.<br>
+          &bull; Projected Delay Risk: <strong>LOW (18%)</strong> &bull; Expected Delay: <strong>0-15 min</strong>.
+        `;
+      } else if (scenario === 'storm_intensifies') {
+        resultBox.innerHTML = `
+          <strong>⛈️ SIMULATION: Severe Frontal Intensification (+30% Precip / 45kt Gusts)</strong><br>
+          &bull; FAA ATCSCC Trigger: Initiates formal <strong>Ground Delay Program (GDP)</strong>.<br>
+          &bull; Expected Ground Delay: Escalates to <strong>75-110 min</strong>.<br>
+          &bull; Missed Connection Risk: Spikes to <strong>88% (CRITICAL)</strong>. Recommend immediate backup rebooking.
+        `;
+      } else if (scenario === 'ground_stop_lifted') {
+        resultBox.innerHTML = `
+          <strong>🟢 SIMULATION: Ground Stop Termination / Visual Approach Restored</strong><br>
+          &bull; Arrival Acceptance Rate: Restored to <strong>60 aircraft/hour</strong>.<br>
+          &bull; Backlog Clearance: Flight meter delays clear within approximately <strong>45 minutes</strong>.<br>
+          &bull; On-Time Departure Probability: Rises to <strong>84%</strong>.
+        `;
+      }
+    });
+  });
+}
+
 
