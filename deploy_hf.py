@@ -9,6 +9,13 @@ import sys
 import argparse
 from pathlib import Path
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    load_dotenv(Path.home() / ".env")
+except ImportError:
+    pass
+
 def main():
     parser = argparse.ArgumentParser(description="Deploy Strata Ops to Hugging Face Spaces")
     parser.add_argument("--token", help="Hugging Face Access Token (Write permissions required)")
