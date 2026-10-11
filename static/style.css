@@ -1,0 +1,167 @@
+/* Strata Ops Enterprise Design System */
+
+/* Dark Mode Native Controls & Forms */
+input[type="date"] {
+  color-scheme: dark;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+/* Leaflet Map overrides for dark operations theme */
+.leaflet-container {
+  background-color: #0b0f19 !important;
+  font-family: inherit !important;
+}
+
+.leaflet-tile {
+  filter: brightness(0.68) invert(1) contrast(3) hue-rotate(200deg) saturate(0.25) !important;
+}
+
+/* Custom Leaflet Route Pins */
+.airport-pin {
+  background: #1e3a8a;
+  border: 1.5px solid #60a5fa;
+  color: #f8fafc;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  border-radius: 6px;
+  padding: 2px 7px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+}
+
+.airport-pin.origin {
+  background: #1d4ed8;
+  border-color: #93c5fd;
+}
+
+.airport-pin.dest-low {
+  background: #065f46;
+  border-color: #34d399;
+}
+
+.airport-pin.dest-mod {
+  background: #92400e;
+  border-color: #fbbf24;
+}
+
+.airport-pin.dest-high {
+  background: #991b1b;
+  border-color: #f87171;
+}
+
+/* Roadway Operations Map Pins */
+.road-pin {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  border-radius: 6px;
+  padding: 2px 7px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+}
+
+.road-pin.origin {
+  background: #047857;
+  border: 1.5px solid #34d399;
+  color: #ecfdf5;
+}
+
+.road-pin.dest {
+  background: #0f766e;
+  border: 1.5px solid #2dd4bf;
+  color: #f0fdfa;
+}
+
+.road-pin.halt {
+  background: #0369a1;
+  border: 1.5px solid #38bdf8;
+  color: #f0f9ff;
+}
+
+.road-pin.stay {
+  background: #6d28d9;
+  border: 1.5px solid #c084fc;
+  color: #faf5ff;
+}
+
+/* Operational Risk Banner Visual Hierarchy */
+.risk-low {
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.2) 0%, rgba(17, 24, 39, 0.95) 100%);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.risk-moderate {
+  background: linear-gradient(135deg, rgba(146, 64, 14, 0.2) 0%, rgba(17, 24, 39, 0.95) 100%);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.risk-high {
+  background: linear-gradient(135deg, rgba(153, 27, 27, 0.25) 0%, rgba(17, 24, 39, 0.95) 100%);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.risk-critical {
+  background: linear-gradient(135deg, rgba(136, 19, 55, 0.35) 0%, rgba(17, 24, 39, 0.95) 100%);
+  border-color: rgba(244, 63, 94, 0.55);
+  box-shadow: 0 0 25px rgba(225, 29, 72, 0.15);
+}
+
+/* Print Styles for Corporate Advisory Memo */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+  header, footer, #searchCard, .preset-btn, #settingsModal, #exportBriefingBtn, .no-print {
+    display: none !important;
+  }
+  #resultsContainer {
+    display: block !important;
+  }
+  .bg-surface-800, .bg-surface-900 {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+  }
+  .text-white, .text-gray-200, .text-gray-300 {
+    color: #0f172a !important;
+  }
+  .text-gray-400, .text-gray-500 {
+    color: #475569 !important;
+  }
+}
