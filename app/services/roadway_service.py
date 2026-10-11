@@ -22,14 +22,30 @@ HIGHWAY_CORRIDORS: Dict[str, List[str]] = {
     "DEN-SEA": ["I-25 N → I-80 W → I-84 W → I-82 W → I-90 W"],
     "LAX-LAS": ["I-15 N (Mojave Desert Corridor)"],
     "SFO-LAX": ["I-5 S (Central Valley) or US-101 S"],
-    "DFW-LBB": ["I-20 W → US-84 W (Caprock Escarpment Route)"],
-    "LBB-DFW": ["US-84 E → I-20 E"],
+    "DFW-LBB": ["I-20 W (185 miles on Interstate Freeway) → US-84 W (4-Lane Divided US Highway)"],
+    "LBB-DFW": ["US-84 E → I-20 E (185 miles on Interstate Freeway into DFW Metro)"],
     # North-South
     "JFK-DCA": ["I-95 S (Northeast Megalopolis Corridor)"],
     "BOS-JFK": ["I-95 S / I-84 W / CT-15"],
     "ATL-MIA": ["I-75 S → Florida's Turnpike → I-95 S"],
     "DFW-IAH": ["I-45 S"],
     "SEA-SFO": ["I-5 S (Siskiyou Pass)"],
+}
+
+# Key Interstate via waypoints to anchor routes to the Interstate network (preventing routing defaults to two-lane state roads)
+INTERSTATE_VIA_WAYPOINTS: Dict[str, Dict] = {
+    "DFW-LBB": {"name": "Abilene, TX (I-20 West / US-84 Junction)", "city": "Abilene", "state": "TX", "lat": 32.4487, "lon": -99.7331, "highway": "I-20 W", "exit": "Exit 286"},
+    "LBB-DFW": {"name": "Abilene, TX (US-84 / I-20 East Junction)", "city": "Abilene", "state": "TX", "lat": 32.4487, "lon": -99.7331, "highway": "I-20 E", "exit": "Exit 286"},
+    "LAX-LAS": {"name": "Barstow, CA (I-15 / Historic Route 66)", "city": "Barstow", "state": "CA", "lat": 34.8958, "lon": -117.0173, "highway": "I-15 N", "exit": "Exit 184"},
+    "LAS-LAX": {"name": "Barstow, CA (I-15 Southbound Hub)", "city": "Barstow", "state": "CA", "lat": 34.8958, "lon": -117.0173, "highway": "I-15 S", "exit": "Exit 184"},
+    "SFO-LAX": {"name": "Kettleman City, CA (I-5 / CA-41 Hub)", "city": "Kettleman City", "state": "CA", "lat": 35.9816, "lon": -119.9615, "highway": "I-5 S", "exit": "Exit 309"},
+    "LAX-SFO": {"name": "Kettleman City, CA (I-5 / CA-41 Hub)", "city": "Kettleman City", "state": "CA", "lat": 35.9816, "lon": -119.9615, "highway": "I-5 N", "exit": "Exit 309"},
+    "ORD-BOS": {"name": "Cleveland, OH (I-80 / I-90 Junction)", "city": "Cleveland", "state": "OH", "lat": 41.4993, "lon": -81.6944, "highway": "I-90 E", "exit": "Exit 173"},
+    "BOS-ORD": {"name": "Cleveland, OH (I-80 / I-90 Junction)", "city": "Cleveland", "state": "OH", "lat": 41.4993, "lon": -81.6944, "highway": "I-90 W", "exit": "Exit 173"},
+    "JFK-DCA": {"name": "Wilmington, DE (I-95 Megalopolis Welcome Center)", "city": "Wilmington", "state": "DE", "lat": 39.7447, "lon": -75.5484, "highway": "I-95 S", "exit": "Exit 5"},
+    "DCA-JFK": {"name": "Wilmington, DE (I-95 Megalopolis Welcome Center)", "city": "Wilmington", "state": "DE", "lat": 39.7447, "lon": -75.5484, "highway": "I-95 N", "exit": "Exit 5"},
+    "DFW-IAH": {"name": "Madisonville, TX (I-45 Midway Hub)", "city": "Madisonville", "state": "TX", "lat": 30.9499, "lon": -95.9119, "highway": "I-45 S", "exit": "Exit 142"},
+    "IAH-DFW": {"name": "Madisonville, TX (I-45 Midway Hub)", "city": "Madisonville", "state": "TX", "lat": 30.9499, "lon": -95.9119, "highway": "I-45 N", "exit": "Exit 142"},
 }
 
 # State Highway & Regional Scenic Corridors
@@ -104,6 +120,11 @@ class RoadwayService:
         mins = int((total_hours - hours) * 60)
         drive_time_str = f"{hours}h {mins}m" if hours > 0 else f"{mins}m"
 
+        # Look up key Interstate via waypoint (forces route to follow Interstate rather than two-lane state roads)
+        via_waypoint = None
+        if highway_preference == "interstate":
+            via_waypoint = INTERSTATE_VIA_WAYPOINTS.get(pair_key1) or INTERSTATE_VIA_WAYPOINTS.get(pair_key2)
+
         # Generate realistic highway waypoints along the route corridor
         lat1, lon1 = origin["lat"], origin["lon"]
         lat2, lon2 = destination["lat"], destination["lon"]
@@ -119,6 +140,11 @@ class RoadwayService:
                 name = f"Origin: {origin['city']}"
             elif i == num_pts:
                 name = f"Destination: {destination['city']}"
+            elif i == 3 and via_waypoint:
+                # Replace midpoint with the prominent Interstate via hub (e.g. Abilene, TX on I-20)
+                name = f"Interstate Gateway: {via_waypoint['name']}"
+                w_lat = via_waypoint["lat"]
+                w_lon = via_waypoint["lon"]
             else:
                 name = f"Corridor Waypoint #{i} ({int(driving_distance * f)} mi)"
             waypoints.append({
@@ -135,6 +161,7 @@ class RoadwayService:
             "primary_interstates": interstates,
             "highway_preference": highway_preference,
             "highway_waypoints": waypoints,
+            "interstate_via_waypoint": via_waypoint,
         }
 
     @staticmethod

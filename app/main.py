@@ -237,6 +237,9 @@ async def assess_travel_disruption(req: AssessmentRequest):
         driving_distance_miles=road_route["driving_distance_miles"],
         roadway_hazards=roadway_disruptions,
         composite_risk_score=fusion_result["composite_score"],
+        driving_hours=road_route.get("driving_hours", 0.0),
+        desired_halt_count=req.desired_halt_count,
+        highway_preference=req.highway_preference or "interstate",
     )
     alternate_routes = ReroutingService.generate_alternate_routes(
         origin=orig_airport,
@@ -367,6 +370,7 @@ async def assess_travel_disruption(req: AssessmentRequest):
         primary_interstates=road_route["primary_interstates"],
         highway_preference=road_route.get("highway_preference", "interstate"),
         highway_waypoints=road_route.get("highway_waypoints", []),
+        interstate_via_waypoint=road_route.get("interstate_via_waypoint"),
     )
 
     return AssessmentResponse(

@@ -263,14 +263,24 @@ def test_stay_service():
     orig = resolve_airport("DFW")
     dest = resolve_airport("LBB")
 
-    res = StayService.generate_halts_and_stays(orig, dest, 350.0, [], 75)
-    halts = res["halts"]
-    stays = res["stays"]
+    # Auto halts: for DFW-LBB (under 6h), yields 1 halt in Abilene, TX
+    res_auto = StayService.generate_halts_and_stays(orig, dest, 340.0, [], 75, driving_hours=5.2)
+    halts_auto = res_auto["halts"]
+    stays = res_auto["stays"]
 
-    assert len(halts) >= 3
-    assert any(h.stop_type == "fuel_ev_hub" for h in halts)
-    assert any(h.stop_type == "safe_haven_weather_shelter" for h in halts)
-    assert all(h.lat is not None and h.lon is not None for h in halts)
+    assert len(halts_auto) == 1
+    assert halts_auto[0].city == "Abilene"
+    assert halts_auto[0].state == "TX"
+    assert "I-20" in halts_auto[0].highway
+    assert halts_auto[0].lat is not None and halts_auto[0].lon is not None
+
+    # Custom halt count: 2 halts
+    res_2 = StayService.generate_halts_and_stays(orig, dest, 340.0, [], 75, driving_hours=5.2, desired_halt_count=2)
+    assert len(res_2["halts"]) == 2
+
+    # Custom halt count: 0 halts (nonstop)
+    res_0 = StayService.generate_halts_and_stays(orig, dest, 340.0, [], 75, driving_hours=5.2, desired_halt_count=0)
+    assert len(res_0["halts"]) == 0
 
     assert len(stays) >= 3
     assert any(s.tier == "emergency_shelter" for s in stays)

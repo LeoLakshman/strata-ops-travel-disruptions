@@ -41,6 +41,8 @@ class HaltSuggestion(BaseModel):
     stop_number: int
     stop_type: str = Field(..., description="rest_stop, fuel_ev_hub, safe_haven_weather_shelter, meal_stop")
     location_name: str
+    city: Optional[str] = None
+    state: Optional[str] = None
     highway: str
     mile_marker: Optional[str] = None
     distance_from_origin_miles: float
@@ -72,6 +74,7 @@ class AssessmentRequest(BaseModel):
     time_window: str = Field(default="all_day", description="'morning', 'afternoon', 'evening', or 'all_day'")
     travel_mode: TravelMode = Field(default=TravelMode.AIR, description="'air', 'road', or 'multimodal'")
     highway_preference: Optional[str] = Field(default="interstate", description="'interstate', 'state_highway', or 'weather_optimized'")
+    desired_halt_count: Optional[int] = Field(default=None, description="User-requested number of halts (e.g. 0, 1, 2, 3), or None for auto-calculated based on driving duration")
     gemini_api_key: Optional[str] = Field(default=None, description="Optional Google Gemini API key")
 
 
@@ -129,6 +132,7 @@ class RouteSummary(BaseModel):
     primary_interstates: List[str] = Field(default_factory=list)
     highway_preference: Optional[str] = "interstate"
     highway_waypoints: List[Dict[str, Any]] = Field(default_factory=list)
+    interstate_via_waypoint: Optional[Dict[str, Any]] = None
 
 
 class HourlyForecastItem(BaseModel):

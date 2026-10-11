@@ -519,6 +519,21 @@ function initFormHandlers() {
     });
   });
 
+  // Halt Frequency Selector buttons
+  document.querySelectorAll('.halt-count-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.halt-count-btn').forEach(b => {
+        b.classList.remove('bg-blue-600', 'text-white');
+        b.classList.add('text-gray-400');
+      });
+      btn.classList.add('bg-blue-600', 'text-white');
+      btn.classList.remove('text-gray-400');
+      const halts = btn.getAttribute('data-halts');
+      const input = document.getElementById('desiredHaltCountInput');
+      if (input) input.value = halts;
+    });
+  });
+
   travelerTab.addEventListener('click', () => {
     travelerTab.classList.add('bg-blue-600', 'text-white');
     travelerTab.classList.remove('text-gray-400');
@@ -607,6 +622,8 @@ async function submitAssessment(origin, destination, dateVal, timeWindow) {
   }, 900);
 
   const apiKey = localStorage.getItem('strata_gemini_api_key') || null;
+  const haltVal = document.getElementById('desiredHaltCountInput')?.value || 'auto';
+  const desiredHaltCount = haltVal === 'auto' ? null : parseInt(haltVal, 10);
 
   try {
     const resp = await fetch('/api/assess', {
@@ -619,6 +636,7 @@ async function submitAssessment(origin, destination, dateVal, timeWindow) {
         time_window: timeWindow,
         travel_mode: travelMode,
         highway_preference: highwayPref,
+        desired_halt_count: desiredHaltCount,
         gemini_api_key: apiKey,
       }),
     });
@@ -844,18 +862,30 @@ function initMap() {
 
 /**
  * Real-World Highway Route Geometry Fetcher
+ * Supports intermediate via-points to enforce Interstate corridors (e.g. I-20 via Abilene, TX)
  * Tries TomTom Routing API if user key is configured; otherwise uses high-accuracy OSRM driving geometry.
  */
-async function fetchRoadGeometry(origLat, origLon, destLat, destLon) {
+async function fetchRoadGeometry(origLat, origLon, destLat, destLon, viaLat = null, viaLon = null) {
   // 1. TomTom Calculate Route (Fastest + Traffic) if key is provided
   if (tomtomApiKey) {
     try {
-      const url = `https://api.tomtom.com/routing/1/calculateRoute/${origLat},${origLon}:${destLat},${destLon}/json?key=${tomtomApiKey}&routeType=fastest&traffic=true`;
+      let routePath = `${origLat},${origLon}`;
+      if (viaLat && viaLon) {
+        routePath += `:${viaLat},${viaLon}`;
+      }
+      routePath += `:${destLat},${destLon}`;
+      const url = `https://api.tomtom.com/routing/1/calculateRoute/${routePath}/json?key=${tomtomApiKey}&routeType=fastest&traffic=true`;
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
-        if (data.routes && data.routes[0] && data.routes[0].legs && data.routes[0].legs[0].points) {
-          return data.routes[0].legs[0].points.map(p => [p.latitude, p.longitude]);
+        if (data.routes && data.routes[0] && data.routes[0].legs) {
+          let points = [];
+          data.routes[0].legs.forEach(leg => {
+            if (leg.points) {
+              leg.points.forEach(p => points.push([p.latitude, p.longitude]));
+            }
+          });
+          if (points.length > 5) return points;
         }
       }
     } catch (e) {
@@ -865,7 +895,12 @@ async function fetchRoadGeometry(origLat, origLon, destLat, destLon) {
 
   // 2. High-Accuracy OSRM Real Road Highway Engine (Zero-Key, Real Highway Turns)
   try {
-    const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${origLon},${origLat};${destLon},${destLat}?overview=full&geometries=geojson`;
+    let coordsStr = `${origLon},${origLat}`;
+    if (viaLat && viaLon) {
+      coordsStr += `;${viaLon},${viaLat}`;
+    }
+    coordsStr += `;${destLon},${destLat}`;
+    const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coordsStr}?overview=full&geometries=geojson`;
     const res = await fetch(osrmUrl);
     if (res.ok) {
       const data = await res.json();
@@ -901,10 +936,21 @@ async function updateMap(route, travelMode = 'air', halts = [], stays = []) {
   const allCoords = [[origLat, origLon], [destLat, destLon]];
 
   if (travelMode === 'road') {
+    // Determine Interstate via waypoint or major halt to pin the highway polyline to the Interstate
+    let viaLat = null;
+    let viaLon = null;
+    if (route.interstate_via_waypoint && route.interstate_via_waypoint.lat) {
+      viaLat = route.interstate_via_waypoint.lat;
+      viaLon = route.interstate_via_waypoint.lon;
+    } else if (halts && halts.length > 0 && halts[0].lat && route.highway_preference === 'interstate') {
+      viaLat = halts[0].lat;
+      viaLon = halts[0].lon;
+    }
+
     // 1. Fetch real highway turn-by-turn road geometry via TomTom or OSRM
     let roadPoints = null;
     try {
-      roadPoints = await fetchRoadGeometry(origLat, origLon, destLat, destLon);
+      roadPoints = await fetchRoadGeometry(origLat, origLon, destLat, destLon, viaLat, viaLon);
     } catch (err) {
       console.warn('Real highway geometry fetch failed:', err);
     }
@@ -1342,24 +1388,41 @@ function renderRoadwayAndStays(data) {
   const haltList = document.getElementById('haltSuggestionsList');
   haltList.innerHTML = '';
   const halts = data.halt_suggestions || [];
-  halts.forEach(h => {
-    const el = document.createElement('div');
-    el.className = 'p-3 bg-surface-900/80 rounded-xl border border-surface-700/70 space-y-1';
-    el.innerHTML = `
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-white flex items-center gap-1.5">
-          <span class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-400 text-[10px] flex items-center justify-center font-mono font-bold">${h.stop_number}</span>
-          <span>${h.location_name}</span>
-        </span>
-        <span class="text-[10px] font-mono text-gray-400">${h.estimated_drive_time} (${h.distance_from_origin_miles} mi)</span>
-      </div>
-      <p class="text-[11px] text-blue-300 font-medium">${h.rationale}</p>
-      <div class="flex flex-wrap gap-1 pt-1">
-        ${(h.facilities || []).map(f => `<span class="text-[9px] bg-surface-700 text-gray-300 px-1.5 py-0.5 rounded">${f}</span>`).join('')}
+  if (halts.length === 0) {
+    haltList.innerHTML = `
+      <div class="p-3 bg-surface-900/80 rounded-xl border border-surface-700/70 text-center text-xs text-gray-400 space-y-1">
+        <div class="text-emerald-400 font-semibold flex items-center justify-center gap-1.5">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+          <span>Nonstop Express Highway Routing</span>
+        </div>
+        <p class="text-[11px] text-gray-400">Continuous direct driving: total transit duration is within standard driver alertness thresholds (~2.5–3 hours), or nonstop mode was selected.</p>
       </div>
     `;
-    haltList.appendChild(el);
-  });
+    lucide.createIcons();
+  } else {
+    halts.forEach(h => {
+      const el = document.createElement('div');
+      el.className = 'p-3 bg-surface-900/90 rounded-xl border border-surface-700/80 space-y-1.5 shadow';
+      el.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] flex items-center justify-center font-mono font-bold">${h.stop_number}</span>
+            <span class="text-xs font-bold text-white">${h.location_name}</span>
+            ${h.city ? `<span class="text-[10px] font-semibold bg-blue-500/15 text-blue-300 border border-blue-500/30 px-1.5 py-0.5 rounded font-sans">📍 ${h.city}${h.state ? ', ' + h.state : ''}</span>` : ''}
+          </div>
+          <span class="text-[10px] font-mono text-emerald-400 font-semibold">${h.estimated_drive_time} (~${h.distance_from_origin_miles} mi)</span>
+        </div>
+        <div class="text-[10px] font-mono text-gray-400">
+          <span class="text-gray-300 font-semibold">${h.highway}</span> &bull; <span>${h.mile_marker || 'MM Transit'}</span>
+        </div>
+        <p class="text-[11px] text-gray-300 leading-relaxed"><strong class="text-blue-300">Driver Focus & Recharge:</strong> ${h.rationale}</p>
+        <div class="flex flex-wrap gap-1 pt-0.5">
+          ${(h.facilities || []).map(f => `<span class="text-[9px] bg-surface-800 text-gray-300 px-1.5 py-0.5 rounded border border-surface-700/60">${f}</span>`).join('')}
+        </div>
+      `;
+      haltList.appendChild(el);
+    });
+  }
 
   // 3. Stay / Motel Recommendations
   const stayList = document.getElementById('stayRecommendationsList');

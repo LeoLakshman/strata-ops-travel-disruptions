@@ -39,7 +39,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="/static/style.css?v=20261011_6">
+  <link rel="stylesheet" href="/static/style.css?v=20261011_7">
 </head>
 <body class="bg-surface-900 text-gray-100 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
 
@@ -145,27 +145,56 @@
         <input type="hidden" id="travelModeInput" value="air">
       </div>
 
-      <!-- Highway Routing Preferences (Active for Roadway or Multimodal) -->
-      <div id="highwayPrefContainer" class="hidden flex flex-wrap items-center gap-2 mb-3 pb-3 border-b border-surface-700/60 text-xs transition">
-        <span class="text-emerald-400 font-semibold flex items-center gap-1">
-          <i data-lucide="compass" class="w-3.5 h-3.5"></i>
-          <span>Highway Preferences:</span>
-        </span>
-        <div class="inline-flex bg-surface-900 p-0.5 rounded-lg border border-surface-700">
-          <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-white bg-emerald-600 transition flex items-center gap-1" data-pref="interstate">
-            <i data-lucide="navigation" class="w-3 h-3"></i>
-            <span>Interstate Corridors (Fastest)</span>
-          </button>
-          <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-gray-400 hover:text-white transition flex items-center gap-1" data-pref="state_highway">
-            <i data-lucide="map-pin" class="w-3 h-3"></i>
-            <span>State Highways (Toll-Free / Scenic)</span>
-          </button>
-          <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-gray-400 hover:text-white transition flex items-center gap-1" data-pref="weather_optimized">
-            <i data-lucide="shield-check" class="w-3 h-3"></i>
-            <span>Weather-Resilient Bypass</span>
-          </button>
+      <!-- Highway Routing Preferences & Halt Frequency Controls (Active for Roadway or Multimodal) -->
+      <div id="highwayPrefContainer" class="hidden flex flex-col md:flex-row md:items-center justify-between gap-2.5 mb-3 pb-3 border-b border-surface-700/60 text-xs transition">
+        <!-- Highway Corridor Type -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-emerald-400 font-semibold flex items-center gap-1">
+            <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+            <span>Highway Corridor:</span>
+          </span>
+          <div class="inline-flex bg-surface-900 p-0.5 rounded-lg border border-surface-700">
+            <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-white bg-emerald-600 transition flex items-center gap-1" data-pref="interstate">
+              <i data-lucide="navigation" class="w-3 h-3"></i>
+              <span>Interstate (Fastest)</span>
+            </button>
+            <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-gray-400 hover:text-white transition flex items-center gap-1" data-pref="state_highway">
+              <i data-lucide="map-pin" class="w-3 h-3"></i>
+              <span>State Highways (Scenic)</span>
+            </button>
+            <button type="button" class="hw-pref-btn px-2.5 py-1 rounded-md font-medium text-gray-400 hover:text-white transition flex items-center gap-1" data-pref="weather_optimized">
+              <i data-lucide="shield-check" class="w-3 h-3"></i>
+              <span>Weather Bypass</span>
+            </button>
+          </div>
+          <input type="hidden" id="highwayPrefInput" value="interstate">
         </div>
-        <input type="hidden" id="highwayPrefInput" value="interstate">
+
+        <!-- Halt Frequency Selection -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-blue-400 font-semibold flex items-center gap-1">
+            <i data-lucide="coffee" class="w-3.5 h-3.5"></i>
+            <span>Driving Halts:</span>
+          </span>
+          <div class="inline-flex bg-surface-900 p-0.5 rounded-lg border border-surface-700">
+            <button type="button" class="halt-count-btn px-2.5 py-1 rounded-md font-medium text-white bg-blue-600 transition flex items-center gap-1" data-halts="auto" title="Auto: 1 halt roughly every 2.5 to 3 hours in major hub cities">
+              <span>Auto (2.5–3h Hubs)</span>
+            </button>
+            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-gray-400 hover:text-white transition" data-halts="0" title="0 Halts: Nonstop express transit">
+              <span>0 (Nonstop)</span>
+            </button>
+            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-gray-400 hover:text-white transition" data-halts="1" title="1 Major City Halt (e.g. Abilene, TX)">
+              <span>1 City Halt</span>
+            </button>
+            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-gray-400 hover:text-white transition" data-halts="2" title="2 Major City Halts">
+              <span>2 Halts</span>
+            </button>
+            <button type="button" class="halt-count-btn px-2 py-1 rounded-md font-medium text-gray-400 hover:text-white transition" data-halts="3" title="3 Halts">
+              <span>3 Halts</span>
+            </button>
+          </div>
+          <input type="hidden" id="desiredHaltCountInput" value="auto">
+        </div>
       </div>
 
       <!-- Unified Form -->
@@ -880,6 +909,6 @@
     </div>
   </div>
 
-  <script src="/static/app.js?v=20261011_6"></script>
+  <script src="/static/app.js?v=20261011_7"></script>
 </body>
 </html>
