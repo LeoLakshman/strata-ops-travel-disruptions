@@ -26,6 +26,7 @@ class RiskFusionEngine:
         airsigmets: List[Dict],
         travel_date_str: str = "tomorrow",
         time_window: str = "all_day",
+        travel_mode: str = "air",
     ) -> Dict:
         """
         Executes multi-source signal fusion and Bayesian risk calculations.
@@ -136,7 +137,8 @@ class RiskFusionEngine:
             metar_dest,
             forecast_dest,
             nws_dest_alerts,
-            nws_origin_alerts
+            nws_origin_alerts,
+            travel_mode=travel_mode,
         )
 
         return {
@@ -166,11 +168,52 @@ class RiskFusionEngine:
         forecast_dest: Dict,
         nws_dest_alerts: List[Dict],
         nws_origin_alerts: List[Dict],
+        travel_mode: str = "air",
     ) -> Dict[str, str]:
         """
         Synthesizes an immediate operational headline and executive verdict.
+        Adapts dynamically for Airway vs Roadway driving corridors.
         """
-        # Check active FAA programs
+        all_alerts = nws_dest_alerts + nws_origin_alerts
+        severe_alerts = [a for a in all_alerts if a.get("score", 0) >= 70]
+
+        # Dedicated Roadway / Driving Mode Verdicts
+        if travel_mode == "road":
+            if severe_alerts:
+                top_ev = severe_alerts[0].get("event", "Severe Weather Advisory")
+                loc = severe_alerts[0].get("location", "Corridor Sector")
+                return {
+                    "verdict": f"HIGH ROAD RISK: {top_ev} active in {loc}.",
+                    "headline": "Official NWS bulletins indicate hazardous highway pavement, reduced visibility, or road weather hazards.",
+                }
+            if forecast_dest.get("max_wind_gust_mph", 0) >= 35:
+                gust = forecast_dest["max_wind_gust_mph"]
+                return {
+                    "verdict": f"MODERATE ROAD RISK: Lateral wind gusts forecasted along corridor (up to {gust} mph).",
+                    "headline": "Commercial and high-profile vehicles subject to crosswind overturn friction and bridge advisories.",
+                }
+            if risk_level == RiskLevel.LOW:
+                return {
+                    "verdict": "LOW RISK: Favorable highway pavement and corridor driving conditions.",
+                    "headline": "No active road closures, chain controls, or severe weather hazards detected along this driving corridor.",
+                }
+            elif risk_level == RiskLevel.MODERATE:
+                return {
+                    "verdict": "MODERATE RISK: Highway friction, localized weather, or pass controls along corridor.",
+                    "headline": "Standard driving buffers recommended. Minor delays of 15-30 minutes possible.",
+                }
+            elif risk_level == RiskLevel.HIGH:
+                return {
+                    "verdict": "HIGH RISK: Hazardous highway travel conditions detected along primary corridor.",
+                    "headline": "Multiple road weather alerts (freezing precipitation, high winds, or chain controls) indicate elevated delay.",
+                }
+            else:
+                return {
+                    "verdict": "CRITICAL RISK: Major highway pass closure or severe road hazards in effect.",
+                    "headline": "Active blizzard, road closure, or severe road weather warning along primary highway corridor.",
+                }
+
+        # Dedicated Airway / Flight Mode Verdicts
         if faa_dest.get("ground_stops"):
             arpt = faa_dest["airport"]
             reason = faa_dest["ground_stops"][0].get("reason", "operations")
@@ -188,18 +231,14 @@ class RiskFusionEngine:
                 "headline": f"Destination airport is operating under constrained arrival slots due to {reason}.",
             }
             
-        # Check severe NWS alerts
-        all_alerts = nws_dest_alerts + nws_origin_alerts
-        severe_alerts = [a for a in all_alerts if a.get("score", 0) >= 70]
         if severe_alerts:
             top_ev = severe_alerts[0].get("event", "Severe Weather")
             loc = severe_alerts[0].get("location", "Terminal area")
             return {
                 "verdict": f"HIGH RISK: {top_ev} active in {loc}.",
-                "headline": f"Official National Weather Service advisory indicates imminent disruption to flight operations.",
+                "headline": "Official National Weather Service advisory indicates imminent disruption to flight operations.",
             }
 
-        # Check IFR / LIFR conditions
         if metar_dest and metar_dest.get("flight_category") in ("IFR", "LIFR"):
             cat = metar_dest["flight_category"]
             vis = metar_dest.get("visibility_sm", 3)
@@ -208,7 +247,6 @@ class RiskFusionEngine:
                 "headline": "Low cloud ceilings and reduced visibility are reducing runway acceptance rates.",
             }
 
-        # Forecast conditions
         if forecast_dest.get("max_wind_gust_mph", 0) >= 35:
             gust = forecast_dest["max_wind_gust_mph"]
             return {

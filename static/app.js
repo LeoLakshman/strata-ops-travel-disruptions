@@ -756,9 +756,6 @@ function renderResults(data) {
   setMeter('depWeatherScoreVal', 'depWeatherScoreBar', dims.departure_terminal);
   setMeter('enrouteScoreVal', 'enrouteScoreBar', dims.enroute_corridor);
 
-  // Map Update with halts and stays
-  updateMap(data.route, data.travel_mode, data.halt_suggestions, data.stay_recommendations);
-
   // Hourly Timeline
   renderHourlyTimeline(data.hourly_timeline);
 
@@ -833,8 +830,50 @@ function initMap() {
   applyBaseMapTiles();
 }
 
-function updateMap(route, travelMode = 'air', halts = [], stays = []) {
+/**
+ * Real-World Highway Route Geometry Fetcher
+ * Tries TomTom Routing API if user key is configured; otherwise uses high-accuracy OSRM driving geometry.
+ */
+async function fetchRoadGeometry(origLat, origLon, destLat, destLon) {
+  // 1. TomTom Calculate Route (Fastest + Traffic) if key is provided
+  if (tomtomApiKey) {
+    try {
+      const url = `https://api.tomtom.com/routing/1/calculateRoute/${origLat},${origLon}:${destLat},${destLon}/json?key=${tomtomApiKey}&routeType=fastest&traffic=true`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.routes && data.routes[0] && data.routes[0].legs && data.routes[0].legs[0].points) {
+          return data.routes[0].legs[0].points.map(p => [p.latitude, p.longitude]);
+        }
+      }
+    } catch (e) {
+      console.warn('TomTom routing API query failed, falling back to OSRM:', e);
+    }
+  }
+
+  // 2. High-Accuracy OSRM Real Road Highway Engine (Zero-Key, Real Highway Turns)
+  try {
+    const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${origLon},${origLat};${destLon},${destLat}?overview=full&geometries=geojson`;
+    const res = await fetch(osrmUrl);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.routes && data.routes[0] && data.routes[0].geometry && data.routes[0].geometry.coordinates) {
+        // OSRM coordinates are [lon, lat], Leaflet polyline expects [lat, lon]
+        return data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+      }
+    }
+  } catch (e) {
+    console.warn('OSRM routing query failed:', e);
+  }
+
+  return null;
+}
+
+let currentMapRenderId = 0;
+
+async function updateMap(route, travelMode = 'air', halts = [], stays = []) {
   if (!flightMap) return;
+  const renderId = ++currentMapRenderId;
 
   // Clear existing layers
   flightMap.eachLayer(layer => {
@@ -850,21 +889,34 @@ function updateMap(route, travelMode = 'air', halts = [], stays = []) {
   const allCoords = [[origLat, origLon], [destLat, destLon]];
 
   if (travelMode === 'road') {
-    // 1. Build Highway Corridor Polyline from highway_waypoints
-    let waypoints = [];
-    if (route.highway_waypoints && route.highway_waypoints.length > 0) {
-      waypoints = route.highway_waypoints.map(wp => [wp.lat, wp.lon]);
-    } else {
-      waypoints = [[origLat, origLon], [destLat, destLon]];
+    // 1. Fetch real highway turn-by-turn road geometry via TomTom or OSRM
+    let roadPoints = null;
+    try {
+      roadPoints = await fetchRoadGeometry(origLat, origLon, destLat, destLon);
+    } catch (err) {
+      console.warn('Real highway geometry fetch failed:', err);
     }
 
-    waypoints.forEach(pt => allCoords.push(pt));
+    // Guard against stale response if another query was fired in the meantime
+    if (renderId !== currentMapRenderId) return;
 
-    // Draw Highway Polyline
-    L.polyline(waypoints, {
+    let polylineCoords = [];
+    if (roadPoints && roadPoints.length > 5) {
+      polylineCoords = roadPoints;
+    } else if (route.highway_waypoints && route.highway_waypoints.length > 0) {
+      polylineCoords = route.highway_waypoints.map(wp => [wp.lat, wp.lon]);
+    } else {
+      polylineCoords = [[origLat, origLon], [destLat, destLon]];
+    }
+
+    polylineCoords.forEach(pt => allCoords.push(pt));
+
+    // Draw Real Highway Polyline (Emerald Green)
+    L.polyline(polylineCoords, {
       color: '#10b981',
-      weight: 4,
-      opacity: 0.9,
+      weight: 5,
+      opacity: 0.95,
+      smoothFactor: 1,
     }).addTo(flightMap);
 
     // Origin Road Marker
@@ -875,7 +927,7 @@ function updateMap(route, travelMode = 'air', halts = [], stays = []) {
       iconAnchor: [40, 12],
     });
     L.marker([origLat, origLon], { icon: origIcon })
-      .bindTooltip(`<b>Origin: ${route.origin.name}</b><br><span class="text-xs text-gray-400">Departure Corridor</span>`, { direction: 'top' })
+      .bindTooltip(`<b>Origin: ${route.origin.name}</b><br><span class="text-xs text-emerald-300">Departure Highway Gateway</span>`, { direction: 'top' })
       .addTo(flightMap);
 
     // Destination Road Marker
@@ -886,14 +938,28 @@ function updateMap(route, travelMode = 'air', halts = [], stays = []) {
       iconAnchor: [40, 12],
     });
     L.marker([destLat, destLon], { icon: destIcon })
-      .bindTooltip(`<b>Destination: ${route.destination.name}</b><br><span class="text-xs text-gray-400">Arrival Corridor</span>`, { direction: 'top' })
+      .bindTooltip(`<b>Destination: ${route.destination.name}</b><br><span class="text-xs text-emerald-300">Arrival Corridor Terminal</span>`, { direction: 'top' })
       .addTo(flightMap);
 
-    // Render Intermediate Milestone Halts
+    // Snap Intermediate Halts directly onto the real road polyline
     if (halts && halts.length > 0) {
+      const haltRatios = halts.length === 1 ? [0.50] :
+                         halts.length === 2 ? [0.33, 0.67] :
+                         halts.length === 3 ? [0.24, 0.50, 0.80] :
+                         halts.map((_, i) => (i + 1) / (halts.length + 1));
+
       halts.forEach((halt, idx) => {
-        if (halt.lat && halt.lon) {
-          allCoords.push([halt.lat, halt.lon]);
+        let hLat = halt.lat;
+        let hLon = halt.lon;
+        if (polylineCoords.length >= 10) {
+          const ratio = haltRatios[idx] || (idx + 1) / (halts.length + 1);
+          const snapIdx = Math.min(polylineCoords.length - 1, Math.max(0, Math.floor(polylineCoords.length * ratio)));
+          hLat = polylineCoords[snapIdx][0];
+          hLon = polylineCoords[snapIdx][1];
+        }
+
+        if (hLat && hLon) {
+          allCoords.push([hLat, hLon]);
           const haltIcon = L.divIcon({
             className: 'road-pin halt',
             html: `<span>HALT ${idx + 1}</span>`,
@@ -905,18 +971,31 @@ function updateMap(route, travelMode = 'air', halts = [], stays = []) {
           const haltDist = halt.distance_from_origin_miles ? `${halt.distance_from_origin_miles} mi` : (halt.est_distance_from_origin || '');
           const haltReason = halt.rationale || halt.primary_reason || 'Fuel / EV recharge & rest';
           const facs = (halt.facilities || []).slice(0, 3).join(', ');
-          L.marker([halt.lat, halt.lon], { icon: haltIcon })
+          L.marker([hLat, hLon], { icon: haltIcon })
             .bindTooltip(`<b>${haltTitle}</b><br><span class="text-xs text-blue-300">Stop at ~${haltTime} (${haltDist})</span><br><span class="text-xs text-gray-300">${haltReason}</span><br><span class="text-xs text-gray-400">Facilities: ${facs}</span>`, { direction: 'top' })
             .addTo(flightMap);
         }
       });
     }
 
-    // Render Overnight Stay / Lodging Contingencies
+    // Snap Overnight Stay / Lodging Contingencies directly onto the real road polyline
     if (stays && stays.length > 0) {
-      stays.forEach(stay => {
-        if (stay.lat && stay.lon) {
-          allCoords.push([stay.lat, stay.lon]);
+      const stayRatios = stays.length === 1 ? [0.58] :
+                         stays.length === 2 ? [0.46, 0.72] :
+                         stays.map((_, i) => 0.40 + (i * 0.22));
+
+      stays.forEach((stay, idx) => {
+        let sLat = stay.lat;
+        let sLon = stay.lon;
+        if (polylineCoords.length >= 10) {
+          const ratio = stayRatios[idx] || 0.50;
+          const snapIdx = Math.min(polylineCoords.length - 1, Math.max(0, Math.floor(polylineCoords.length * ratio)));
+          sLat = polylineCoords[snapIdx][0];
+          sLon = polylineCoords[snapIdx][1];
+        }
+
+        if (sLat && sLon) {
+          allCoords.push([sLat, sLon]);
           const stayIcon = L.divIcon({
             className: 'road-pin stay',
             html: `<span>LODGE</span>`,
@@ -926,7 +1005,7 @@ function updateMap(route, travelMode = 'air', halts = [], stays = []) {
           const stayLoc = stay.location || stay.city_state || 'Corridor Exit';
           const stayExit = stay.highway_exit || 'Exit';
           const stayRole = stay.strategic_role || stay.contingency_trigger || 'Rest Stop';
-          L.marker([stay.lat, stay.lon], { icon: stayIcon })
+          L.marker([sLat, sLon], { icon: stayIcon })
             .bindTooltip(`<b>${stay.name}</b> (${(stay.tier || 'HOTEL').toUpperCase()})<br><span class="text-xs text-purple-300">${stayLoc} • ${stayExit}</span><br><span class="text-xs text-amber-300">Contingency: ${stayRole}</span>`, { direction: 'top' })
             .addTo(flightMap);
         }

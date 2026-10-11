@@ -209,6 +209,7 @@ async def assess_travel_disruption(req: AssessmentRequest):
         airsigmets=airsigmets,
         travel_date_str=req.date,
         time_window=req.time_window,
+        travel_mode=req.travel_mode.value,
     )
 
     # 5. Roadway Corridor & Strategic Stay Computations (Extensible Multimodal Engine)
@@ -278,6 +279,7 @@ async def assess_travel_disruption(req: AssessmentRequest):
         forecast_dest=forecast_dest,
         hourly_timeline=dest_hourly,
         roadway_disruptions=roadway_disruptions,
+        travel_mode=req.travel_mode.value,
     )
 
     # 8. Uncertainty Analysis & Confidence Quantification
@@ -288,6 +290,7 @@ async def assess_travel_disruption(req: AssessmentRequest):
         metar_dest=metar_dest,
         forecast_dest=forecast_dest,
         nws_dest_alerts=nws_dest_alerts,
+        travel_mode=req.travel_mode.value,
     )
 
     # 8. AI Synthesis & Executive Briefing
