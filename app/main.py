@@ -382,6 +382,6 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.api_route("/", methods=["GET", "HEAD"])
 async def serve_index():
     """
-    Serves the primary web dashboard UI.
+    Serves the primary web dashboard UI with no-cache headers.
     """
-    return FileResponse("static/index.html")
+    return FileResponse("static/index.html", headers={"Cache-Control": "no-cache, no-store, must-revalidate"})
